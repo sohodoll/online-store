@@ -28,14 +28,14 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/sohodoll/news-JS-test.git"
+        "url": "git+https://github.com/sohodoll/online-store.git"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "bugs": {
-        "url": "https://github.com/sohodoll/news-JS-test/issues"
+        "url": "https://github.com/sohodoll/online-store/issues"
     },
-    "homepage": "https://github.com/sohodoll/news-JS-test#readme",
+    "homepage": "https://github.com/sohodoll/online-store#readme",
     "description": ""
 }
