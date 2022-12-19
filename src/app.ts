@@ -38,6 +38,10 @@ class App {
         window.addEventListener('hashchange', () => {
             const hash = window.location.hash.slice(1);
             App.renderNewPage(hash);
+            // const currentURL = new URL(window.location.href);
+            // currentURL.searchParams.set('brand', 'adidas');
+            // currentURL.searchParams.set('model', 'adistar');
+            // console.log(currentURL);
         });
     }
 
