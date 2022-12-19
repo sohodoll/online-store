@@ -50,6 +50,7 @@ class App {
     }
 
     run() {
+        window.location.hash = PageIDs.MainPage;
         App.container.prepend(this.header.render());
         App.renderNewPage('main');
         this.handleRouting();
