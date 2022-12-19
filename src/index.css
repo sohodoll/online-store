@@ -1,6 +1,10 @@
 @import url('./reset.css');
 @import url('./pages/components/footer/footer.css');
 @import url('./pages/components/header/header.css');
+@import url('./app/pages/header/header.css');
+@import url('./app/pages/main/main.css');
+@import url('./app/pages/error404/error404.css');
+@import url('./app/pages/footer/footer.css');
 
 body {
     background-color: #f3f3f3;
@@ -8,6 +12,7 @@ body {
     background-repeat: repeat;
     background-blend-mode: multiply;
     width: 100vw;
+    overflow-x: hidden;
 }
 
 .header,

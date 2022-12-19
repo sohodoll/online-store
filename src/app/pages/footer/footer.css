@@ -1,0 +1,52 @@
+.footer-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px auto;
+    width: 100%;
+    padding: 0 5%;
+}
+
+.footer__author {
+   display: flex;
+   align-items: center;
+   gap: 10%;
+}
+
+.footer__author_github_link,
+.footer__rsshool_link,
+.footer__site-year {
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 24px;
+    line-height: 30px;
+    text-shadow: 0 0 4px #000;
+}
+
+.footer__author_github_link {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 5%;
+    transition: transform .3s linear;
+}
+
+    .footer__author_github_link:hover {
+        transform: scale(1.1);
+    }
+
+.footer__author_github_img {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #fff;
+}
+
+.footer__rsshool_link:hover > .footer__rsshool_img {
+    transform: scale(1.1);
+}
+
+.footer__rsshool_img {
+    height: 56px;
+    transition: transform .3s linear;
+}
