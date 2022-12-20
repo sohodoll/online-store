@@ -1,0 +1,26 @@
+@import url('../../reset.css');
+
+.description__container {
+    width: 80%;
+    margin: 0 auto;
+    display: flex;
+    gap: 5rem;
+}
+
+.description__highlights {
+    border: 1px solid black;
+}
+
+.description__left {
+    flex: 1;
+}
+
+.description__right {
+    flex: 3;
+    border: 1px solid black;
+    font-size: clamp(1rem, 1rem + 1vw, 4rem);
+}
+
+.description__image {
+    width: clamp(200px, 30vw, 500px);
+}

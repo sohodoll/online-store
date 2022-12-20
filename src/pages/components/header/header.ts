@@ -26,7 +26,7 @@ class Header extends Component {
                 <a href="#${PageIDs.MainPage}" ><img class="header__logo-img" src="./assets/png/store-logo.png" alt="Online Store" /></a>
             </div>
             <div class="header__total">
-                <span class="header__total-title">Total:</span>
+                <a href="#${PageIDs.DescriptionPage}" ><span class="header__total-title">Total:</span></a>
                 <span class="header__total-price">0</span>
             </div>
             <div class="header__cart">
