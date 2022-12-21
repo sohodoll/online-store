@@ -4,6 +4,7 @@ import CartPage from './pages/cart/cart';
 import Page from './pages/templates/page';
 import DescriptionPage from './pages/description/description';
 import Header from './pages/components/header/header';
+import shoes from './app/db/shoes';
 
 export const enum PageIDs {
     MainPage = 'main',
@@ -25,7 +26,11 @@ class App {
         } else if (pageId === PageIDs.CartPage) {
             page = new CartPage(pageId);
         } else if (pageId === PageIDs.DescriptionPage) {
-            page = new DescriptionPage(pageId);
+            page = new DescriptionPage(pageId, shoes[2]);
+            const Desc = new DescriptionPage(pageId, shoes[2]);
+            setTimeout(() => {
+                Desc.listen();
+            }, 500);
         }
 
         if (page) {

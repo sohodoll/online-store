@@ -5,6 +5,15 @@
 @import url('./app/pages/main/main.css');
 @import url('./app/pages/error404/error404.css');
 @import url('./app/pages/footer/footer.css');
+@import url('.//pages/description/description.css');
+
+:root {
+    --main: #655588;
+    --accent: #e77b42;
+    --darkmain: #42395a;
+    --lightaccent: #ffbd32;
+    --extra: #dddbf1;
+}
 
 body {
     background-color: #f3f3f3;
@@ -17,7 +26,7 @@ body {
 
 .header,
 .main {
-    border-bottom: solid 2px #c5c5c5;
+    border-bottom: solid 2px var(--main);
 }
 
 .header,
@@ -29,6 +38,6 @@ body {
 .wrapper {
     max-width: 1100px;
     margin: 0 auto;
-    background: rgba(255, 255, 255, 0.8);
+    background: white;
     padding: 10px 30px;
 }
