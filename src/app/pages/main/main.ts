@@ -1,5 +1,5 @@
 import { createCartItemFromMain, IPrototypeItem } from '../../items';
-import ItemCart from '../cart/cart';
+import ItemCart from '../itemCart/itemCart';
 import shoes from '../../db/shoes';
 
 let itemsAddCartButton: NodeList;

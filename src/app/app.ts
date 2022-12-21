@@ -2,7 +2,7 @@ import headerTemplate from './pages/header/header';
 import mainTemplate from './pages/main/main';
 import footerTemplate from './pages/footer/footer';
 import error404Template from './pages/error404/error404';
-import ItemCart from './pages/cart/cart';
+import ItemCart from './pages/itemCart/itemCart';
 import { IPrototypeItem } from './items';
 import shoes from './db/shoes';
 
