@@ -1,5 +1,48 @@
 @import url('./reset.css');
+@import url('./pages/components/footer/footer.css');
+@import url('./pages/components/header/header.css');
+@import url('./pages/components/header/header.css');
+@import url('./pages/main/main.css');
+@import url('./pages/error404/error404.css');
+@import url('./pages/components/footer/footer.css');
+@import url('./pages/description/description.css');
+
+:root {
+    --main: #655588;
+    --accent: #e77b42;
+    --darkmain: #42395a;
+    --lightaccent: #ffbd32;
+    --extra: #dddbf1;
+}
+
+html {
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+}
 
 body {
-    background-color: rgb(47, 95, 138);
+    background-color: #f3f3f3;
+    background-image: url(./assets/png/background-img.png);
+    background-repeat: repeat;
+    background-blend-mode: multiply;
+    width: 100vw;
+    overflow-x: hidden;
+}
+
+.header,
+.main {
+    border-bottom: solid 2px var(--main);
+}
+
+.header,
+.main,
+.footer {
+    width: 100%;
+}
+
+.wrapper {
+    max-width: 1100px;
+    margin: 0 auto;
+    background: white;
+    padding: 10px 30px;
 }
