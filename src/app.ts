@@ -3,41 +3,87 @@ import MainPage from './pages/main/main';
 import CartPage from './pages/cart/cart';
 import Page from './pages/templates/page';
 import DescriptionPage from './pages/description/description';
+import ErrorPage from './pages/error404/error404';
 import Header from './pages/components/header/header';
-import shoes from './app/db/shoes';
+import Footer from './pages/components/footer/footer';
+import ItemCart from './pages/components/itemCart/itemCart';
+import { IPrototypeItem } from './pages/templates/items';
+import shoes from './db/shoes';
+
+//let itemsAddCartButton: NodeList;
+const arrCart: ItemCart[] = [];
+let clickItem: IPrototypeItem;
 
 export const enum PageIDs {
-    MainPage = 'main',
+    //MainPage = 'main',
+    MainPage = '',
     CartPage = 'cart',
     DescriptionPage = 'description',
+    ErrorPage = 'error404',
+}
+
+function updateCartAmount(arr: ItemCart[]): void {
+    const headerCartCount: HTMLImageElement = <HTMLImageElement>document.querySelector('.header__cart-count');
+    headerCartCount.textContent = arr.length.toString();
+}
+
+function updateCartPrice(arr: ItemCart[]): void {
+    const headerTotalPrice: HTMLImageElement = <HTMLImageElement>document.querySelector('.header__total-price');
+    let total = 0;
+    arr.forEach((el) => {
+        total += el.getTotalPrice();
+    });
+    headerTotalPrice.textContent = `$${total.toString()}`;
+}
+
+function viewButtonAddClick(): void {
+    const itemsViewButton: NodeList = <NodeList>document.querySelectorAll('.btn-view');
+
+    itemsViewButton.forEach((el) => {
+        el.addEventListener('click', () => {
+            const itemID: number = parseInt((el as HTMLButtonElement).value);
+            clickItem = <IPrototypeItem>shoes.find((el) => el.id === itemID);
+            document.location.href = '#description';
+        });
+    });
+}
+
+function cartButtonAddClick(): void {
+    const itemsAddCartButton: NodeList = <NodeList>document.querySelectorAll('.btn-to-cart');
+
+    itemsAddCartButton.forEach((el) => {
+        el.addEventListener('click', () => {
+            const itemID: number = parseInt((el as HTMLButtonElement).value);
+            const clickItem: IPrototypeItem = <IPrototypeItem>shoes.find((el) => el.id === itemID);
+            const cartItem: ItemCart = new ItemCart(
+                clickItem.id,
+                clickItem.name,
+                clickItem.brand,
+                clickItem.thumbnail,
+                1,
+                clickItem.price
+            );
+            if (arrCart.length === 0) {
+                arrCart.push(cartItem);
+            } else {
+                const findElem: ItemCart | undefined = arrCart.find((el) => el.id === itemID);
+                if (findElem !== undefined) {
+                    findElem.addAmount();
+                } else {
+                    arrCart.push(cartItem);
+                }
+            }
+            updateCartAmount(arrCart);
+            updateCartPrice(arrCart);
+        });
+    });
 }
 
 class App {
     private static container: HTMLElement = <HTMLElement>document.body;
-    private static mainHTML: HTMLElement = <HTMLElement>document.querySelector('main');
-    private header: Header;
-
-    static renderNewPage(pageId: string) {
-        App.mainHTML.innerHTML = '';
-        let page: Page | null = null;
-
-        if (pageId === PageIDs.MainPage) {
-            page = new MainPage(pageId);
-        } else if (pageId === PageIDs.CartPage) {
-            page = new CartPage(pageId);
-        } else if (pageId === PageIDs.DescriptionPage) {
-            page = new DescriptionPage(pageId, shoes[2]);
-            const Desc = new DescriptionPage(pageId, shoes[2]);
-            setTimeout(() => {
-                Desc.listen();
-            }, 500);
-        }
-
-        if (page) {
-            const pageHTML = page.render();
-            this.mainHTML.appendChild(pageHTML);
-        }
-    }
+    private static mainHTML: HTMLElement = <HTMLElement>document.querySelector('.main');
+    private header: HTMLElement; // = <HTMLElement>document.createElement('header');
+    private footer: HTMLElement; // = <HTMLElement>document.createElement('footer');
 
     private handleRouting() {
         window.addEventListener('hashchange', () => {
@@ -46,14 +92,52 @@ class App {
         });
     }
 
+    static renderNewPage(pageId: string): void {
+        App.mainHTML.innerHTML = '';
+        let page: Page | null = null;
+        if (pageId === PageIDs.MainPage) {
+            page = new MainPage(pageId);
+        } else if (pageId === PageIDs.CartPage) {
+            page = new CartPage(pageId, arrCart);
+        } else if (pageId === PageIDs.DescriptionPage) {
+            page = new DescriptionPage(pageId, clickItem);
+            const Desc = new DescriptionPage(pageId, clickItem);
+            setTimeout(() => {
+                Desc.listen();
+            }, 500);
+        } else {
+            page = new ErrorPage(PageIDs.ErrorPage);
+        }
+
+        if (page) {
+            const pageHTML = page.render();
+            this.mainHTML.appendChild(pageHTML);
+            if (page instanceof MainPage) {
+                viewButtonAddClick();
+                cartButtonAddClick();
+            }
+        }
+    }
+
     constructor() {
-        this.header = new Header('header', 'header');
+        this.header = Header();
+        this.footer = Footer();
     }
 
     run() {
-        App.container.prepend(this.header.render());
-        App.renderNewPage('main');
+        App.container.prepend(this.header);
+        App.renderNewPage('');
+        App.container.appendChild(this.footer);
         this.handleRouting();
+
+        //viewButtonAddClick();
+        //cartButtonAddClick();
+
+        /*
+        const headerCartImg = document.querySelector('.header__cart-img');
+        headerCartImg?.addEventListener('click', () => {
+            console.log(arrCart);
+        });*/
     }
 }
 

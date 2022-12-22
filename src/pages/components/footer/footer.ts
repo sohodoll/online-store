@@ -1,5 +1,9 @@
-export default function Footer() {
-    return `
+import { PageIDs } from '../../../app';
+
+export default function Footer(): HTMLElement {
+    const footer: HTMLElement = document.createElement('footer');
+    footer.className = 'footer';
+    footer.innerHTML = `
         <div class="footer-wrapper wrapper">
             <div class="footer__author">
                 <a class="footer__author_github_link" href="https://github.com/DeFranS325">
@@ -19,4 +23,5 @@ export default function Footer() {
             </div>
         </div>
     `;
+    return footer;
 }

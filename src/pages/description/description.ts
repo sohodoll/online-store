@@ -1,3 +1,4 @@
+import { IPrototypeItem } from '../templates/items';
 import Page from '../templates/page';
 import shoes from '../../app/db/shoes';
 import { IPrototypeItem } from '../../app/items';
@@ -13,7 +14,8 @@ class DescriptionPage extends Page {
     private static shoePictures: string[];
     static TextObject = {
         MainTitle: 'Description of the shoes',
-    };
+    };*/
+    private item: IPrototypeItem;
 
     constructor(id: string, shoe: IPrototypeItem) {
         super(id);
