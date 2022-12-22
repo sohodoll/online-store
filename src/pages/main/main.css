@@ -13,6 +13,7 @@
     align-items: center;
     border: solid 1px #c5c5c5;
     background: #fff;
+    height: 263px;
 }
 
 .main__item:hover .main__item_btn-collection {
