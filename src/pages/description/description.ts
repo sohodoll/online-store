@@ -1,21 +1,19 @@
 import { IPrototypeItem } from '../templates/items';
 import Page from '../templates/page';
-import shoes from '../../app/db/shoes';
-import { IPrototypeItem } from '../../app/items';
 
 class DescriptionPage extends Page {
-    private static shoeBrand: string;
-    private static shoeName: string;
-    private static shoeDescription: string;
-    private static shoePrice: string;
-    private static shoeStock: string;
-    private static shoeCategory: string;
-    private static shoeThumbnail: string;
-    private static shoePictures: string[];
+    static shoeBrand: string;
+    static shoeName: string;
+    static shoeDescription: string;
+    static shoePrice: string;
+    static shoeStock: string;
+    static shoeCategory: string;
+    static shoeThumbnail: string;
+    static shoePictures: string[];
     static TextObject = {
         MainTitle: 'Description of the shoes',
-    };*/
-    private item: IPrototypeItem;
+    };
+    static item: IPrototypeItem;
 
     constructor(id: string, shoe: IPrototypeItem) {
         super(id);
@@ -30,8 +28,6 @@ class DescriptionPage extends Page {
     }
 
     render() {
-        const title = this.createTitle(DescriptionPage.TextObject.MainTitle);
-        this.container.appendChild(title);
         this.container.innerHTML = `<div class="description__container">
         <div class="description__left">
             <div class="description__highlights">
@@ -78,7 +74,7 @@ class DescriptionPage extends Page {
     }
 
     listen() {
-        let highlightImage = <HTMLImageElement>document.querySelector('.description__image');
+        const highlightImage = <HTMLImageElement>document.querySelector('.description__image');
         const smallerImages = Array.from(document.querySelectorAll('.image-choice')) as HTMLImageElement[];
         console.log(smallerImages);
         smallerImages.forEach((image) => {

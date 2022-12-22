@@ -1,4 +1,4 @@
-import { IPrototypeItem } from '../items';
+import { IPrototypeItem } from '../pages/templates/items';
 
 const shoes: IPrototypeItem[] = [
     {

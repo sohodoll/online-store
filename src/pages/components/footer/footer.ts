@@ -1,4 +1,4 @@
-import { PageIDs } from '../../../app';
+// import { PageIDs } from '../../../app';
 
 export default function Footer(): HTMLElement {
     const footer: HTMLElement = document.createElement('footer');
