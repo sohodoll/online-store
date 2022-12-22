@@ -9,11 +9,6 @@
     --extra: #dddbf1;
 }
 
-html {
-    font-family: 'Roboto', sans-serif;
-    font-size: 14px;
-}
-
 .main__wrapper {
     display: flex;
     justify-content: center;

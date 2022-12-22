@@ -15,6 +15,11 @@
     --extra: #dddbf1;
 }
 
+html {
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+}
+
 body {
     background-color: #f3f3f3;
     background-image: url(./assets/png/background-img.png);
