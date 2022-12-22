@@ -1,4 +1,4 @@
-import ItemCart from '../../app/pages/itemCart/itemCart';
+import ItemCart from '../components/itemCart/itemCart';
 import Page from '../templates/page';
 
 class CartPage extends Page {
@@ -22,8 +22,8 @@ class CartPage extends Page {
                 this.container.appendChild(el.createHTMLElement());
             });
         }
-            //this.createHTML(CartPage.TextObject.MainTitle);
-         return this.container;
+        //this.createHTML(CartPage.TextObject.MainTitle);
+        return this.container;
     }
 }
 

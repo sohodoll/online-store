@@ -5,8 +5,7 @@ abstract class Page {
 
     constructor(id: string) {
         this.container = document.createElement('div');
-        if (id === '')
-            id = 'main';
+        if (id === '') id = 'main';
         this.container.className = `${id}-wrapper wrapper`;
         this.container.id = id;
         this.mainHTML = <HTMLElement>document.querySelector('#main');

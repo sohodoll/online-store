@@ -10,7 +10,7 @@ class ErrorPage extends Page {
                         <img class="error404__img" src="../../../assets/gif/error404.gif" alt="404"/>
                       </div>
         `;
-        
+
         this.createHTML(html);
         return this.container;
     }

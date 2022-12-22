@@ -5,9 +5,7 @@ class ItemCart {
     thumbnail: string;
     amount: number;
     price: number;
-    constructor(id: number, name: string, brand: string,
-        thumbnail: string, amount: number, price: number
-    ) {
+    constructor(id: number, name: string, brand: string, thumbnail: string, amount: number, price: number) {
         this.id = id;
         this.name = name;
         this.brand = brand;
@@ -21,8 +19,7 @@ class ItemCart {
     }
 
     delAmount(): void {
-        if (this.amount > 0)
-            this.amount--;
+        if (this.amount > 0) this.amount--;
     }
 
     getAmount(): number {
