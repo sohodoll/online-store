@@ -1,11 +1,11 @@
 @import url('./reset.css');
 @import url('./pages/components/footer/footer.css');
 @import url('./pages/components/header/header.css');
-@import url('./app/pages/header/header.css');
-@import url('./app/pages/main/main.css');
-@import url('./app/pages/error404/error404.css');
-@import url('./app/pages/footer/footer.css');
-@import url('.//pages/description/description.css');
+@import url('./pages/components/header/header.css');
+@import url('./pages/main/main.css');
+@import url('./pages/error404/error404.css');
+@import url('./pages/components/footer/footer.css');
+@import url('./pages/description/description.css');
 
 :root {
     --main: #655588;
