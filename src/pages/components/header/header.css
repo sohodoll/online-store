@@ -1,7 +1,8 @@
 .header-wrapper {
     display: flex;
     justify-content: space-between;
-    align-items: center;    
+    align-items: center;
+    box-shadow: 0 0 0 var(--main), 0 0 0 var(--main), 0 1px 4px var(--main);
 }
 
 .header__logo-img,

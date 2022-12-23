@@ -16,6 +16,10 @@
     height: 263px;
 }
 
+.main__item:hover {
+    box-shadow: 0 0 4px var(--main);
+}
+
 .main__item:hover .main__item_btn-collection {
     display: flex;
 }
@@ -59,7 +63,7 @@
 }
 
 .main__item-btn {
-    background-color: var(--lightaccent); /*#e32526;*/
+    background-color: var(--lightaccent);
     border: none;
     color: var(--main);
     font-size: 20px;
@@ -68,7 +72,7 @@
 }
 
     .main__item-btn:hover {
-        background-color: var(--accent); /*#cc2223;*/
+        background-color: var(--accent);
         color: #fff;
     }
 

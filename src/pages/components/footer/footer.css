@@ -5,6 +5,8 @@
     margin: 10px auto;
     width: 100%;
     padding: 0 5%;
+    box-shadow: 0 -2px 4px var(--main);
+    z-index: 1;
 }
 
 .footer__author {
@@ -20,7 +22,6 @@
     cursor: pointer;
     font-size: 24px;
     line-height: 30px;
-    text-shadow: 0 0 4px #000;
 }
 
 .footer__author_github_link {
@@ -31,9 +32,9 @@
     transition: transform .3s linear;
 }
 
-    .footer__author_github_link:hover {
-        transform: scale(1.1);
-    }
+.footer__author_github_link:hover {
+    transform: scale(1.1);
+}
 
 .footer__author_github_img {
     width: 56px;
