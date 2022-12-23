@@ -34,7 +34,7 @@ class DescriptionPage extends Page {
                 <div class="bread__separator">>></div>
                 <div class="bread__type bread__item">Shoes</div>
                 <div class="bread__separator ">>></div>
-                <div class="bread__name bread__item">Adistar</div>
+                <div class="bread__name bread__item">${DescriptionPage.shoeName}</div>
             </div>
         <div class="description__container">
         <div class="description__left">
