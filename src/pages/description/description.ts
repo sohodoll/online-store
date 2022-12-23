@@ -28,7 +28,15 @@ class DescriptionPage extends Page {
     }
 
     render() {
-        this.container.innerHTML = `<div class="description__container">
+        this.container.innerHTML = `
+        <div class="description__bread bread">
+        <div class="bread__store bread__item"><a href="/">Store</a></div>
+                <div class="bread__separator">>></div>
+                <div class="bread__type bread__item">Shoes</div>
+                <div class="bread__separator ">>></div>
+                <div class="bread__name bread__item">Adistar</div>
+            </div>
+        <div class="description__container">
         <div class="description__left">
             <div class="description__highlights">
                 <img class="description__image" src="${DescriptionPage.shoeThumbnail}" alt="${DescriptionPage.shoeName}" />
