@@ -43,6 +43,10 @@
     line-height: 26px;
 }
 
+.main__item-price::before {
+    content: 'Price: $';
+}
+
 .main__item-price {
     color: #870101;
     font-size: 18px;

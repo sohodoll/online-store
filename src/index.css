@@ -9,10 +9,14 @@
 :root {
     --main: #655588;
     --accent: #e77b42;
+    --accent50: #e77b42b5;
     --darkmain: #42395a;
     --lightaccent: #ffbd32;
     --extra: #dddbf1;
     --azure: #00a8cf;
+    --darkgray: darkgray;
+    --button-disable: darkgray;
+    --button-enable: #ffbd32;
 }
 
 html {

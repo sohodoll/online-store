@@ -56,7 +56,7 @@ function createCartItemFromMain(item: IPrototypeItem): HTMLDivElement {
     elemName.className = 'main__item-name';
     elemName.textContent = `${item.brand} ${item.name}`;
     elemPrice.className = 'main__item-price';
-    elemPrice.textContent = `Price: $${item.price.toString()}`;
+    elemPrice.textContent = `${item.price.toString()}`;
 
     elemTitle.appendChild(elemName); //Name
     elemTitle.appendChild(elemPrice); //Price
