@@ -9,11 +9,10 @@ export default function Header(): HTMLElement {
                 <a href="#${PageIDs.MainPage}" ><img class="header__logo-img" src="./assets/png/store-logo.png" alt="Online Store" /></a>
             </div>
             <div class="header__total">
-                <a href="#${PageIDs.DescriptionPage}" ><span class="header__total-title">Total:</span></a>
                 <span class="header__total-price">0</span>
             </div>
             <div class="header__cart">
-                <span class="header__cart-title">Cart:</span>
+                <!--<span class="header__cart-title">Cart:</span>-->
                 <span class="header__cart-count">0</span>
                 <a href="#${PageIDs.CartPage}"><img class="header__cart-img" src="./assets/png/cart.png" alt="Cart" /></a>
             </div>
