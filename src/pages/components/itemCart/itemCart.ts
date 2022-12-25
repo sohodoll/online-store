@@ -333,4 +333,4 @@ class ItemCart {
     }
 }
 
-export { ItemCart, createReceipt };
+export { ItemCart, createReceipt, appendChildElements };

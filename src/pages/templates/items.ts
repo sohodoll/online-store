@@ -1,3 +1,6 @@
+import { appendChildElements } from '../components/itemCart/itemCart';
+import getBrandLogo from './brandsLogo';
+
 interface IPrototypeItem {
     id: number;
     brand: string;
@@ -35,6 +38,7 @@ class Item {
 
 function createCartItemFromMain(item: IPrototypeItem): HTMLDivElement {
     const elem: HTMLDivElement = document.createElement('div');
+    const brandLogo: HTMLDivElement = document.createElement('div');
     const elemTumb: HTMLImageElement = document.createElement('img');
     const elemTitle: HTMLDivElement = document.createElement('div');
     const elemName: HTMLParagraphElement = document.createElement('p');
@@ -42,9 +46,15 @@ function createCartItemFromMain(item: IPrototypeItem): HTMLDivElement {
     const elemButtons: HTMLDivElement = document.createElement('div');
     const elemBtnView: HTMLButtonElement = document.createElement('button');
     const elemBtnToCart: HTMLButtonElement = document.createElement('button');
-    
+
+    //const logoBrands = brandsLogo;
+
     elem.className = 'main__item';
     elem.id = `main__item_${item.id}`;
+
+    //Brand Logo
+    brandLogo.className = 'main__item-brand-logo';
+    brandLogo.innerHTML = getBrandLogo(item.brand.toLowerCase());
 
     //Tumbnail
     elemTumb.className = 'main__item-tumb';
@@ -58,8 +68,7 @@ function createCartItemFromMain(item: IPrototypeItem): HTMLDivElement {
     elemPrice.className = 'main__item-price';
     elemPrice.textContent = `${item.price.toString()}`;
 
-    elemTitle.appendChild(elemName); //Name
-    elemTitle.appendChild(elemPrice); //Price
+    appendChildElements(elemTitle, [elemName, elemPrice]) //Name and Price
 
     //Buttons
     elemButtons.className = 'main__item_btn-collection';
@@ -112,13 +121,10 @@ m-236 -171 c31 -31 11 -84 -33 -84 -16 0 -41 30 -41 50 0 22 25 50 45 50 7 0
 </g>
 </svg>`;
 
-    elemButtons.appendChild(elemBtnView);
-    elemButtons.appendChild(elemBtnToCart);
+    appendChildElements(elemButtons, [elemBtnView, elemBtnToCart]);
     //------------
 
-    elem.appendChild(elemTumb); //Tumbnail
-    elem.appendChild(elemTitle); //Title
-    elem.appendChild(elemButtons); //Button View
+    appendChildElements(elem, [brandLogo, elemTumb, elemTitle, elemButtons]); //Brand Logo, Tumbnail, Title and Button View
     return elem;
 }
 //}

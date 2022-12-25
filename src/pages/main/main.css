@@ -24,6 +24,24 @@
     display: flex;
 }
 
+.main__item-brand-logo {
+    position: absolute;
+    width: 70px;
+    height: 30px;
+    right: 10px;
+    top: 10px;
+}
+
+.main__item-brand-logo svg {
+    width: 100%;
+    height: 100%;
+    fill: #000;
+}
+
+.main__item-brand-logo:hover svg {
+    fill: var(--accent);
+}
+
 .main__item-tumb {
     object-fit: contain;
     width: 200px;
