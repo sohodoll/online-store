@@ -6,7 +6,7 @@ import DescriptionPage from './pages/description/description';
 import ErrorPage from './pages/error404/error404';
 import Header from './pages/components/header/header';
 import Footer from './pages/components/footer/footer';
-import ItemCart from './pages/components/itemCart/itemCart';
+import { ItemCart } from './pages/components/itemCart/itemCart';
 import { IPrototypeItem } from './pages/templates/items';
 import shoes from './db/shoes';
 
@@ -22,18 +22,20 @@ export const enum PageIDs {
     ErrorPage = 'error404',
 }
 
-function updateCartAmount(arr: ItemCart[]): void {
+function updateCartAmount(/*arr: ItemCart[]*/): void {
     const headerCartCount: HTMLImageElement = <HTMLImageElement>document.querySelector('.header__cart-count');
-    headerCartCount.textContent = arr.length.toString();
+    //headerCartCount.textContent = arr.length.toString();
+    headerCartCount.textContent = arrCart.length.toString();
 }
 
-function updateCartPrice(arr: ItemCart[]): void {
+function updateCartPrice(/*arr: ItemCart[]*/): void {
     const headerTotalPrice: HTMLImageElement = <HTMLImageElement>document.querySelector('.header__total-price');
     let total = 0;
-    arr.forEach((el) => {
+    //arr.forEach((el) => {
+    arrCart.forEach((el) => {
         total += el.getTotalPrice();
     });
-    headerTotalPrice.textContent = `$${total.toString()}`;
+    headerTotalPrice.textContent = `${total.toString()}`;
 }
 
 function viewButtonAddClick(): void {
@@ -48,6 +50,13 @@ function viewButtonAddClick(): void {
     });
 }
 
+function updateHeader(): void {
+    /*updateCartAmount(arrCart);
+    updateCartPrice(arrCart);*/
+    updateCartAmount();
+    updateCartPrice();
+}
+
 function cartButtonAddClick(): void {
     const itemsAddCartButton: NodeList = <NodeList>document.querySelectorAll('.btn-to-cart');
 
@@ -59,8 +68,10 @@ function cartButtonAddClick(): void {
                 clickItem.id,
                 clickItem.name,
                 clickItem.brand,
+                clickItem.category,
                 clickItem.thumbnail,
                 1,
+                clickItem.stock,
                 clickItem.price
             );
             if (arrCart.length === 0) {
@@ -73,10 +84,15 @@ function cartButtonAddClick(): void {
                     arrCart.push(cartItem);
                 }
             }
-            updateCartAmount(arrCart);
-            updateCartPrice(arrCart);
+            updateHeader();
         });
     });
+}
+
+function removeItemFromCart(id: number): void {
+    arrCart.splice(id, 1);
+    updateHeader();
+    App.renderNewPage('cart');
 }
 
 class App {
@@ -115,6 +131,16 @@ class App {
             if (page instanceof MainPage) {
                 viewButtonAddClick();
                 cartButtonAddClick();
+            }
+            if (page instanceof CartPage) {
+                const buttonsItemRemove: NodeList = document.querySelectorAll('.cart__item-remove');
+                buttonsItemRemove.forEach((button) => {
+                    const id: number = parseInt((button as HTMLButtonElement).value);
+                    button.addEventListener('click', () => {
+                        removeItemFromCart(id);
+//                        this.renderNewPage(pageId);
+                    });
+                });
             }
         }
     }
@@ -157,4 +183,4 @@ class App {
 
 // }
 
-export default App;
+export { App, removeItemFromCart, updateHeader };
