@@ -5,7 +5,7 @@ const promoList: Promocode[] = [];
 promoList.push(new Promocode(promoList.length, 'rs', 10));
 promoList.push(new Promocode(promoList.length, 'epm', 15));
 
-function appendChildElements(parentElem: HTMLDivElement, arr: HTMLElement[]): void {
+function appendChildElements(parentElem: HTMLElement, arr: HTMLElement[]): void {
     arr.forEach((el) => {
         parentElem.appendChild(el);
     });
