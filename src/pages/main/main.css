@@ -26,20 +26,12 @@
 
 .main__item-brand-logo {
     position: absolute;
+    object-fit: contain;
+    object-position: right;
     width: 70px;
     height: 30px;
     right: 10px;
     top: 10px;
-}
-
-.main__item-brand-logo svg {
-    width: 100%;
-    height: 100%;
-    fill: #000;
-}
-
-.main__item-brand-logo:hover svg {
-    fill: var(--accent);
 }
 
 .main__item-tumb {

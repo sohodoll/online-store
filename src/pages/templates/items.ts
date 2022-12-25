@@ -1,5 +1,4 @@
 import { appendChildElements } from '../components/itemCart/itemCart';
-import getBrandLogo from './brandsLogo';
 
 interface IPrototypeItem {
     id: number;
@@ -38,7 +37,7 @@ class Item {
 
 function createCartItemFromMain(item: IPrototypeItem): HTMLDivElement {
     const elem: HTMLDivElement = document.createElement('div');
-    const brandLogo: HTMLDivElement = document.createElement('div');
+    const brandLogo: HTMLImageElement = document.createElement('img');
     const elemTumb: HTMLImageElement = document.createElement('img');
     const elemTitle: HTMLDivElement = document.createElement('div');
     const elemName: HTMLParagraphElement = document.createElement('p');
@@ -54,7 +53,7 @@ function createCartItemFromMain(item: IPrototypeItem): HTMLDivElement {
 
     //Brand Logo
     brandLogo.className = 'main__item-brand-logo';
-    brandLogo.innerHTML = getBrandLogo(item.brand.toLowerCase());
+    brandLogo.src = `./assets/svg/${item.brand.toLowerCase()}.svg`;
 
     //Tumbnail
     elemTumb.className = 'main__item-tumb';
