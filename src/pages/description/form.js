@@ -18,11 +18,13 @@ const cardValidField = document.querySelector('#card-valid');
 const cardCVVField = document.querySelector('#card-cvv');
 const submitButton = document.querySelector('.submit-button');
 
-formElement.addEventListener('input', (event) => {
-    event.preventDefault();
-    console.log('input');
-    validateAllInputs();
-});
+const inputs = [];
+inputs.push(nameField, phoneField, addressField, emailField, cardNumField, cardValidField, cardCVVField);
+
+// formElement.addEventListener('input', (event) => {
+//     event.preventDefault();
+//     validateAllInputs();
+// });
 
 submitButton.addEventListener('click', (event) => {
     event.preventDefault();
@@ -32,7 +34,6 @@ const setErrorMessage = (element, message) => {
     const inputControl = element.parentElement;
     const input = inputControl.querySelector('input');
     const errorDisplay = inputControl.querySelector('.error');
-    console.log('error set');
     errorDisplay.innerText = message;
     input.classList.add('err');
     input.classList.remove('success');
@@ -42,44 +43,64 @@ const setSuccess = (element) => {
     const inputControl = element.parentElement;
     const input = inputControl.querySelector('input');
     const errorDisplay = inputControl.querySelector('.error');
-    console.log('success!!!');
     errorDisplay.innerText = '';
     input.classList.add('success');
     input.classList.remove('err');
 };
 
-const validateName = (value) => {
+const validateName = () => {
+    const value = nameField.value.trim();
     const currName = value.split(' ');
+    const error = setErrorMessage(nameField, 'Username required or wrong format');
+    if (value === '') {
+        error;
+    }
     if (Boolean(value.match(/\d/))) {
-        setErrorMessage(nameField, 'Username Required');
-    } else {
+        error;
+    } else if (currName[0] && currName[1]) {
         if (currName[0]) {
             if (currName[0].length < 3) {
-                setErrorMessage(nameField, 'Username Required');
+                error;
             }
         }
         if (currName[1]) {
             if (currName[1].length < 3) {
-                setErrorMessage(nameField, 'Username Required');
+                error;
             }
         }
         if (currName[0] && currName[1]) {
-            if (currName[0].length >= 3 && currName[1].length >= 3) setSuccess(nameField);
+            if (currName[0].length >= 3 && currName[1].length >= 3) {
+                setSuccess(nameField);
+            }
         }
     }
 };
 
+const validatePhone = () => {
+    const value = phoneField.value.trim();
+    const sliced = value.slice(1);
+    console.log(sliced);
+    // const currPhone = value.split('');
+    const error = setErrorMessage(phoneField, 'Phone required or wrong format');
+    const check = /^\d{9,}$/;
+    if (sliced.match(check) && value[0] === '+') {
+        setSuccess(phoneField);
+    } else {
+        error;
+    }
+};
+
 const validateAllInputs = () => {
-    const nameValue = nameField.value.trim();
     const phoneValue = phoneField.value.trim();
     const addressValue = addressField.value.trim();
     const emailValue = emailField.value.trim();
     const cardNumValue = cardNumField.value;
     const cardValidValue = cardValidField.value.trim();
     const cardCVVValue = cardCVVField.value;
-    console.log(nameValue, phoneValue, addressValue, emailValue, cardNumValue, cardValidValue, cardCVVValue);
 
     validateName(nameValue);
+
+    // validatePhone(phoneValue);
 
     // if (nameValue === '') {
     //     setErrorMessage(nameField, 'Username Required');
@@ -87,6 +108,9 @@ const validateAllInputs = () => {
     //     setSuccess(nameField);
     // }
 };
+
+nameField.addEventListener('input', validateName);
+phoneField.addEventListener('input', validatePhone);
 
 // console.log(
 //     formElement,
