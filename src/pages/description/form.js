@@ -116,6 +116,19 @@ const validateEmail = () => {
     }
 };
 
+const validateCardNum = () => {
+    let value = cardNumField.value.trim();
+    value = Number(value);
+    const error = setErrorMessage(cardNumField, 'Card number required or wrong format');
+    if (String(value).length) {
+        if (String(value).length >= 16) {
+            setSuccess(cardNumField);
+        } else {
+            error;
+        }
+    }
+};
+
 const validateAllInputs = () => {
     const phoneValue = phoneField.value.trim();
     const addressValue = addressField.value.trim();
@@ -139,6 +152,7 @@ nameField.addEventListener('input', validateName);
 phoneField.addEventListener('input', validatePhone);
 addressField.addEventListener('input', validateAddress);
 emailField.addEventListener('input', validateEmail);
+cardNumField.addEventListener('input', validateCardNum);
 
 // console.log(
 //     formElement,
