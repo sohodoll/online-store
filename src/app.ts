@@ -45,7 +45,7 @@ function viewButtonAddClick(): void {
         el.addEventListener('click', () => {
             const itemID: number = parseInt((el as HTMLButtonElement).value);
             clickItem = <IPrototypeItem>shoes.find((el) => el.id === itemID);
-            document.location.href = '#description';
+            document.location.href = '#description' + `/${itemID}`;
         });
     });
 }
@@ -103,7 +103,9 @@ class App {
 
     private handleRouting() {
         window.addEventListener('hashchange', () => {
-            const hash = window.location.hash.slice(1);
+            const hash = window.location.hash.slice(1).split('/')[0];
+            const currentShoe = window.location.hash.slice(1).split('/')[1];
+            console.log(currentShoe);
             App.renderNewPage(hash);
         });
     }
@@ -116,7 +118,12 @@ class App {
         } else if (pageId === PageIDs.CartPage) {
             page = new CartPage(pageId, arrCart);
         } else if (pageId === PageIDs.DescriptionPage) {
+            const currentShoe = window.location.hash.slice(1).split('/')[1];
+            if (currentShoe) {
+                clickItem = <IPrototypeItem>shoes.find((el) => el.id === Number(currentShoe));
+            }
             page = new DescriptionPage(pageId, clickItem);
+            console.log(currentShoe);
             const Desc = new DescriptionPage(pageId, clickItem);
             setTimeout(() => {
                 Desc.listen();
@@ -152,7 +159,15 @@ class App {
 
     run() {
         App.container.prepend(this.header);
-        App.renderNewPage('');
+        if (window.location.hash === '' || window.location.hash === '#') {
+            App.renderNewPage('');
+        } else {
+            const hash = window.location.hash.slice(1).split('/')[0];
+            const currentShoe = window.location.hash.slice(1).split('/')[1];
+            console.log(currentShoe);
+            App.renderNewPage(hash);
+        }
+
         App.container.appendChild(this.footer);
         this.handleRouting();
 
