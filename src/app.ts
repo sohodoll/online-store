@@ -89,10 +89,20 @@ function cartButtonAddClick(): void {
     });
 }
 
+//Remove Item from Cart
 function removeItemFromCart(id: number): void {
     arrCart.splice(id, 1);
     updateHeader();
     App.renderNewPage('cart');
+}
+
+//Add Item To Cart
+function addItemToCart(itemID: number): void {
+    if (arrCart.find((el) => { el.id === itemID })) {
+        console.log('In Cart');
+    } else {
+        console.log('Not in Cart');
+    }
 }
 
 class App {
@@ -198,4 +208,4 @@ class App {
 
 // }
 
-export { App, removeItemFromCart, updateHeader };
+export { App, removeItemFromCart, updateHeader, addItemToCart };
