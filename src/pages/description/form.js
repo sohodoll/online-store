@@ -24,6 +24,10 @@ formElement.addEventListener('input', (event) => {
     validateAllInputs();
 });
 
+submitButton.addEventListener('click', (event) => {
+    event.preventDefault();
+});
+
 const setErrorMessage = (element, message) => {
     const inputControl = element.parentElement;
     const input = inputControl.querySelector('input');
@@ -46,19 +50,22 @@ const setSuccess = (element) => {
 
 const validateName = (value) => {
     const currName = value.split(' ');
-    console.log(currName, currName[0].length);
-    if (currName[0]) {
-        if (currName[0].length < 3) {
-            setErrorMessage(nameField, 'Username Required');
+    if (Boolean(value.match(/\d/))) {
+        setErrorMessage(nameField, 'Username Required');
+    } else {
+        if (currName[0]) {
+            if (currName[0].length < 3) {
+                setErrorMessage(nameField, 'Username Required');
+            }
         }
-    }
-    if (currName[1]) {
-        if (currName[1].length < 3) {
-            setErrorMessage(nameField, 'Username Required');
+        if (currName[1]) {
+            if (currName[1].length < 3) {
+                setErrorMessage(nameField, 'Username Required');
+            }
         }
-    }
-    if (currName[0] && currName[1]) {
-        if (currName[0].length >= 3 && currName[1].length >= 3) setSuccess(nameField);
+        if (currName[0] && currName[1]) {
+            if (currName[0].length >= 3 && currName[1].length >= 3) setSuccess(nameField);
+        }
     }
 };
 
