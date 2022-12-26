@@ -18,8 +18,8 @@ const cardValidField = document.querySelector('#card-valid');
 const cardCVVField = document.querySelector('#card-cvv');
 const submitButton = document.querySelector('.submit-button');
 
-const inputs = [];
-inputs.push(nameField, phoneField, addressField, emailField, cardNumField, cardValidField, cardCVVField);
+// const inputs = [];
+// inputs.push(nameField, phoneField, addressField, emailField, cardNumField, cardValidField, cardCVVField);
 
 // formElement.addEventListener('input', (event) => {
 //     event.preventDefault();
@@ -103,6 +103,19 @@ const validateAddress = () => {
     }
 };
 
+const validateEmail = () => {
+    const value = emailField.value.trim();
+    const valid =
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    const error = setErrorMessage(emailField, 'Email required or wrong format');
+
+    if (value.match(valid)) {
+        setSuccess(emailField);
+    } else {
+        error;
+    }
+};
+
 const validateAllInputs = () => {
     const phoneValue = phoneField.value.trim();
     const addressValue = addressField.value.trim();
@@ -125,6 +138,7 @@ const validateAllInputs = () => {
 nameField.addEventListener('input', validateName);
 phoneField.addEventListener('input', validatePhone);
 addressField.addEventListener('input', validateAddress);
+emailField.addEventListener('input', validateEmail);
 
 // console.log(
 //     formElement,
