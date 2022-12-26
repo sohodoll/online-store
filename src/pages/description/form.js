@@ -79,12 +79,25 @@ const validateName = () => {
 const validatePhone = () => {
     const value = phoneField.value.trim();
     const sliced = value.slice(1);
-    console.log(sliced);
-    // const currPhone = value.split('');
     const error = setErrorMessage(phoneField, 'Phone required or wrong format');
     const check = /^\d{9,}$/;
     if (sliced.match(check) && value[0] === '+') {
         setSuccess(phoneField);
+    } else {
+        error;
+    }
+};
+
+const validateAddress = () => {
+    const value = addressField.value.trim();
+    const currAddress = value.split(' ');
+    const error = setErrorMessage(addressField, 'Address required or wrong format');
+    if (currAddress[0] && currAddress[1] && currAddress[2]) {
+        if (currAddress[0].length < 5 || currAddress[1].length < 5 || currAddress[2].length < 5) {
+            error;
+        } else {
+            setSuccess(addressField);
+        }
     } else {
         error;
     }
@@ -111,6 +124,7 @@ const validateAllInputs = () => {
 
 nameField.addEventListener('input', validateName);
 phoneField.addEventListener('input', validatePhone);
+addressField.addEventListener('input', validateAddress);
 
 // console.log(
 //     formElement,
