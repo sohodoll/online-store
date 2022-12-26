@@ -17,6 +17,7 @@ const cardNumField = document.querySelector('#card-num');
 const cardValidField = document.querySelector('#card-valid');
 const cardCVVField = document.querySelector('#card-cvv');
 const submitButton = document.querySelector('.submit-button');
+const cardFiller = document.querySelector('#card-filler');
 
 // const inputs = [];
 // inputs.push(nameField, phoneField, addressField, emailField, cardNumField, cardValidField, cardCVVField);
@@ -118,10 +119,23 @@ const validateEmail = () => {
 
 const validateCardNum = () => {
     let value = cardNumField.value.trim();
+    const stringValue = String(value);
     value = Number(value);
     const error = setErrorMessage(cardNumField, 'Card number required or wrong format');
-    if (String(value).length) {
-        if (String(value).length >= 16) {
+    if (!stringValue.length) {
+        cardFiller.src = '../../assets/icons/card-filler.png';
+    }
+    if (stringValue.length) {
+        if (stringValue[0] === '4') {
+            cardFiller.src = '../../assets/icons/visa-logo-svg-vector.svg';
+        }
+        if (stringValue[0] === '5') {
+            cardFiller.src = '../../assets/icons/mastercard.png';
+        }
+        if (stringValue[0] === '6') {
+            cardFiller.src = '../../assets/icons/paypal.png';
+        }
+        if (stringValue.length >= 16) {
             setSuccess(cardNumField);
         } else {
             error;

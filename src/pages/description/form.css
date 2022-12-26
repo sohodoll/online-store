@@ -37,6 +37,24 @@
     height: 8px;
 }
 
+.card-num-input-control {
+    position: relative;
+}
+
+.card-num-input-control img {
+    width: 15%;
+    aspect-ratio: 3/2;
+    object-fit: contain;
+    position: absolute;
+    top: 25%;
+    right: 5%;
+}
+
+/* #card-num {
+    width: 80%;
+    align-self: flex-end;
+} */
+
 .input-control input:focus {
     outline: 0;
 }
