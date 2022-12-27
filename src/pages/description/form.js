@@ -31,6 +31,12 @@ submitButton.addEventListener('click', (event) => {
     event.preventDefault();
 });
 
+const validateIsNum = (evt) => {
+    if ((evt.which != 8 && evt.which != 0 && evt.which < 48) || evt.which > 57) {
+        evt.preventDefault();
+    }
+};
+
 const setErrorMessage = (element, message) => {
     const inputControl = element.parentElement;
     const input = inputControl.querySelector('input');
@@ -119,7 +125,11 @@ const validateEmail = () => {
 
 const validateValidDate = () => {
     const value = cardValidField.value;
-    const error = setErrorMessage(emailField, 'Expiration date required or wrong format');
+    const error = setErrorMessage(cardValidField, 'Expiration date required or wrong format');
+    const currValue = value.split('');
+    if (currValue[0] && currValue[1] && !currValue[2]) {
+        cardValidField.value = cardValidField.value + '/';
+    }
 };
 
 const validateCardNum = () => {
@@ -177,12 +187,17 @@ phoneField.addEventListener('input', validatePhone);
 addressField.addEventListener('input', validateAddress);
 emailField.addEventListener('input', validateEmail);
 cardNumField.addEventListener('input', validateCardNum);
-cardNumField.addEventListener('keypress', (evt) => {
-    if ((evt.which != 8 && evt.which != 0 && evt.which < 48) || evt.which > 57) {
-        evt.preventDefault();
+cardNumField.addEventListener('keypress', (event) => {
+    validateIsNum(event);
+});
+cardValidField.addEventListener('input', validateValidDate);
+cardValidField.addEventListener('keydown', (event) => {
+    validateIsNum(event);
+    console.log(event.key);
+    if (event.key === 'Backspace') {
+        cardValidField.value = '';
     }
 });
-
 // console.log(
 //     formElement,
 //     nameField,
