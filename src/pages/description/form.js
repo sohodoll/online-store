@@ -123,15 +123,6 @@ const validateEmail = () => {
     }
 };
 
-const validateValidDate = () => {
-    const value = cardValidField.value;
-    const error = setErrorMessage(cardValidField, 'Expiration date required or wrong format');
-    const currValue = value.split('');
-    if (currValue[0] && currValue[1] && !currValue[2]) {
-        cardValidField.value = cardValidField.value + '/';
-    }
-};
-
 const validateCardNum = () => {
     let value = cardNumField.value.trim();
     const stringValue = String(value);
@@ -163,23 +154,29 @@ const validateCardNum = () => {
     }
 };
 
-const validateAllInputs = () => {
-    const phoneValue = phoneField.value.trim();
-    const addressValue = addressField.value.trim();
-    const emailValue = emailField.value.trim();
-    const cardNumValue = cardNumField.value;
-    const cardValidValue = cardValidField.value.trim();
-    const cardCVVValue = cardCVVField.value;
+const validateValidDate = () => {
+    const value = cardValidField.value;
+    const error = setErrorMessage(cardValidField, 'Expiration date required or wrong format');
+    const currValue = value.split('');
+    if (currValue[0] && currValue[1] && !currValue[2]) {
+        cardValidField.value = cardValidField.value + '/';
+    }
+    if (currValue[0] && currValue[2] && currValue[3] && currValue[4]) {
+        if (currValue[0] + currValue[1] > 12 || (currValue[0] === '0' && currValue[1] === '0')) {
+            console.log('err');
+            error;
+        } else if (currValue[3] + currValue[4] > 31 || (currValue[3] === '0' && currValue[4] === '0')) {
+            error;
+        } else {
+            setSuccess(cardValidField);
+        }
 
-    validateName(nameValue);
-
-    // validatePhone(phoneValue);
-
-    // if (nameValue === '') {
-    //     setErrorMessage(nameField, 'Username Required');
-    // } else {
-    //     setSuccess(nameField);
-    // }
+        // if (currValue[2]) {
+        //     if (currValue[2] > 31 && currValue[2].length !== 2) {
+        //         error;
+        //     }
+        // }
+    }
 };
 
 nameField.addEventListener('input', validateName);
@@ -193,7 +190,7 @@ cardNumField.addEventListener('keypress', (event) => {
 cardValidField.addEventListener('input', validateValidDate);
 cardValidField.addEventListener('keydown', (event) => {
     validateIsNum(event);
-    console.log(event.key);
+    5;
     if (event.key === 'Backspace') {
         cardValidField.value = '';
     }
