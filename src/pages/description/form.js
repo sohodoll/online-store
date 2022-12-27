@@ -117,6 +117,11 @@ const validateEmail = () => {
     }
 };
 
+const validateValidDate = () => {
+    const value = cardValidField.value;
+    const error = setErrorMessage(emailField, 'Expiration date required or wrong format');
+};
+
 const validateCardNum = () => {
     let value = cardNumField.value.trim();
     const stringValue = String(value);
@@ -172,6 +177,11 @@ phoneField.addEventListener('input', validatePhone);
 addressField.addEventListener('input', validateAddress);
 emailField.addEventListener('input', validateEmail);
 cardNumField.addEventListener('input', validateCardNum);
+cardNumField.addEventListener('keypress', (evt) => {
+    if ((evt.which != 8 && evt.which != 0 && evt.which < 48) || evt.which > 57) {
+        evt.preventDefault();
+    }
+});
 
 // console.log(
 //     formElement,
