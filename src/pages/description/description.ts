@@ -1,20 +1,22 @@
 import { IPrototypeItem } from '../templates/items';
 import Page from '../templates/page';
-import { addItemToCart } from '../../app';
+import { addItemToCart, buyNow } from '../../app';
 
 class DescriptionPage extends Page {
-    private shoeBrand: string;
-    private shoeName: string;
-    private shoeDescription: string;
-    private shoePrice: string;
-    private shoeStock: string;
-    private shoeCategory: string;
-    private shoeThumbnail: string;
-    private shoePictures: string[];
-    private item: IPrototypeItem;
+    shoeId: number;
+    shoeBrand: string;
+    shoeName: string;
+    shoeDescription: string;
+    shoePrice: string;
+    shoeStock: string;
+    shoeCategory: string;
+    shoeThumbnail: string;
+    shoePictures: string[];
+    //private item: IPrototypeItem;
 
     constructor(id: string, shoe: IPrototypeItem) {
         super(id);
+        this.shoeId = shoe.id;
         this.shoeBrand = shoe.brand;
         this.shoeName = shoe.name;
         this.shoeDescription = shoe.description;
@@ -43,16 +45,16 @@ class DescriptionPage extends Page {
                     <div class="item__price">$<span class="item__price-number">${this.shoePrice}</span></div>
                 </div>
                 <div class="description__images">
-                            <div class="description__image-choice">
-                                <img class="image-choice" src="${this.shoePictures[0]}" alt="${this.shoeName}" />
-                            </div>
-                            <div class="description__image-choice">
-                                <img class="image-choice" src="${this.shoeThumbnail}" alt="${this.shoeName}" />
-                            </div>
-                            <div class="description__image-choice">
-                                <img class="image-choice" src="${this.shoePictures[1]}" alt="${this.shoeName}" />
-                            </div>
-                        </div>
+                    <div class="description__image-choice">
+                        <img class="image-choice" src="${this.shoeThumbnail}" alt="${this.shoeName}" />
+                    </div>
+                    <div class="description__image-choice">
+                        <img class="image-choice" src="${this.shoePictures[0]}" alt="${this.shoeName}" />
+                    </div>                            
+                    <div class="description__image-choice">
+                        <img class="image-choice" src="${this.shoePictures[1]}" alt="${this.shoeName}" />
+                    </div>
+                </div>
                 <div class="description__buttons">
                     <div class="description__button-buy-now">Buy Now</div>
                     <div class="description__button-add-cart">Add To Cart</div>
@@ -93,7 +95,11 @@ class DescriptionPage extends Page {
         const buttonBuyNow: HTMLDivElement = <HTMLDivElement>document.querySelector('.description__button-buy-now');
         const buttonAddCart: HTMLDivElement = <HTMLDivElement>document.querySelector('.description__button-add-cart');
         buttonBuyNow.addEventListener('click', () => {
-            addItemToCart(this.)
+            buyNow(this.shoeId);
+        });
+
+        buttonAddCart.addEventListener('click', () => {
+            addItemToCart(this.shoeId);
         });
         console.log(highlightImage);
     }

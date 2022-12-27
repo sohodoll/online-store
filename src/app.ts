@@ -98,11 +98,19 @@ function removeItemFromCart(id: number): void {
 
 //Add Item To Cart
 function addItemToCart(itemID: number): void {
-    if (arrCart.find((el) => { el.id === itemID })) {
-        console.log('In Cart');
-    } else {
-        console.log('Not in Cart');
+    if (arrCart.length > 0) {
+        if (arrCart.find((el) => { el.id == itemID })) {
+            console.log(arrCart[0].id, arrCart.find((el) => { el.id === itemID }), 'id =', itemID, 'In Cart');
+        } else {
+            console.log(arrCart[0].id, arrCart.find((el) => { el.id === itemID }), 'id =', itemID, 'Not in Cart');
+        }
     }
+}
+
+//Buy Now
+function buyNow(itemID: number): void {
+    addItemToCart(itemID);
+    App.renderNewPage(PageIDs.CartPage);
 }
 
 class App {
@@ -208,4 +216,4 @@ class App {
 
 // }
 
-export { App, removeItemFromCart, updateHeader, addItemToCart };
+export { App, removeItemFromCart, updateHeader, addItemToCart, buyNow };
