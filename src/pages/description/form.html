@@ -50,7 +50,6 @@
                         type="text"
                         id="card-valid"
                         name="card-valid"
-                        maxlength="5"
                         placeholder="04/24"
                         onKeyPress="if(this.value.length==5) return false;"
                     />
@@ -58,7 +57,13 @@
                 </div>
                 <div class="input-control">
                     <label for="card-cvv">CVV</label>
-                    <input type="text" id="card-cvv" name="card-cvv" placeholder="717" />
+                    <input
+                        type="text"
+                        id="card-cvv"
+                        name="card-cvv"
+                        placeholder="717"
+                        onKeyPress="if(this.value.length==3) return false;"
+                    />
                     <div class="error"></div>
                 </div>
                 <button class="submit-button" type="submit">Submit</button>

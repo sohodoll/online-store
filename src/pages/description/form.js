@@ -19,17 +19,13 @@ const cardCVVField = document.querySelector('#card-cvv');
 const submitButton = document.querySelector('.submit-button');
 const cardFiller = document.querySelector('#card-filler');
 
-// const inputs = [];
-// inputs.push(nameField, phoneField, addressField, emailField, cardNumField, cardValidField, cardCVVField);
+const inputs = [];
+inputs.push(nameField, phoneField, addressField, emailField, cardNumField, cardValidField, cardCVVField);
 
 // formElement.addEventListener('input', (event) => {
 //     event.preventDefault();
 //     validateAllInputs();
 // });
-
-submitButton.addEventListener('click', (event) => {
-    event.preventDefault();
-});
 
 const validateIsNum = (evt) => {
     if ((evt.which != 8 && evt.which != 0 && evt.which < 48) || evt.which > 57) {
@@ -170,12 +166,16 @@ const validateValidDate = () => {
         } else {
             setSuccess(cardValidField);
         }
+    }
+};
 
-        // if (currValue[2]) {
-        //     if (currValue[2] > 31 && currValue[2].length !== 2) {
-        //         error;
-        //     }
-        // }
+const validateCVV = () => {
+    const value = cardCVVField.value;
+    const error = setErrorMessage(cardCVVField, 'CVV required or wrong format');
+    if (value.length < 3) {
+        error;
+    } else {
+        setSuccess(cardCVVField);
     }
 };
 
@@ -190,11 +190,46 @@ cardNumField.addEventListener('keypress', (event) => {
 cardValidField.addEventListener('input', validateValidDate);
 cardValidField.addEventListener('keydown', (event) => {
     validateIsNum(event);
-    5;
     if (event.key === 'Backspace') {
         cardValidField.value = '';
     }
 });
+cardCVVField.addEventListener('input', validateCVV);
+cardCVVField.addEventListener('keydown', (event) => {
+    validateIsNum(event);
+});
+
+const validateAllInputs = () => {
+    let isValid = false;
+    let classes = [];
+    let values = [];
+    inputs.forEach((input) => {
+        values.push(input.value);
+        classes.push(Array.from(input.classList).includes('err'));
+    });
+    if (classes.includes(true)) {
+        isValid = false;
+    } else {
+        if (!values.includes('')) isValid = true;
+    }
+    console.log(values);
+    return isValid;
+};
+
+const submitFrom = () => {
+    let isValid = validateAllInputs();
+    if (isValid) {
+        alert('Purchase completed! Emptying cart, redirecting to main...');
+    } else {
+        console.log('cannot do!');
+    }
+};
+
+submitButton.addEventListener('click', (event) => {
+    event.preventDefault();
+    submitFrom();
+});
+
 // console.log(
 //     formElement,
 //     nameField,
