@@ -1,5 +1,6 @@
 import { IPrototypeItem } from '../templates/items';
 import Page from '../templates/page';
+import { Form } from '../components/form/form';
 
 class DescriptionPage extends Page {
     static shoeBrand: string;
@@ -14,6 +15,7 @@ class DescriptionPage extends Page {
         MainTitle: 'Description of the shoes',
     };
     static item: IPrototypeItem;
+    static modal: Form = new Form();
 
     constructor(id: string, shoe: IPrototypeItem) {
         super(id);
@@ -93,6 +95,24 @@ class DescriptionPage extends Page {
             });
         });
         console.log(highlightImage);
+        const buyButton = <HTMLDivElement>document.querySelector('.description__buy');
+        buyButton.addEventListener('click', () => {
+            this.renderModal();
+            const description = <HTMLFormElement>document.querySelector('.description-wrapper');
+            description.classList.add('low-opacity');
+            setTimeout(() => {
+                DescriptionPage.modal.listen();
+            }, 200);
+        });
+    }
+
+    renderModal() {
+        const modalHTML = DescriptionPage.modal.render();
+        const container = <HTMLElement>document.querySelector('main');
+        const modalDiv = <HTMLDivElement>document.createElement('div');
+        modalDiv.classList.add('container');
+        modalDiv.innerHTML = modalHTML;
+        container.appendChild(modalDiv);
     }
 }
 

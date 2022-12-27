@@ -5,6 +5,7 @@
 @import url('./pages/main/main.css');
 @import url('./pages/error404/error404.css');
 @import url('./pages/description/description.css');
+@import url('./pages/components/form/form.css');
 
 :root {
     --main: #655588;

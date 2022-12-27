@@ -1,16 +1,28 @@
+.container {
+    top: 5%;
+    left: 40%;
+    position: absolute;
+}
+
 #form {
-    width: 300px;
-    margin: 20vh auto 0 auto;
+    width: 400px;
+    margin: 0 auto;
     padding: 20px;
     background-color: whitesmoke;
-    border-radius: 4px;
-    font-size: 12px;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    opacity: 100%;
+    box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
 }
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
+}
+
+.low-opacity {
+    opacity: 10%;
 }
 
 #form h1 {
@@ -31,16 +43,17 @@ input::-webkit-inner-spin-button {
 .input-control {
     display: flex;
     flex-direction: column;
+    gap: 2px;
 }
 
 .input-control input {
     border: 2px solid rgba(128, 128, 128, 0.196);
     border-radius: 4px;
     display: block;
-    font-size: 12px;
+    font-size: 1.2rem;
     padding: 10px;
     width: 90%;
-    height: 8px;
+    height: 45px;
 }
 
 .card-num-input-control {
@@ -52,8 +65,8 @@ input::-webkit-inner-spin-button {
     aspect-ratio: 3/2;
     object-fit: contain;
     position: absolute;
-    top: 25%;
-    right: 5%;
+    top: 32%;
+    right: 11%;
 }
 
 /* #card-num {
@@ -77,6 +90,6 @@ input::-webkit-inner-spin-button {
 
 .input-control .error {
     color: red;
-    font-size: 9px;
+    font-size: 0.8rem;
     height: 13px;
 }
