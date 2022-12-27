@@ -121,6 +121,7 @@ const validateCardNum = () => {
     let value = cardNumField.value.trim();
     const stringValue = String(value);
     value = Number(value);
+    let isNum = /^\d+$/.test(stringValue);
     const error = setErrorMessage(cardNumField, 'Card number required or wrong format');
     if (!stringValue.length) {
         cardFiller.src = '../../assets/icons/card-filler.png';
@@ -135,8 +136,12 @@ const validateCardNum = () => {
         if (stringValue[0] === '6') {
             cardFiller.src = '../../assets/icons/paypal.png';
         }
-        if (stringValue.length >= 16) {
-            setSuccess(cardNumField);
+        if (stringValue.length === 16) {
+            if (!isNum) {
+                error;
+            } else {
+                setSuccess(cardNumField);
+            }
         } else {
             error;
         }
