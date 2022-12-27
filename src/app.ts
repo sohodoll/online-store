@@ -57,35 +57,37 @@ function updateHeader(): void {
     updateCartPrice();
 }
 
+function addToCart(el: Node): void {
+    const itemID: number = parseInt((el as HTMLButtonElement).value);
+    const clickItem: IPrototypeItem = <IPrototypeItem>shoes.find((el) => el.id === itemID);
+    const cartItem: ItemCart = new ItemCart(
+        clickItem.id,
+        clickItem.name,
+        clickItem.brand,
+        clickItem.category,
+        clickItem.thumbnail,
+        1,
+        clickItem.stock,
+        clickItem.price
+    );
+    if (arrCart.length === 0) {
+        arrCart.push(cartItem);
+    } else {
+        const findElem: ItemCart | undefined = arrCart.find((el) => el.id === itemID);
+        if (findElem !== undefined) {
+            findElem.addAmount();
+        } else {
+            arrCart.push(cartItem);
+        }
+    }
+    updateHeader();
+}
+
 function cartButtonAddClick(): void {
     const itemsAddCartButton: NodeList = <NodeList>document.querySelectorAll('.btn-to-cart');
 
     itemsAddCartButton.forEach((el) => {
-        el.addEventListener('click', () => {
-            const itemID: number = parseInt((el as HTMLButtonElement).value);
-            const clickItem: IPrototypeItem = <IPrototypeItem>shoes.find((el) => el.id === itemID);
-            const cartItem: ItemCart = new ItemCart(
-                clickItem.id,
-                clickItem.name,
-                clickItem.brand,
-                clickItem.category,
-                clickItem.thumbnail,
-                1,
-                clickItem.stock,
-                clickItem.price
-            );
-            if (arrCart.length === 0) {
-                arrCart.push(cartItem);
-            } else {
-                const findElem: ItemCart | undefined = arrCart.find((el) => el.id === itemID);
-                if (findElem !== undefined) {
-                    findElem.addAmount();
-                } else {
-                    arrCart.push(cartItem);
-                }
-            }
-            updateHeader();
-        });
+        el.addEventListener('click', () => { addToCart(el) });
     });
 }
 
@@ -96,21 +98,42 @@ function removeItemFromCart(id: number): void {
     App.renderNewPage('cart');
 }
 
+function shoesImportToItemCart(shoe: IPrototypeItem): ItemCart {
+    const newItemCart: ItemCart = new ItemCart(
+        shoe.id, shoe.name, shoe.brand, shoe.category, shoe.thumbnail, 1, shoe.stock, shoe.price
+    );
+    return newItemCart;
+}
+
 //Add Item To Cart
 function addItemToCart(itemID: number): void {
-    if (arrCart.length > 0) {
-        if (arrCart.find((el) => { el.id == itemID })) {
-            console.log(arrCart[0].id, arrCart.find((el) => { el.id === itemID }), 'id =', itemID, 'In Cart');
-        } else {
-            console.log(arrCart[0].id, arrCart.find((el) => { el.id === itemID }), 'id =', itemID, 'Not in Cart');
-        }
+    const findIndex = arrCart.findIndex((el) => el.id === itemID);
+    if (findIndex < 0) {
+        arrCart.push(shoesImportToItemCart(shoes[itemID - 1]));        
+    } else {
+        arrCart[findIndex].addAmount();
     }
+    updateHeader();
+    App.renderNewPage(PageIDs.CartPage);
+
+    /*if (arrCart.length > 0) {
+        if (arrCart.find((el) => el.id === itemID)) {
+            const findIndex = arrCart.findIndex((el) => el.id === itemID);
+
+        } else { //if not in cart
+            arrCart.push(shoesImportToItemCart(shoes[itemID - 1]));
+            App.renderNewPage(PageIDs.CartPage);
+        }
+    } else { //if cart is empty
+        arrCart.push(shoesImportToItemCart(shoes[itemID - 1]));
+        App.renderNewPage(PageIDs.CartPage);
+    }*/
 }
 
 //Buy Now
 function buyNow(itemID: number): void {
     addItemToCart(itemID);
-    App.renderNewPage(PageIDs.CartPage);
+    //App.renderNewPage(PageIDs.CartPage);
 }
 
 class App {
@@ -141,11 +164,11 @@ class App {
                 clickItem = <IPrototypeItem>shoes.find((el) => el.id === Number(currentShoe));
             }
             page = new DescriptionPage(pageId, clickItem);
-            console.log(currentShoe);
+            console.log(currentShoe);/*
             const Desc = new DescriptionPage(pageId, clickItem);
             setTimeout(() => {
                 Desc.listen();
-            }, 500);
+            }, 500);*/
         } else {
             page = new ErrorPage(PageIDs.ErrorPage);
         }

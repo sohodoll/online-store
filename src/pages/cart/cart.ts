@@ -55,6 +55,8 @@ class CartPage extends Page {
         super(id);
         this.arrCart = arrayItemCart;
     }
+
+
     /*
     removeButton(ID: number): void {
         this.arrCart.splice(ID - 1, 1);
