@@ -285,14 +285,14 @@ class ItemCart {
                 updateHeader();
             }
         });
-        
-        itemAmount.className = 'cart__item-amount';
-        itemAmount.id = `item-${this.id.toString()}`;
-        itemAmount.readOnly = true;
-        itemAmount.min = '0';
-        itemAmount.max = this.limit.toString();
+
         itemAmount.type = 'number';
-        itemAmount.value = this.amount.toString();
+        itemAmount.className = 'cart__item-amount';
+        itemAmount.id = `item-${this.id.toString()}`;        
+        itemAmount.min = '1';
+        itemAmount.max = `${this.limit}`;
+        itemAmount.value = `${this.amount}`;
+        itemAmount.readOnly = true;
 
         itemAmountUp.className = 'cart__item-amount-up btn';
         itemAmountUp.value = this.id.toString();

@@ -57,9 +57,13 @@ function updateHeader(): void {
     updateCartPrice();
 }
 
+function getArrCart(): ItemCart[] {
+    return arrCart;
+}
+
 function addToCart(el: Node): void {
     const itemID: number = parseInt((el as HTMLButtonElement).value);
-    const clickItem: IPrototypeItem = <IPrototypeItem>shoes.find((el) => el.id === itemID);
+    const clickItem: IPrototypeItem = <IPrototypeItem>shoes.find((el) => el.id === itemID);    
     const cartItem: ItemCart = new ItemCart(
         clickItem.id,
         clickItem.name,
@@ -80,6 +84,7 @@ function addToCart(el: Node): void {
             arrCart.push(cartItem);
         }
     }
+    console.log(arrCart);
     updateHeader();
 }
 
@@ -87,7 +92,7 @@ function cartButtonAddClick(): void {
     const itemsAddCartButton: NodeList = <NodeList>document.querySelectorAll('.btn-to-cart');
 
     itemsAddCartButton.forEach((el) => {
-        el.addEventListener('click', () => { addToCart(el) });
+        el.addEventListener('click', () => addToCart(el));
     });
 }
 
@@ -239,4 +244,4 @@ class App {
 
 // }
 
-export { App, removeItemFromCart, updateHeader, addItemToCart, buyNow };
+export { App, removeItemFromCart, updateHeader, addItemToCart, buyNow, getArrCart };
