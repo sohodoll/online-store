@@ -11,8 +11,8 @@ function loadPage(parentElem: Element, numPage: number, perPage: number): void {
     //items.className = 'cart__item-collection';
     const tempArray: ItemCart[] = getArrCart();
     if (tempArray.length > 0) {
-        parentElem.innerHTML = '';        
-        const n = Math.min(perPage, tempArray.length - ((currPage - 1) * perPage));        
+        parentElem.innerHTML = '';
+        const n = Math.min(perPage, tempArray.length - ((currPage - 1) * perPage));
         for (let i = 0; i < n; i += 1) {
             const index = (numPage - 1) * perPage + i;
             parentElem.appendChild(tempArray[index].createHTMLElement(index));
@@ -208,11 +208,12 @@ class CartPage extends Page {
     render(): HTMLElement {
         const mainDivCart: HTMLDivElement = document.createElement('div');
         let paginPanel: HTMLDivElement = document.createElement('div');
-        let itemCartCollection: HTMLDivElement = document.createElement('div');
+        const itemCartCollection: HTMLDivElement = document.createElement('div');
         let receipt: HTMLDivElement = document.createElement('div');
 
         mainDivCart.className = 'cart';
         pageCount = Math.ceil(this.arrCart.length / perPage);
+        currPage = 1;
 
         //Item Collection
         itemCartCollection.className = 'cart__item-collection';

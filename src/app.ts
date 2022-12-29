@@ -61,8 +61,8 @@ function getArrCart(): ItemCart[] {
     return arrCart;
 }
 
-function addToCart(el: Node): void {
-    const itemID: number = parseInt((el as HTMLButtonElement).value);
+function addToCart(elem: Node): void {
+    const itemID: number = parseInt((elem as HTMLButtonElement).value);
     const clickItem: IPrototypeItem = <IPrototypeItem>shoes.find((el) => el.id === itemID);    
     const cartItem: ItemCart = new ItemCart(
         clickItem.id,
@@ -122,7 +122,7 @@ function addItemToCart(itemID: number): void {
         arrCart.push(shoesImportToItemCart(shoes[itemID - 1]));
     } else {
         arrCart.splice(findInCart(itemID), 1);
-        updateHeader();
+//        updateHeader();
     }
     /* else {
         arrCart[findIndex].addAmount();
@@ -193,7 +193,7 @@ class App {
             const pageHTML = page.render();
             this.mainHTML.appendChild(pageHTML);
             if (page instanceof MainPage) {
-                viewButtonAddClick();
+                //viewButtonAddClick();
                 //cartButtonAddClick();
             }/*
             if (page instanceof CartPage) {

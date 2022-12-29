@@ -78,13 +78,25 @@ function createCartItemFromMain(item: IPrototypeItem): HTMLDivElement {
     elemBtnView.className = 'main__item-btn btn-view';
     elemBtnView.textContent = 'View';
     elemBtnView.value = item.id.toString();
+    elemBtnView.addEventListener('click', function () {
+        document.location.href = '#description' + `/${item.id}`;
+    });
 
     //-- Add to Cart
     elemBtnToCart.className = 'main__item-btn btn-to-cart';
-    elemBtnToCart.value = item.id.toString();    
+    elemBtnToCart.value = item.id.toString();
+    elemBtnToCart.dataset.icon = 'cart';
     elemBtnToCart.innerHTML = iconsSVG.cart;
     elemBtnToCart.addEventListener('click', function () {
         addItemToCart(item.id);
+        if (this.dataset.icon === 'cart') {
+            this.dataset.icon = 'removeCart';
+            this.innerHTML = iconsSVG.removeCart;
+        }
+        else {
+            this.dataset.icon = 'cart';
+            this.innerHTML = iconsSVG.cart;
+        }
     });
 
     appendChildElements(elemButtons, [elemBtnView, elemBtnToCart]);
