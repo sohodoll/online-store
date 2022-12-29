@@ -38,7 +38,7 @@ function updateCartPrice(/*arr: ItemCart[]*/): void {
     headerTotalPrice.textContent = `${total.toString()}`;
 }
 
-function viewButtonAddClick(): void {
+export function viewButtonAddClick(): void {
     const itemsViewButton: NodeList = <NodeList>document.querySelectorAll('.btn-view');
 
     itemsViewButton.forEach((el) => {
@@ -145,7 +145,7 @@ class App {
                     const id: number = parseInt((button as HTMLButtonElement).value);
                     button.addEventListener('click', () => {
                         removeItemFromCart(id);
-//                        this.renderNewPage(pageId);
+                        //                        this.renderNewPage(pageId);
                     });
                 });
             }
