@@ -1,7 +1,7 @@
 import { IPrototypeItem } from '../templates/items';
 import Page from '../templates/page';
 import { appendChildElements } from '../components/itemCart/itemCart';
-import { addItemToCart, buyNow } from '../../app';
+import { addItemToCart, buyNow, findInCart } from '../../app';
 
 let selectImg: HTMLImageElement;
 
@@ -87,10 +87,18 @@ function createLeftDescriptionPanel(shoe: IPrototypeItem): HTMLDivElement {
     btnBuyNow.addEventListener('click', () => {
         buyNow(shoe.id);
     });
+
     btnAddToCart.className = 'description__button-add-cart btn';
-    btnAddToCart.textContent = 'Add To Cart';
-    btnAddToCart.addEventListener('click', () => {
+    if (findInCart(shoe.id) < 0)
+        btnAddToCart.textContent = 'Add To Cart';
+    else
+        btnAddToCart.textContent = 'Remove From Cart';
+    btnAddToCart.addEventListener('click', function () {
         addItemToCart(shoe.id);
+        if (this.textContent === 'Add To Cart')
+            this.textContent = 'Remove From Cart';
+        else 
+            this.textContent = 'Add To Cart'
     });
     appendChildElements(buttons, [btnBuyNow, btnAddToCart]);
     appendChildElements(descriptionLeft, [highlights, imgCollection, buttons]);

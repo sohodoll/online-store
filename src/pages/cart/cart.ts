@@ -6,22 +6,57 @@ let perPage = 3;
 let currPage = 1;
 let pageCount: number;
 
-function loadPage(numPage: number, perPage: number): HTMLDivElement {
-    const items: HTMLDivElement = document.createElement('div');
-    items.className = 'cart__item-collection';
-    const n = Math.min(perPage, getArrCart().length - ((currPage - 1) * perPage));
+function loadPage(parentElem: Element, numPage: number, perPage: number): void {//HTMLDivElement {
+    //const items: HTMLDivElement = document.createElement('div');
+    //items.className = 'cart__item-collection';
     const tempArray: ItemCart[] = getArrCart();
-    for (let i = 0; i < n; i += 1) {
-        const index = (numPage - 1) * perPage + i;
-        items.appendChild(tempArray[index].createHTMLElement(index));
+    if (tempArray.length > 0) {
+        parentElem.innerHTML = '';        
+        const n = Math.min(perPage, tempArray.length - ((currPage - 1) * perPage));        
+        for (let i = 0; i < n; i += 1) {
+            const index = (numPage - 1) * perPage + i;
+            parentElem.appendChild(tempArray[index].createHTMLElement(index));
+        }
     }
-    return items;
+    //return items;
+}
+
+function buttonPaginStyle(): void {
+    const firstPage: HTMLButtonElement = <HTMLButtonElement>document.querySelector('.pagination__first-btn');
+    const prevPage: HTMLButtonElement = <HTMLButtonElement>document.querySelector('.pagination__prev-btn');
+    const nextPage: HTMLButtonElement = <HTMLButtonElement>document.querySelector('.pagination__next-btn');
+    const lastPage: HTMLButtonElement = <HTMLButtonElement>document.querySelector('.pagination__last-btn');
+    if (currPage === 1) {
+        firstPage.classList.add('disable');
+        prevPage.classList.add('disable');
+        if (currPage !== pageCount) {
+            nextPage.classList.remove('disable');
+            lastPage.classList.remove('disable');
+        }
+    } else if (currPage === pageCount) {
+        nextPage.classList.add('disable');
+        lastPage.classList.add('disable');
+        if (currPage !== 1) {
+            firstPage.classList.remove('disable');
+            prevPage.classList.remove('disable');
+        }
+    } else {
+        firstPage.classList.remove('disable');
+        prevPage.classList.remove('disable');
+        nextPage.classList.remove('disable');
+        lastPage.classList.remove('disable');
+    }
 }
 
 function updatePaginParam(): void {
     pageCount = Math.ceil(getArrCart().length / perPage);
     const cartItemCollection = <HTMLDivElement>document.querySelector('.cart__item-collection');
-    cartItemCollection.innerHTML = loadPage(currPage, perPage).innerHTML;
+    //cartItemCollection.innerHTML = loadPage(currPage, perPage).innerHTML;
+    if (currPage > pageCount) currPage = pageCount;
+    const currPageInput: HTMLInputElement = <HTMLInputElement>document.querySelector('.pagination__num-current-page');
+    currPageInput.value = `${currPage}`;
+    loadPage(cartItemCollection, currPage, perPage);
+    buttonPaginStyle();
 }
 
 function createComboBox(): HTMLDivElement {
@@ -51,6 +86,7 @@ function createComboBox(): HTMLDivElement {
             perPage = parseInt(String(this.textContent));
             //pageCount = Math.ceil(getArrCart().length / perPage);
             updatePaginParam();
+            
             /*
             const cartItemCollection = <HTMLDivElement>document.querySelector('.cart__item-collection');
             cartItemCollection.innerHTML = loadPage(currPage, perPage).innerHTML;*/
@@ -68,6 +104,20 @@ function createComboBox(): HTMLDivElement {
     return comboBox;
 }
 
+function perPagePanel(): HTMLDivElement {
+    const perpagePanel: HTMLDivElement = document.createElement('div');
+    const comboBoxTitle: HTMLSpanElement = document.createElement('span');
+    const comboBox: HTMLDivElement = createComboBox();
+
+    perpagePanel.className = 'pagination__perpage-panel';
+
+    comboBoxTitle.className = 'pagination__combobox-title';
+    comboBoxTitle.textContent = 'Item per page';
+
+    appendChildElements(perpagePanel, [comboBoxTitle, comboBox]);
+    return perpagePanel;
+}
+
 function createPagesList(): HTMLDivElement {
     const pagesList: HTMLDivElement = document.createElement('div');
     const btnFirstPage: HTMLButtonElement = document.createElement('button');
@@ -79,10 +129,13 @@ function createPagesList(): HTMLDivElement {
     function clickPaginButton(): void {
         inputNumCurrentPage.value = currPage.toString();
         const cartItemCollection = <HTMLDivElement>document.querySelector('.cart__item-collection');
-        cartItemCollection.outerHTML = loadPage(currPage, perPage).outerHTML;
+        //cartItemCollection.outerHTML = loadPage(currPage, perPage).outerHTML;
+        loadPage(cartItemCollection, currPage, perPage);
+        buttonPaginStyle();
     }
 
     btnFirstPage.className = 'pagination__first-btn btn';
+    if (currPage === 1) btnFirstPage.classList.add('disable');
     btnFirstPage.textContent = '<<';
     btnFirstPage.addEventListener('click', function () {
         currPage = 1;
@@ -90,6 +143,7 @@ function createPagesList(): HTMLDivElement {
     });
 
     btnPrevPage.className = 'pagination__prev-btn btn';
+    if (currPage === 1) btnPrevPage.classList.add('disable');
     btnPrevPage.textContent = '<';
     btnPrevPage.addEventListener('click', function () {
         if (currPage > 1)
@@ -98,6 +152,7 @@ function createPagesList(): HTMLDivElement {
     });
 
     btnNextPage.className = 'pagination__next-btn btn';
+    if (currPage === pageCount) btnNextPage.classList.add('disable');
     btnNextPage.textContent = '>';
     btnNextPage.addEventListener('click', function () {
         if (currPage < pageCount)
@@ -106,6 +161,7 @@ function createPagesList(): HTMLDivElement {
     });
 
     btnLastPage.className = 'pagination__last-btn btn';
+    if (currPage === pageCount) btnLastPage.classList.add('disable');
     btnLastPage.textContent = '>>';
     btnLastPage.addEventListener('click', function () {
         currPage = pageCount;
@@ -114,7 +170,7 @@ function createPagesList(): HTMLDivElement {
 
     inputNumCurrentPage.className = 'pagination__num-current-page';
     inputNumCurrentPage.readOnly = true;
-    inputNumCurrentPage.type = 'number';
+    inputNumCurrentPage.type = 'text';
     inputNumCurrentPage.step = '1';
     inputNumCurrentPage.min = '1';
     inputNumCurrentPage.value = '1';
@@ -129,10 +185,10 @@ function createPagesList(): HTMLDivElement {
 function createPagination(): HTMLDivElement {
     const paginPanel: HTMLDivElement = document.createElement('div');
     const pagesList: HTMLDivElement = createPagesList();
-    const comboBox: HTMLDivElement = createComboBox();
+    const perpagePanel: HTMLDivElement = perPagePanel();
 
     paginPanel.className = 'pagination';
-    appendChildElements(paginPanel, [pagesList, comboBox]);
+    appendChildElements(paginPanel, [pagesList, perpagePanel]);
     return paginPanel;
 }
 
@@ -163,7 +219,8 @@ class CartPage extends Page {
         if (this.arrCart.length === 0) {
             itemCartCollection.innerHTML = '<h1>Cart is empty</h1>';
         } else {
-            itemCartCollection = loadPage(currPage, perPage);
+            //itemCartCollection = loadPage(currPage, perPage);
+            loadPage(itemCartCollection, currPage, perPage);            
             /*
             this.arrCart.forEach((el, index) => {
                 itemCartCollection.appendChild(el.createHTMLElement(index));
@@ -174,7 +231,7 @@ class CartPage extends Page {
         }
 
         appendChildElements(mainDivCart, [itemCartCollection, receipt]);
-        appendChildElements(this.container, [mainDivCart, paginPanel]);
+        appendChildElements(this.container, [mainDivCart, paginPanel]);        
 
         /*buttonsItemRemove.forEach((button) => {
             button.addEventListener('click', () => {
@@ -188,4 +245,4 @@ class CartPage extends Page {
     }
 }
 
-export default CartPage;
+export { CartPage, updatePaginParam };

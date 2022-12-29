@@ -1,6 +1,6 @@
 import './index.css';
 import MainPage from './pages/main/main';
-import CartPage from './pages/cart/cart';
+import { CartPage, updatePaginParam } from './pages/cart/cart';
 import Page from './pages/templates/page';
 import DescriptionPage from './pages/description/description';
 import ErrorPage from './pages/error404/error404';
@@ -99,6 +99,7 @@ function cartButtonAddClick(): void {
 //Remove Item from Cart
 function removeItemFromCart(id: number): void {
     arrCart.splice(id, 1);
+    updatePaginParam();
     updateHeader();
     App.renderNewPage('cart');
 }
@@ -110,16 +111,24 @@ function shoesImportToItemCart(shoe: IPrototypeItem): ItemCart {
     return newItemCart;
 }
 
+function findInCart(itemID: number): number {
+    const findIndex = arrCart.findIndex((el) => el.id === itemID);
+    return findIndex;
+}
+
 //Add Item To Cart
 function addItemToCart(itemID: number): void {
-    const findIndex = arrCart.findIndex((el) => el.id === itemID);
-    if (findIndex < 0) {
-        arrCart.push(shoesImportToItemCart(shoes[itemID - 1]));        
+    if (findInCart(itemID) < 0) {
+        arrCart.push(shoesImportToItemCart(shoes[itemID - 1]));
     } else {
-        arrCart[findIndex].addAmount();
+        arrCart.splice(findInCart(itemID), 1);
+        updateHeader();
     }
+    /* else {
+        arrCart[findIndex].addAmount();
+    }*/
     updateHeader();
-    App.renderNewPage(PageIDs.CartPage);
+    //App.renderNewPage(PageIDs.CartPage);
 
     /*if (arrCart.length > 0) {
         if (arrCart.find((el) => el.id === itemID)) {
@@ -137,8 +146,10 @@ function addItemToCart(itemID: number): void {
 
 //Buy Now
 function buyNow(itemID: number): void {
-    addItemToCart(itemID);
-    //App.renderNewPage(PageIDs.CartPage);
+    if (findInCart(itemID) < 0)
+        arrCart.push(shoesImportToItemCart(shoes[itemID - 1]));
+    updateHeader();
+    App.renderNewPage(PageIDs.CartPage);
 }
 
 class App {
@@ -183,8 +194,8 @@ class App {
             this.mainHTML.appendChild(pageHTML);
             if (page instanceof MainPage) {
                 viewButtonAddClick();
-                cartButtonAddClick();
-            }
+                //cartButtonAddClick();
+            }/*
             if (page instanceof CartPage) {
                 const buttonsItemRemove: NodeList = document.querySelectorAll('.cart__item-remove');
                 buttonsItemRemove.forEach((button) => {
@@ -194,7 +205,7 @@ class App {
 //                        this.renderNewPage(pageId);
                     });
                 });
-            }
+            }*/
         }
     }
 
@@ -244,4 +255,4 @@ class App {
 
 // }
 
-export { App, removeItemFromCart, updateHeader, addItemToCart, buyNow, getArrCart };
+export { App, removeItemFromCart, updateHeader, addItemToCart, buyNow, getArrCart, findInCart };

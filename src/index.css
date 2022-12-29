@@ -1,6 +1,7 @@
 @import url('./reset.css');
 @import url('./pages/components/footer/footer.css');
 @import url('./pages/components/header/header.css');
+@import url('./pages/cart/cart.css');
 @import url('./pages/components/itemCart/itemCart.css');
 @import url('./pages/main/main.css');
 @import url('./pages/error404/error404.css');
