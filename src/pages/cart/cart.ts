@@ -212,7 +212,8 @@ class CartPage extends Page {
         let receipt: HTMLDivElement = document.createElement('div');
 
         mainDivCart.className = 'cart';
-        pageCount = Math.ceil(this.arrCart.length / perPage);
+        //pageCount = Math.ceil(this.arrCart.length / perPage);
+        pageCount = Math.ceil(getArrCart.length / perPage);
         currPage = 1;
 
         //Item Collection

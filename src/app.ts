@@ -30,28 +30,38 @@ function loadIconForItems(): void {
 }
 
 /* Local Storage */
-
+/*
 //save parameter in localStorage
 function saveLocalStorage() {
     localStorage.setItem('arrCart', JSON.stringify(arrCart));
 }
 
 //loading parameter from localStorage
-function loadLocalStorage() {
+function loadLocalStorage() {    
     if (localStorage.getItem('arrCart')) {
         arrCart = JSON.parse(String(localStorage.getItem('arrCart'))).map((el: ItemCart) => {
             const { id, name, brand, category, thumbnail, amount, limit, price } = el;
             return new ItemCart(id, name, brand, category, thumbnail, amount, limit, price);
         });
+        const hash: string = window.location.hash.slice(1).split('/')[0];
+        App.renderNewPage(hash);
     } else {
         arrCart = [];
     }
+
     updateHeader();
-    loadIconForItems();
+    /*const hash: string = window.location.hash.slice(1).split('/')[0];
+    console.log(`{${hash}}`);
+    /*switch (hash) {
+        case PageIDs.MainPage: App.renderNewPage(PageIDs.MainPage); break;
+        case PageIDs.CartPage: App.renderNewPage(PageIDs.CartPage); break;
+    }*/
+    //App.renderNewPage(hash);
+  /*  loadIconForItems();
 }
 
 window.addEventListener('beforeunload', saveLocalStorage);
-window.addEventListener('load', loadLocalStorage);
+window.addEventListener('load', loadLocalStorage);*/
 /* ------------------------- */
 
 export const enum PageIDs {
@@ -126,7 +136,6 @@ function addToCart(elem: Node): void {
             arrCart.push(cartItem);
         }
     }
-    console.log(arrCart);
     updateHeader();
 }
 
@@ -204,9 +213,10 @@ class App {
         window.addEventListener('hashchange', () => {
             const hash = window.location.hash.slice(1).split('/')[0];
             const currentShoe = window.location.hash.slice(1).split('/')[1];
-            console.log(currentShoe);
+            console.log(currentShoe, 'ky-ky');
             App.renderNewPage(hash);
         });
+        
     }
 
     static renderNewPage(pageId: string): void {
@@ -234,10 +244,10 @@ class App {
         if (page) {
             const pageHTML = page.render();
             this.mainHTML.appendChild(pageHTML);
-            if (page instanceof MainPage) {
+            /*if (page instanceof MainPage) {
                 //viewButtonAddClick();
                 //cartButtonAddClick();
-            }/*
+            }
             if (page instanceof CartPage) {
                 const buttonsItemRemove: NodeList = document.querySelectorAll('.cart__item-remove');
                 buttonsItemRemove.forEach((button) => {
@@ -268,8 +278,7 @@ class App {
         }
 
         App.container.appendChild(this.footer);
-        this.handleRouting();        
-
+        this.handleRouting();
         //viewButtonAddClick();
         //cartButtonAddClick();
 
