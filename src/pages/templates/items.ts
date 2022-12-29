@@ -91,14 +91,14 @@ function createCartItemFromMain(item: IPrototypeItem): HTMLDivElement {
             elemBtnToCart.innerHTML = iconsSVG.cart;
         } else {
             elemBtnToCart.dataset.icon = 'removeCart';
-            elemBtnToCart.innerHTML = iconsSVG.removeCart;
+            elemBtnToCart.innerHTML = iconsSVG.remove;
         }
     }
     elemBtnToCart.addEventListener('click', function () {
         addItemToCart(item.id);
         if (this.dataset.icon === 'cart') {
             this.dataset.icon = 'removeCart';
-            this.innerHTML = iconsSVG.removeCart;
+            this.innerHTML = iconsSVG.remove;
         }
         else {
             this.dataset.icon = 'cart';

@@ -19,7 +19,7 @@ function loadIconForItems(): void {
     const items: NodeList = document.querySelectorAll('.btn-to-cart');
     items.forEach(function (el) {
         if (findInCart(parseInt(String((el as HTMLButtonElement).value))) >= 0) {
-            (el as HTMLButtonElement).innerHTML = iconsSVG.removeCart;
+            (el as HTMLButtonElement).innerHTML = iconsSVG.remove;
             (el as HTMLButtonElement).dataset.icon = 'removeCart';
         }
         else {
