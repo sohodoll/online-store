@@ -147,9 +147,7 @@ function createPromoPanel(): HTMLDivElement {
 }
 
 function countItemsInCart(): number {
-    let count: number = 0;
-    getArrCart().forEach((el) => count += el.getAmount());
-    return count;
+    return getArrCart().reduce((a = 0, el) => a + el.getAmount(), 0);
 }
 
 function createReceipt(array: ItemCart[]): HTMLDivElement {

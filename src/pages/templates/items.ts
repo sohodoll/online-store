@@ -1,4 +1,4 @@
-import { addItemToCart } from '../../app';
+import { addItemToCart, findInCart, getArrCart } from '../../app';
 import { appendChildElements } from '../components/itemCart/itemCart';
 import iconsSVG from './icons';
 
@@ -85,8 +85,15 @@ function createCartItemFromMain(item: IPrototypeItem): HTMLDivElement {
     //-- Add to Cart
     elemBtnToCart.className = 'main__item-btn btn-to-cart';
     elemBtnToCart.value = item.id.toString();
-    elemBtnToCart.dataset.icon = 'cart';
-    elemBtnToCart.innerHTML = iconsSVG.cart;
+    if (getArrCart()) {
+        if (findInCart(item.id) < 0) {
+            elemBtnToCart.dataset.icon = 'cart';
+            elemBtnToCart.innerHTML = iconsSVG.cart;
+        } else {
+            elemBtnToCart.dataset.icon = 'removeCart';
+            elemBtnToCart.innerHTML = iconsSVG.removeCart;
+        }
+    }
     elemBtnToCart.addEventListener('click', function () {
         addItemToCart(item.id);
         if (this.dataset.icon === 'cart') {

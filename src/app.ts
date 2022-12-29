@@ -9,10 +9,50 @@ import Footer from './pages/components/footer/footer';
 import { ItemCart } from './pages/components/itemCart/itemCart';
 import { IPrototypeItem } from './pages/templates/items';
 import shoes from './db/shoes';
+import iconsSVG from './pages/templates/icons';
 
 //let itemsAddCartButton: NodeList;
-const arrCart: ItemCart[] = [];
+let arrCart: ItemCart[];
 let clickItem: IPrototypeItem;
+
+function loadIconForItems(): void {
+    const items: NodeList = document.querySelectorAll('.btn-to-cart');
+    items.forEach(function (el) {
+        if (findInCart(parseInt(String((el as HTMLButtonElement).value))) >= 0) {
+            (el as HTMLButtonElement).innerHTML = iconsSVG.removeCart;
+            (el as HTMLButtonElement).dataset.icon = 'removeCart';
+        }
+        else {
+            (el as HTMLButtonElement).innerHTML = iconsSVG.cart;
+            (el as HTMLButtonElement).dataset.icon = 'cart';
+        }
+    });
+}
+
+/* Local Storage */
+
+//save parameter in localStorage
+function saveLocalStorage() {
+    localStorage.setItem('arrCart', JSON.stringify(arrCart));
+}
+
+//loading parameter from localStorage
+function loadLocalStorage() {
+    if (localStorage.getItem('arrCart')) {
+        arrCart = JSON.parse(String(localStorage.getItem('arrCart'))).map((el: ItemCart) => {
+            const { id, name, brand, category, thumbnail, amount, limit, price } = el;
+            return new ItemCart(id, name, brand, category, thumbnail, amount, limit, price);
+        });
+    } else {
+        arrCart = [];
+    }
+    updateHeader();
+    loadIconForItems();
+}
+
+window.addEventListener('beforeunload', saveLocalStorage);
+window.addEventListener('load', loadLocalStorage);
+/* ------------------------- */
 
 export const enum PageIDs {
     //MainPage = 'main',
@@ -25,7 +65,9 @@ export const enum PageIDs {
 function updateCartAmount(/*arr: ItemCart[]*/): void {
     const headerCartCount: HTMLImageElement = <HTMLImageElement>document.querySelector('.header__cart-count');
     //headerCartCount.textContent = arr.length.toString();
-    headerCartCount.textContent = arrCart.length.toString();
+    /*headerCartCount.textContent = arrCart.length.toString();*/
+    //let a = 0;
+    headerCartCount.textContent = arrCart.reduce((a = 0, el) => a + el.getAmount(), 0).toString();
 }
 
 function updateCartPrice(/*arr: ItemCart[]*/): void {
@@ -226,7 +268,7 @@ class App {
         }
 
         App.container.appendChild(this.footer);
-        this.handleRouting();
+        this.handleRouting();        
 
         //viewButtonAddClick();
         //cartButtonAddClick();
