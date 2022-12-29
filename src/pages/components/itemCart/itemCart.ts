@@ -294,7 +294,7 @@ class ItemCart {
                 this.delAmount();
                 const newPrice = this.getTotalPrice();
                 itemPrice.textContent = `${this.getTotalPrice().toString()}`;
-                itemAmount.stepDown(1);
+                itemAmount.value = this.getAmount().toString();
                 changeReceiptPrice(oldPrice, newPrice);
                 updateHeader();
                 const itemsCount: HTMLDivElement = <HTMLDivElement>document.querySelector('.receipt__item-count');
@@ -302,7 +302,7 @@ class ItemCart {
             }
         });
 
-        itemAmount.type = 'number';
+        itemAmount.type = 'text';
         itemAmount.className = 'cart__item-amount';
         itemAmount.id = `item-${this.id.toString()}`;        
         itemAmount.min = '1';
@@ -317,7 +317,7 @@ class ItemCart {
             const oldPrice = this.getTotalPrice();
             this.addAmount();
             const newPrice = this.getTotalPrice();
-            itemAmount.stepUp(1);
+            itemAmount.value = this.getAmount().toString();
             itemPrice.textContent = `${this.getTotalPrice().toString()}`;
             changeReceiptPrice(oldPrice, newPrice);
             updateHeader();
