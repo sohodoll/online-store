@@ -15,6 +15,11 @@ import iconsSVG from './pages/templates/icons';
 let arrCart: ItemCart[];
 let clickItem: IPrototypeItem;
 
+function findInCart(itemID: number): number {
+    const findIndex = arrCart.findIndex((el) => el.id === itemID);
+    return findIndex;
+}
+
 function loadIconForItems(): void {
     const items: NodeList = document.querySelectorAll('.btn-to-cart');
     items.forEach(function (el) {
@@ -29,40 +34,7 @@ function loadIconForItems(): void {
     });
 }
 
-/* Local Storage */
-/*
-//save parameter in localStorage
-function saveLocalStorage() {
-    localStorage.setItem('arrCart', JSON.stringify(arrCart));
-}
 
-//loading parameter from localStorage
-function loadLocalStorage() {    
-    if (localStorage.getItem('arrCart')) {
-        arrCart = JSON.parse(String(localStorage.getItem('arrCart'))).map((el: ItemCart) => {
-            const { id, name, brand, category, thumbnail, amount, limit, price } = el;
-            return new ItemCart(id, name, brand, category, thumbnail, amount, limit, price);
-        });
-        const hash: string = window.location.hash.slice(1).split('/')[0];
-        App.renderNewPage(hash);
-    } else {
-        arrCart = [];
-    }
-
-    updateHeader();
-    /*const hash: string = window.location.hash.slice(1).split('/')[0];
-    console.log(`{${hash}}`);
-    /*switch (hash) {
-        case PageIDs.MainPage: App.renderNewPage(PageIDs.MainPage); break;
-        case PageIDs.CartPage: App.renderNewPage(PageIDs.CartPage); break;
-    }*/
-    //App.renderNewPage(hash);
-  /*  loadIconForItems();
-}
-
-window.addEventListener('beforeunload', saveLocalStorage);
-window.addEventListener('load', loadLocalStorage);*/
-/* ------------------------- */
 
 export const enum PageIDs {
     //MainPage = 'main',
@@ -162,11 +134,6 @@ function shoesImportToItemCart(shoe: IPrototypeItem): ItemCart {
     return newItemCart;
 }
 
-function findInCart(itemID: number): number {
-    const findIndex = arrCart.findIndex((el) => el.id === itemID);
-    return findIndex;
-}
-
 //Add Item To Cart
 function addItemToCart(itemID: number): void {
     if (findInCart(itemID) < 0) {
@@ -203,6 +170,34 @@ function buyNow(itemID: number): void {
     App.renderNewPage(PageIDs.CartPage);
 }
 
+//loading parameter from localStorage
+function loadLocalStorage() {
+    console.log('loadLocalStorage');
+    if (localStorage.getItem('arrCart')) {
+        arrCart = JSON.parse(String(localStorage.getItem('arrCart'))).map((el: ItemCart) => {
+            const { id, name, brand, category, thumbnail, amount, limit, price } = el;
+            return new ItemCart(id, name, brand, category, thumbnail, amount, limit, price);
+        });
+        updateHeader();
+        loadIconForItems();
+        /*const hash: string = window.location.hash.slice(1).split('/')[0];
+        App.renderNewPage(hash);*/
+    } else {
+        arrCart = [];
+    }
+    /*console.log('localStorage', arrCart);
+    updateHeader();
+    const hash: string = window.location.hash.slice(1).split('/')[0];
+    console.log(`{${hash}}`);
+    switch (hash) {
+        case PageIDs.MainPage: App.renderNewPage(PageIDs.MainPage); break;
+        case PageIDs.DescriptionPage: App.renderNewPage(PageIDs.DescriptionPage); break;
+        case PageIDs.CartPage: App.renderNewPage(PageIDs.CartPage); break;
+    }
+    //App.renderNewPage(hash);
+    loadIconForItems();*/
+}
+
 class App {
     private static container: HTMLElement = <HTMLElement>document.body;
     private static mainHTML: HTMLElement = <HTMLElement>document.querySelector('.main');
@@ -210,6 +205,7 @@ class App {
     private footer: HTMLElement; // = <HTMLElement>document.createElement('footer');
 
     private handleRouting() {
+        console.log('handleRouting');
         window.addEventListener('hashchange', () => {
             const hash = window.location.hash.slice(1).split('/')[0];
             const currentShoe = window.location.hash.slice(1).split('/')[1];
@@ -267,17 +263,19 @@ class App {
     }
 
     run() {
+        console.log('Start');        
         App.container.prepend(this.header);
+        loadLocalStorage();
         if (window.location.hash === '' || window.location.hash === '#') {
             App.renderNewPage('');
         } else {
             const hash = window.location.hash.slice(1).split('/')[0];
             const currentShoe = window.location.hash.slice(1).split('/')[1];
-            console.log(currentShoe);
+            console.log(currentShoe);            
             App.renderNewPage(hash);
         }
 
-        App.container.appendChild(this.footer);
+        App.container.appendChild(this.footer);        
         this.handleRouting();
         //viewButtonAddClick();
         //cartButtonAddClick();
@@ -289,6 +287,17 @@ class App {
         });*/
     }
 }
+
+/* Local Storage */
+
+//save parameter in localStorage
+function saveLocalStorage() {
+    localStorage.setItem('arrCart', JSON.stringify(arrCart));
+}
+
+window.addEventListener('beforeunload', saveLocalStorage);
+//window.addEventListener('load', loadLocalStorage);
+/* ------------------------- */
 
 // getHeader() {
 //     this.header = document.getElementById('header') as HTMLElement;
@@ -306,4 +315,4 @@ class App {
 
 // }
 
-export { App, removeItemFromCart, updateHeader, addItemToCart, buyNow, getArrCart, findInCart };
+export { App, removeItemFromCart, updateHeader, addItemToCart, buyNow, getArrCart, findInCart, arrCart };

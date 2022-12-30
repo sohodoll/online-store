@@ -1,7 +1,7 @@
 import { IPrototypeItem } from '../templates/items';
 import Page from '../templates/page';
 import { appendChildElements } from '../components/itemCart/itemCart';
-import { addItemToCart, buyNow, findInCart } from '../../app';
+import { addItemToCart, buyNow, findInCart, getArrCart, arrCart } from '../../app';
 
 let selectImg: HTMLImageElement;
 
@@ -89,7 +89,9 @@ function createLeftDescriptionPanel(shoe: IPrototypeItem): HTMLDivElement {
     });
 
     btnAddToCart.className = 'description__button-add-cart btn';
-    if (findInCart(shoe.id) < 0)
+    //if (findInCart(shoe.id) < 0)
+    console.log(getArrCart());
+    if (arrCart.findIndex((el) => el.id === shoe.id) < 0)
         btnAddToCart.textContent = 'Add To Cart';
     else
         btnAddToCart.textContent = 'Remove From Cart';
@@ -104,6 +106,8 @@ function createLeftDescriptionPanel(shoe: IPrototypeItem): HTMLDivElement {
     appendChildElements(descriptionLeft, [highlights, imgCollection, buttons]);
     return descriptionLeft;
 }
+
+
 
 //create right description panel
 function createRightDescriptionPanel(shoe: IPrototypeItem): HTMLDivElement {
