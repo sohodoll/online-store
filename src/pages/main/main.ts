@@ -2,6 +2,7 @@ import Page from '../templates/page';
 import { createCartItemFromMain, IPrototypeItem } from '../templates/items';
 //import ItemCart from '../components/itemCart/itemCart';
 import shoes from '../../db/shoes';
+import { setCurrPage } from '../cart/cart';
 
 //let itemsAddCartButton: NodeList;
 //let arrCart: ItemCart[];
@@ -25,6 +26,7 @@ class MainPage extends Page {
         /*const title = this.createHTML(MainPage.TextObject.MainTitle);
         this.container.appendChild(title);*/
         //this.createHTML(MainPage.TextObject.MainTitle);
+        setCurrPage(1);
         this.createListItem(shoes);
         return this.container;
     }

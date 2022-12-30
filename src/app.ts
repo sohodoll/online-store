@@ -1,6 +1,6 @@
 import './index.css';
 import MainPage from './pages/main/main';
-import { CartPage, updatePaginParam } from './pages/cart/cart';
+import { CartPage, getCurrPage, getPerPage, setCurrPage, setPerPage, updatePaginParam } from './pages/cart/cart';
 import Page from './pages/templates/page';
 import DescriptionPage from './pages/description/description';
 import ErrorPage from './pages/error404/error404';
@@ -185,6 +185,12 @@ function loadLocalStorage() {
     } else {
         arrCart = [];
     }
+    if (localStorage.getItem('perPage')) {
+        setPerPage(parseInt(String(localStorage.getItem('perPage'))));
+    }
+    if (localStorage.getItem('currPage')) {
+        setCurrPage(parseInt(String(localStorage.getItem('currPage'))));
+    }
     /*console.log('localStorage', arrCart);
     updateHeader();
     const hash: string = window.location.hash.slice(1).split('/')[0];
@@ -293,6 +299,8 @@ class App {
 //save parameter in localStorage
 function saveLocalStorage() {
     localStorage.setItem('arrCart', JSON.stringify(arrCart));
+    localStorage.setItem('perPage', getPerPage().toString());
+    localStorage.setItem('currPage', getCurrPage().toString());
 }
 
 window.addEventListener('beforeunload', saveLocalStorage);

@@ -2,9 +2,25 @@ import { ItemCart, createReceipt, appendChildElements } from '../components/item
 import Page from '../templates/page';
 import { getArrCart } from '../../app';
 
-let perPage = 3;
-let currPage = 1;
+let perPage: number;
+let currPage: number;
 let pageCount: number;
+
+function setPerPage(value: number): void {
+    perPage = value;
+}
+
+function setCurrPage(value: number): void {
+    currPage = value;
+}
+
+function getPerPage(): number {
+    return perPage;
+}
+
+function getCurrPage(): number {
+    return currPage;
+}
 
 function loadPage(parentElem: Element, numPage: number, perPage: number): void {//HTMLDivElement {
     //const items: HTMLDivElement = document.createElement('div');
@@ -214,7 +230,7 @@ class CartPage extends Page {
         mainDivCart.className = 'cart';
         //pageCount = Math.ceil(this.arrCart.length / perPage);
         pageCount = Math.ceil(getArrCart().length / perPage);
-        currPage = 1;
+        //currPage = 1;
 
         //Item Collection
         itemCartCollection.className = 'cart__item-collection';
@@ -247,4 +263,4 @@ class CartPage extends Page {
     }
 }
 
-export { CartPage, updatePaginParam };
+export { CartPage, updatePaginParam, setPerPage, setCurrPage, getPerPage, getCurrPage };
