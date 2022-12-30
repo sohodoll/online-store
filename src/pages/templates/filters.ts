@@ -44,7 +44,6 @@ function filterItems(array: IPrototypeItem[], brand: string, category: string): 
         if (!brand && !category) {
             return array;
         }
-
         if (brand) {
             filteredArray = array.filter((element) => element.brand === brand);
         } else if (category) {
