@@ -16,17 +16,24 @@
     height: 263px;
 }
 
-.brand__filter {
+.main__filters {
+    display: flex;
+    max-width: 600px;
+}
+
+.brand__filter,
+.category__filter {
     font-size: 1.5rem;
     display: flex;
     gap: 10px;
     flex-direction: column;
-    max-width: 300px !important;
+    min-width: 150px !important;
     margin: 2rem;
 }
 
-.brand {
-    padding: 1rem;
+.brand,
+.category {
+    padding: 0.5rem;
     background-color: var(--accent);
     border-radius: 8px;
     text-align: center;
@@ -36,7 +43,8 @@
     cursor: pointer;
 }
 
-.brand_active {
+.brand_active,
+.category_active {
     background-color: var(--lightaccent);
     box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
     scale: 0.95;

@@ -32,7 +32,7 @@ class DescriptionPage extends Page {
     render() {
         this.container.innerHTML = `
         <div class="description__bread bread">
-        <div class="bread__store bread__item"><a href="/">Store</a></div>
+        <div class="bread__store bread__item"><a href="/#">Store</a></div>
                 <div class="bread__separator">>></div>
                 <div class="bread__type bread__item">Shoes</div>
                 <div class="bread__separator ">>></div>
