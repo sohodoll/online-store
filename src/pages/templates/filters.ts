@@ -24,21 +24,32 @@ function setSearchParams(brand: string, category: string) {
         url.searchParams.set('category', category);
     }
     window.history.replaceState(null, 'null', url);
-    // URL.search = userSearchParams.toString();
 }
 
-function removeSearchParams() {
+function removeSearchParams(types: string[]) {
     const url = new URL(window.location.href);
-    url.searchParams.delete('brand');
+    types.forEach((element) => {
+        url.searchParams.delete(element);
+    });
     window.history.replaceState(null, 'null', url);
 }
 
 function filterItems(array: IPrototypeItem[], brand: string, category: string): IPrototypeItem[] {
     let filteredArray: IPrototypeItem[] = [];
-    if (brand) {
-        filteredArray = array.filter((element) => element.brand === brand);
-    } else if (category) {
-        filteredArray = array.filter((element) => element.category === category);
+    if (brand && category) {
+        filteredArray = array.filter((element) => {
+            return element.brand === brand && element.category === category;
+        });
+    } else {
+        if (!brand && !category) {
+            return array;
+        }
+
+        if (brand) {
+            filteredArray = array.filter((element) => element.brand === brand);
+        } else if (category) {
+            filteredArray = array.filter((element) => element.category === category);
+        }
     }
     return filteredArray;
 }
