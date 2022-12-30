@@ -69,6 +69,7 @@ class MainPage extends Page {
         volleyballFilter.id = 'volleyball-filter';
 
         filterElement.classList.add('main__filters');
+        filterElement.classList.add('wrapper');
         brandFilter.classList.add('brand__filter');
         categoryFilter.classList.add('category__filter');
         filters.forEach((filter) => {
@@ -159,7 +160,7 @@ class MainPage extends Page {
             this.createListItem(shoes);
         }
         const main = <HTMLElement>document.querySelector('main');
-        main.classList.add('wrapper');
+        // main.classList.add('wrapper');
         this.createFilters();
         return this.container;
     }
