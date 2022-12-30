@@ -213,7 +213,7 @@ class CartPage extends Page {
 
         mainDivCart.className = 'cart';
         //pageCount = Math.ceil(this.arrCart.length / perPage);
-        pageCount = Math.ceil(getArrCart.length / perPage);
+        pageCount = Math.ceil(getArrCart().length / perPage);
         currPage = 1;
 
         //Item Collection
@@ -233,7 +233,7 @@ class CartPage extends Page {
         }
 
         appendChildElements(mainDivCart, [itemCartCollection, receipt]);
-        appendChildElements(this.container, [mainDivCart, paginPanel]);        
+        appendChildElements(this.container, [mainDivCart, paginPanel]);
 
         /*buttonsItemRemove.forEach((button) => {
             button.addEventListener('click', () => {

@@ -209,7 +209,7 @@ class App {
         window.addEventListener('hashchange', () => {
             const hash = window.location.hash.slice(1).split('/')[0];
             const currentShoe = window.location.hash.slice(1).split('/')[1];
-            console.log(currentShoe, 'ky-ky');
+            console.log(currentShoe);
             App.renderNewPage(hash);
         });
         
