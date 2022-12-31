@@ -262,8 +262,7 @@ class App {
         this.footer = Footer();
     }
 
-    run() {
-        console.log('Start');        
+    run() {       
         App.container.prepend(this.header);
         loadLocalStorage();
         if (window.location.hash === '' || window.location.hash === '#') {

@@ -26,8 +26,8 @@ class MainPage extends Page {
     }
 
     private createFilters(): void {
-        let brandArray: string[] = [];
-        let catArray: string[] = [];
+        const brandArray: string[] = [];
+        const catArray: string[] = [];
 
         shoes.forEach((shoe) => {
             if (!brandArray.includes(shoe.brand)) {
@@ -50,7 +50,7 @@ class MainPage extends Page {
         main.prepend(filterElement);
     }
 
-    updateCount() {
+    /* updateCount() {
         const brandFiltersList: NodeListOf<HTMLDivElement> = document.querySelectorAll('.brand');
         const brandFilters = Array.from(brandFiltersList);
         const catFiltersList: NodeListOf<HTMLDivElement> = document.querySelectorAll('.category');
@@ -107,49 +107,37 @@ class MainPage extends Page {
                 }
             });
         }
+    }*/
+
+    /**
+     * @param array  - filtredArray after click to the filter button
+     * */
+    createTitleButtons(array: IPrototypeItem[]): void {
+        console.log(array);
+        const brandButtons: NodeListOf<HTMLDivElement> = document.querySelectorAll('.brand');
+        const categoryButtons: NodeListOf<HTMLDivElement> = document.querySelectorAll('.category');
+        brandButtons.forEach((button) => {
+            const brandName = button.childNodes[0].textContent;
+            const countItem = array.filter((el) => el.brand === brandName).length;
+            button.children[0].textContent = `${countItem}/`;
+            if (countItem === 0) {
+                button.classList.add('disable');
+            } else {
+                button.classList.remove('disable');
+            }
+        });
+        categoryButtons.forEach((button) => {
+            const categoryName = button.childNodes[0].textContent;
+            const countItem = array.filter((el) => el.category === categoryName).length;
+            console.log(categoryName, countItem);
+            button.children[0].textContent = `${countItem}/`;
+            if (countItem === 0) {
+                button.classList.add('disable');
+            } else {
+                button.classList.remove('disable');
+            }
+        });
     }
-
-    // updateBrandCount(selectedFilter: string) {
-    //     const brandFiltersList: NodeListOf<HTMLDivElement> = document.querySelectorAll('.brand');
-    //     const brandFilters = Array.from(brandFiltersList);
-    //     const filteredArray = filterItems(shoes, selectedFilter, '');
-    //     brandFilters.forEach((brand) => {
-    //         const idToUpper =
-    // brand.id.substring(0, brand.id.indexOf('-')).charAt(0).toUpperCase() +
-    // brand.id.substring(0, brand.id.indexOf('-')).slice(1);
-    //         if (!selectBrand) {
-    //             const filteredArray = filterItems(shoes, idToUpper, catFilter);
-    //             brand.children[0].textContent = `${filteredArray.length}/`;
-    //         } else {
-    // if (brand.id.substring(0, brand.id.indexOf('-')) !== selectedFilter.toLowerCase()) {
-    //                 const filteredArray: [] = [];
-    //                 brand.children[0].textContent = `${filteredArray.length}/`;
-    //             } else {
-    //                 this.updateCategoryCount(idToUpper);
-    //                 brand.children[0].textContent = `${tempArray.length}/`;
-    //             }
-    //         }
-    //     });
-    // }
-
-    // updateCategoryCount(brand: string) {
-    // const catFiltersList: NodeListOf<HTMLDivElement> = document.querySelectorAll('.category');
-    // const catFilters = Array.from(catFiltersList);
-
-    //     catFilters.forEach((category) => {
-    //         if (selectBrand) {
-    //             const idToUpper =
-    //                 category.id.substring(0, category.id.indexOf('-')).charAt(0).toUpperCase() +
-    //                 category.id.substring(0, category.id.indexOf('-')).slice(1);
-    //             console.log(idToUpper);
-    //             const filteredArray = filterItems(shoes, brand, idToUpper);
-    //             category.children[0].textContent = `${filteredArray.length}/`;
-    //         } else {
-    //             const filteredArray = filterItems(shoes, brandFilter, catFilter);
-    //             category.children[0].textContent = `${filteredArray.length}/`;
-    //         }
-    //     });
-    // }
 
     createFilterElements(array: string[], type: string): HTMLDivElement {
         const filterElement = <HTMLDivElement>document.createElement('div');
@@ -173,73 +161,75 @@ class MainPage extends Page {
             elementDiv.append(currCount, maxCount);
 
             elementDiv.addEventListener('click', () => {
-                let filteredArray: IPrototypeItem[] = [];
-                // if (type === 'brand') {
-                //     filteredArray = filterItems(shoes, element, '');
-                //     elementDiv.textContent = `${element}(${filteredArray.length})`;
-                // }
-                // if (type === 'category') {
-                //     const filteredArray = filterItems(shoes, '', element);
-                //     elementDiv.textContent = `${element}(${filteredArray.length})`;
-                // }
+                if (!elementDiv.classList.contains('disable')) {
+                    //let filteredArray: IPrototypeItem[] = [];
+                    // if (type === 'brand') {
+                    //     filteredArray = filterItems(shoes, element, '');
+                    //     elementDiv.textContent = `${element}(${filteredArray.length})`;
+                    // }
+                    // if (type === 'category') {
+                    //     const filteredArray = filterItems(shoes, '', element);
+                    //     elementDiv.textContent = `${element}(${filteredArray.length})`;
+                    // }
 
-                if (type === 'brand') {
-                    if (selectBrand) {
-                        if (selectBrand !== elementDiv) {
-                            selectBrand.classList.toggle(`${type}_active`);
+                    if (type === 'brand') {
+                        if (selectBrand) {
+                            if (selectBrand !== elementDiv) {
+                                selectBrand.classList.toggle(`${type}_active`);
+                                elementDiv.classList.toggle(`${type}_active`);
+                                selectBrand = <HTMLDivElement>elementDiv;
+                                brandFilter = element;
+                                setSearchParams(brandFilter, catFilter);
+                                //tempArray = filterItems(shoes, brandFilter, catFilter);
+                                //this.createListItem(tempArray);
+                            } else {
+                                brandFilter = '';
+                                removeSearchParams([type]);
+                                elementDiv.classList.remove(`${type}_active`);
+                                selectBrand = undefined;
+                                //tempArray = filterItems(shoes, brandFilter, catFilter);
+                                //this.createListItem(tempArray);
+                            }
+                        } else {
+                            brandFilter = element;
                             elementDiv.classList.toggle(`${type}_active`);
                             selectBrand = <HTMLDivElement>elementDiv;
-                            brandFilter = element;
                             setSearchParams(brandFilter, catFilter);
-                            tempArray = filterItems(shoes, brandFilter, catFilter);
-                            this.createListItem(tempArray);
-                        } else {
-                            brandFilter = '';
-                            tempArray = filterItems(shoes, brandFilter, catFilter);
-                            removeSearchParams([type]);
-                            this.createListItem(tempArray);
-                            elementDiv.classList.remove(`${type}_active`);
-                            selectBrand = undefined;
+                            //tempArray = filterItems(shoes, brandFilter, catFilter);
+                            //this.createListItem(tempArray);
                         }
                     } else {
-                        brandFilter = element;
-                        elementDiv.classList.toggle(`${type}_active`);
-                        selectBrand = <HTMLDivElement>elementDiv;
-                        setSearchParams(brandFilter, catFilter);
-                        tempArray = filterItems(shoes, brandFilter, catFilter);
-                        this.createListItem(tempArray);
-                    }
-                    this.updateCount();
-                } else {
-                    if (selectCategory) {
-                        if (selectCategory !== elementDiv) {
-                            selectCategory.classList.toggle(`${type}_active`);
-                            elementDiv.classList.toggle(`${type}_active`);
-                            selectCategory = <HTMLDivElement>elementDiv;
+                        if (selectCategory) {
+                            if (selectCategory !== elementDiv) {
+                                selectCategory.classList.toggle(`${type}_active`);
+                                elementDiv.classList.toggle(`${type}_active`);
+                                selectCategory = <HTMLDivElement>elementDiv;
+                                catFilter = element;
+                                setSearchParams(brandFilter, catFilter);
+                                //tempArray = filterItems(shoes, brandFilter, catFilter);
+                                //this.createListItem(tempArray);
+                            } else {
+                                catFilter = '';
+                                removeSearchParams([type]);
+                                elementDiv.classList.remove(`${type}_active`);
+                                selectCategory = undefined;
+                                //tempArray = filterItems(shoes, brandFilter, catFilter);
+                                //this.createListItem(tempArray);
+                            }
+                        } else {
                             catFilter = element;
                             setSearchParams(brandFilter, catFilter);
-                            tempArray = filterItems(shoes, brandFilter, catFilter);
-                            this.createListItem(tempArray);
-                        } else {
-                            catFilter = '';
-                            removeSearchParams([type]);
-                            tempArray = filterItems(shoes, brandFilter, catFilter);
-                            this.createListItem(tempArray);
-                            elementDiv.classList.remove(`${type}_active`);
-                            selectCategory = undefined;
+                            elementDiv.classList.toggle(`${type}_active`);
+                            selectCategory = <HTMLDivElement>elementDiv;
+                            //tempArray = filterItems(shoes, brandFilter, catFilter);
+                            //this.createListItem(tempArray);
                         }
-                    } else {
-                        catFilter = element;
-                        setSearchParams(brandFilter, catFilter);
-                        elementDiv.classList.toggle(`${type}_active`);
-                        selectCategory = <HTMLDivElement>elementDiv;
-                        tempArray = filterItems(shoes, brandFilter, catFilter);
-                        this.createListItem(tempArray);
                     }
-                    this.updateCount();
+                    tempArray = filterItems(shoes, brandFilter, catFilter);
+                    this.createListItem(tempArray);
+                    this.createTitleButtons(tempArray);
+                    viewButtonAddClick();
                 }
-
-                viewButtonAddClick();
             });
 
             filterElement.appendChild(elementDiv);
