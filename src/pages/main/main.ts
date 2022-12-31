@@ -25,6 +25,41 @@ class MainPage extends Page {
         });
     }
 
+    private createQueryButtons(): void {
+        const mainButtons = document.createElement('div');
+        const copyQuery = document.createElement('div');
+        const resetButton = document.createElement('div');
+        const foundElement = document.createElement('div');
+        const foundCount = document.createElement('span');
+        foundElement.innerText = 'Found:';
+        foundElement.className = 'main__button';
+        foundCount.innerText = `${tempArray.length}`;
+        foundCount.id = 'found-count';
+        foundElement.append(foundCount);
+        copyQuery.innerText = 'Copy Link';
+        copyQuery.className = 'main__button';
+        copyQuery.id = 'copy-query';
+        resetButton.innerHTML = 'Reset';
+        resetButton.className = 'main__button';
+        resetButton.id = 'reset';
+        mainButtons.append(resetButton, copyQuery, foundElement);
+        mainButtons.className = 'main__buttons';
+        // const main = <HTMLElement>document.querySelector('main');
+        const filterElement = <HTMLDivElement>document.querySelector('.main__filters');
+        filterElement.append(mainButtons);
+
+        copyQuery.addEventListener('click', () => {
+            const currentQuery = window.location.href;
+            navigator.clipboard.writeText(currentQuery);
+            copyQuery.classList.add('copy_active');
+            copyQuery.innerText = 'Copied!';
+            setTimeout(() => {
+                copyQuery.classList.remove('copy_active');
+                copyQuery.innerText = 'Copy Link';
+            }, 1000);
+        });
+    }
+
     private createFilters(): void {
         let brandArray: string[] = [];
         let catArray: string[] = [];
@@ -45,12 +80,15 @@ class MainPage extends Page {
         categoryFilters.classList.add('category__filter');
         filterElement.className = 'main__filters wrapper';
         filterElement.append(categoryFilters, brandFilters);
-
         const main = <HTMLElement>document.querySelector('main');
         main.prepend(filterElement);
+        this.createQueryButtons();
     }
 
     updateCount() {
+        const foundCount = <HTMLDivElement>document.querySelector('#found-count');
+        foundCount.innerText = `${tempArray.length}`;
+
         const brandFiltersList: NodeListOf<HTMLDivElement> = document.querySelectorAll('.brand');
         const brandFilters = Array.from(brandFiltersList);
         const catFiltersList: NodeListOf<HTMLDivElement> = document.querySelectorAll('.category');
