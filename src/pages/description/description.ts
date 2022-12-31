@@ -2,6 +2,7 @@ import { IPrototypeItem } from '../templates/items';
 import Page from '../templates/page';
 import { appendChildElements } from '../components/itemCart/itemCart';
 import { addItemToCart, buyNow, findInCart, getArrCart, arrCart } from '../../app';
+import { setCurrPage } from '../cart/cart';
 
 let selectImg: HTMLImageElement;
 
@@ -196,9 +197,12 @@ class DescriptionPage extends Page {
     render() {
         let breadcrumbs: HTMLDivElement = document.createElement('div');
         let description__container: HTMLDivElement = document.createElement('div');
+
+        setCurrPage(1);
         breadcrumbs = createBreadCrumbs(this.shoe.brand, this.shoe.name);
         description__container = createDescriptionPanel(this.shoe);
         appendChildElements(this.container, [breadcrumbs, description__container]);
+        
        /* this.container.innerHTML = `
         <div class="description__bread bread">
             <div class="bread__store bread__item"><a href="/">Store</a></div>

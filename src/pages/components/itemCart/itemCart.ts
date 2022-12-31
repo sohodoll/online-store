@@ -1,6 +1,7 @@
 import Promocode from '../../templates/promocode';
 import { getArrCart, removeItemFromCart, updateHeader } from '../../../app';
 import iconsSVG from '../../templates/icons';
+import { Form } from '../form/form';
 //import { updatePaginParam } from '../../cart/cart';
 
 const promoList: Promocode[] = [];
@@ -154,7 +155,7 @@ function createReceipt(array: ItemCart[]): HTMLDivElement {
     const receipt: HTMLDivElement = document.createElement('div');
     const receiptTitle: HTMLHeadingElement = document.createElement('h2');
     const itemsCount: HTMLDivElement = document.createElement('div');
-
+    
     //Promo Code
     let promoPanel: HTMLDivElement = document.createElement('div');
     //-----------
@@ -195,9 +196,15 @@ function createReceipt(array: ItemCart[]): HTMLDivElement {
 
     receiptBuyNow.className = 'receipt__button-buy btn';
     receiptBuyNow.textContent = 'Buy now';
+    receiptBuyNow.addEventListener('click', () => {
+        const modalWindow: HTMLDivElement = <HTMLDivElement>document.querySelector('.receipt__modal-window');
+        modalWindow.classList.toggle('hide');
+        new Form().listen();
+    });
 
     receipt.className = 'cart__receipt';
-    appendChildElements(receipt, [receiptTitle, itemsCount, promoPanel, receiptItemsPrice, receiptDelivery, hr, receiptTotalPrice, receiptPriceWithPromo, receiptBuyNow]);
+    appendChildElements(receipt, [receiptTitle, itemsCount, promoPanel, receiptItemsPrice, receiptDelivery, hr,
+                                  receiptTotalPrice, receiptPriceWithPromo, receiptBuyNow]);
     return receipt;
 }
 

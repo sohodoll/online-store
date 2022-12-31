@@ -1,10 +1,52 @@
 import { ItemCart, createReceipt, appendChildElements } from '../components/itemCart/itemCart';
 import Page from '../templates/page';
 import { getArrCart } from '../../app';
+import { Form } from '../components/form/form';
+import iconsSVG from '../templates/icons';
 
-let perPage = 3;
-let currPage = 1;
+let perPage: number;
+let currPage: number;
 let pageCount: number;
+
+//Modal Window
+let modalWindow: HTMLDivElement;
+
+function createModalWindow(show: boolean): HTMLDivElement {
+    const closeModal: HTMLDivElement = document.createElement('div');
+    const modalForm: HTMLFormElement = new Form().render();
+
+    modalWindow = document.createElement('div');
+    modalWindow.className = 'receipt__modal-window';
+    if (!show)
+        modalWindow.classList.add('hide');
+
+    closeModal.className = 'modal-close';
+    closeModal.innerHTML = iconsSVG.close;
+    closeModal.addEventListener('click', () => {
+        modalWindow.classList.toggle('hide');
+    });
+
+    modalForm.prepend(closeModal);
+
+    modalWindow.append(modalForm);
+    return modalWindow;
+}
+
+function setPerPage(value: number): void {
+    perPage = value;
+}
+
+function setCurrPage(value: number): void {
+    currPage = value;
+}
+
+function getPerPage(): number {
+    return perPage;
+}
+
+function getCurrPage(): number {
+    return currPage;
+}
 
 function loadPage(parentElem: Element, numPage: number, perPage: number): void {//HTMLDivElement {
     //const items: HTMLDivElement = document.createElement('div');
@@ -188,16 +230,18 @@ function createPagination(): HTMLDivElement {
     const perpagePanel: HTMLDivElement = perPagePanel();
 
     paginPanel.className = 'pagination';
-    appendChildElements(paginPanel, [pagesList, perpagePanel]);
+    appendChildElements(paginPanel, [pagesList, perpagePanel, modalWindow]);
     return paginPanel;
 }
 
 class CartPage extends Page {
     public arrCart: ItemCart[];
+    showModalWindow: boolean;
 
-    constructor(id: string, arrayItemCart: ItemCart[]) {
+    constructor(id: string, arrayItemCart: ItemCart[], showModalWindow: boolean) {
         super(id);
         this.arrCart = arrayItemCart;
+        this.showModalWindow = showModalWindow;
     }
 
     /*
@@ -210,11 +254,12 @@ class CartPage extends Page {
         let paginPanel: HTMLDivElement = document.createElement('div');
         const itemCartCollection: HTMLDivElement = document.createElement('div');
         let receipt: HTMLDivElement = document.createElement('div');
+        const modalWindow: HTMLDivElement = createModalWindow(this.showModalWindow);
 
         mainDivCart.className = 'cart';
         //pageCount = Math.ceil(this.arrCart.length / perPage);
         pageCount = Math.ceil(getArrCart().length / perPage);
-        currPage = 1;
+        //currPage = 1;
 
         //Item Collection
         itemCartCollection.className = 'cart__item-collection';
@@ -233,7 +278,7 @@ class CartPage extends Page {
         }
 
         appendChildElements(mainDivCart, [itemCartCollection, receipt]);
-        appendChildElements(this.container, [mainDivCart, paginPanel]);
+        appendChildElements(this.container, [mainDivCart, paginPanel, modalWindow]);
 
         /*buttonsItemRemove.forEach((button) => {
             button.addEventListener('click', () => {
@@ -247,4 +292,4 @@ class CartPage extends Page {
     }
 }
 
-export { CartPage, updatePaginParam };
+export { CartPage, updatePaginParam, setPerPage, setCurrPage, getPerPage, getCurrPage };
