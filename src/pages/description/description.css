@@ -69,23 +69,30 @@ a {
 }
 
 .description__buttons {
-    display: flex;
+    /*display: flex;
     justify-content: space-around;
     color: var(--darkmain);
     font-weight: 500;
-    font-size: clamp(0.5rem, 0.5rem + 1vw, 3rem);
+    font-size: clamp(0.5rem, 0.5rem + 1vw, 3rem);*/
+    display: flex;
+    justify-content: center;
+    gap: 50px;
 }
 
 .description__button-buy-now,
 .description__button-add-cart {
-    width: clamp(1rem, 1rem + 13vw, 16rem);
+    /*width: clamp(1rem, 1rem + 13vw, 16rem);
     height: clamp(1rem, 1rem + 5vw, 5rem);
     background-color: var(--lightaccent);
     border-radius: 40px;
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;*/
+    font-size: 18px;
+    line-height: 22px;
     cursor: pointer;
+    padding: 15px 30px;
 }
 
 .description__right {

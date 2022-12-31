@@ -10,6 +10,7 @@ import { ItemCart } from './pages/components/itemCart/itemCart';
 import { IPrototypeItem } from './pages/templates/items';
 import shoes from './db/shoes';
 import iconsSVG from './pages/templates/icons';
+import { Form } from './pages/components/form/form';
 
 //let itemsAddCartButton: NodeList;
 let arrCart: ItemCart[];
@@ -167,7 +168,8 @@ function buyNow(itemID: number): void {
     if (findInCart(itemID) < 0)
         arrCart.push(shoesImportToItemCart(shoes[itemID - 1]));
     updateHeader();
-    App.renderNewPage(PageIDs.CartPage);
+    App.renderNewPage(PageIDs.CartPage, true);
+    new Form().listen();
 }
 
 //loading parameter from localStorage
@@ -187,9 +189,13 @@ function loadLocalStorage() {
     }
     if (localStorage.getItem('perPage')) {
         setPerPage(parseInt(String(localStorage.getItem('perPage'))));
+    } else {
+        setPerPage(3);
     }
     if (localStorage.getItem('currPage')) {
         setCurrPage(parseInt(String(localStorage.getItem('currPage'))));
+    } else {
+        setCurrPage(1);
     }
     /*console.log('localStorage', arrCart);
     updateHeader();
@@ -221,13 +227,15 @@ class App {
         
     }
 
-    static renderNewPage(pageId: string): void {
+    static renderNewPage(pageId: string, showModalWindow?: boolean): void {
         App.mainHTML.innerHTML = '';
         let page: Page | null = null;
         if (pageId === PageIDs.MainPage) {
             page = new MainPage(pageId);
         } else if (pageId === PageIDs.CartPage) {
-            page = new CartPage(pageId, arrCart);
+            if (!showModalWindow)
+                showModalWindow = false;
+            page = new CartPage(pageId, arrCart, showModalWindow);
         } else if (pageId === PageIDs.DescriptionPage) {
             const currentShoe = window.location.hash.slice(1).split('/')[1];
             if (currentShoe) {
