@@ -172,7 +172,6 @@ function buyNow(itemID: number): void {
 
 //loading parameter from localStorage
 function loadLocalStorage() {
-    console.log('loadLocalStorage');
     if (localStorage.getItem('arrCart')) {
         arrCart = JSON.parse(String(localStorage.getItem('arrCart'))).map((el: ItemCart) => {
             const { id, name, brand, category, thumbnail, amount, limit, price } = el;
@@ -205,7 +204,6 @@ class App {
     private footer: HTMLElement; // = <HTMLElement>document.createElement('footer');
 
     private handleRouting() {
-        console.log('handleRouting');
         window.addEventListener('hashchange', () => {
             const hash = window.location.hash.slice(1).split('/')[0];
             const currentShoe = window.location.hash.slice(1).split('/')[1];

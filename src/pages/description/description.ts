@@ -93,7 +93,6 @@ function createLeftDescriptionPanel(shoe: IPrototypeItem): HTMLDivElement {
 
     btnAddToCart.className = 'description__button-add-cart btn';
     //if (findInCart(shoe.id) < 0)
-    console.log(getArrCart());
     if (arrCart.findIndex((el) => el.id === shoe.id) < 0) btnAddToCart.textContent = 'Add To Cart';
     else btnAddToCart.textContent = 'Remove From Cart';
     btnAddToCart.addEventListener('click', function () {

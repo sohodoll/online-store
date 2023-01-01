@@ -18,14 +18,13 @@ class MainPage extends Page {
         super(id);
     }
 
-    private createListItem(array: IPrototypeItem[]): void {
-        this.container.innerHTML = '';
-        array.forEach((el) => {
-            this.container.appendChild(createCartItemFromMain(el));
-        });
+    private createMainItem(): HTMLDivElement {
+        const mainItem: HTMLDivElement = document.createElement('div');
+        mainItem.className = 'main__items';
+        return mainItem;
     }
 
-    private createFilters(): void {
+    private createFilters(): HTMLDivElement {
         const brandArray: string[] = [];
         const catArray: string[] = [];
 
@@ -38,17 +37,24 @@ class MainPage extends Page {
             }
         });
 
-        const filterElement = <HTMLDivElement>document.createElement('div');
-        const brandFilters = this.createFilterElements(brandArray, 'brand');
+        const filterElement: HTMLDivElement = <HTMLDivElement>document.createElement('div');
+        const brandFilters: HTMLDivElement = this.createFilterElements(brandArray, 'brand');
+        const categoryFilters: HTMLDivElement = this.createFilterElements(catArray, 'category');
+
         brandFilters.classList.add('brand__filter');
-        const categoryFilters = this.createFilterElements(catArray, 'category');
         categoryFilters.classList.add('category__filter');
-        filterElement.className = 'main__filters wrapper';
+        filterElement.className = 'main__filters';
         filterElement.append(categoryFilters, brandFilters);
 
-        const main = <HTMLElement>document.querySelector('main');
-        main.prepend(filterElement);
+        return filterElement;
     }
+
+    private createListItem(array: IPrototypeItem[]): void {
+        this.container.children[1].innerHTML = '';
+        array.forEach((el) => {
+            this.container.children[1].appendChild(createCartItemFromMain(el));
+        });
+    }       
 
     /* updateCount() {
         const brandFiltersList: NodeListOf<HTMLDivElement> = document.querySelectorAll('.brand');
@@ -112,11 +118,13 @@ class MainPage extends Page {
     /**
      * @param array  - filtredArray after click to the filter button
      * */
-    createTitleButtons(array: IPrototypeItem[]): void {
-        console.log(array);
-        const brandButtons: NodeListOf<HTMLDivElement> = document.querySelectorAll('.brand');
-        const categoryButtons: NodeListOf<HTMLDivElement> = document.querySelectorAll('.category');
-        brandButtons.forEach((button) => {
+    createTitleButtons(array: IPrototypeItem[], searchParam?: string[]): void {        
+        //const brandButtons: NodeListOf<HTMLDivElement> = document.querySelectorAll('.brand');
+        //const categoryButtons: NodeListOf<HTMLDivElement> = document.querySelectorAll('.category');
+        const brandButtons: NodeListOf<ChildNode> = this.container.children[0].childNodes[1].childNodes; //main-wrapper -> main__filter -> brand__filter -> items
+        const categoryButtons: NodeListOf<ChildNode> = this.container.children[0].childNodes[0].childNodes; //main-wrapper -> main__filter -> category__filter -> items
+        //const categoryButtons: NodeListOf<HTMLDivElement> = document.querySelectorAll('.category');
+        /*brandButtons.forEach((button) => {
             const brandName = button.childNodes[0].textContent;
             const countItem = array.filter((el) => el.brand === brandName).length;
             button.children[0].textContent = `${countItem}/`;
@@ -125,17 +133,34 @@ class MainPage extends Page {
             } else {
                 button.classList.remove('disable');
             }
+        });*/
+
+        function addTitleAndCSS(button: ChildNode, countItem: number, type: string): void {
+            button.childNodes[1].textContent = `${countItem}/`;
+            if (countItem === 0) {
+                (button as HTMLDivElement).classList.add('disable');                
+                (button as HTMLDivElement).classList.remove(`${type}_active`);
+            } else {
+                (button as HTMLDivElement).classList.remove('disable');
+                if (searchParam?.includes(String(button.childNodes[0].textContent))) {
+                    (button as HTMLDivElement).classList.add(`${type}_active`);
+                    if (type === 'brand')
+                        selectBrand = <HTMLDivElement>button;
+                    if (type === 'category')
+                        selectCategory = <HTMLDivElement>button;
+                }
+            }            
+        }
+
+        brandButtons.forEach((button) => {
+            const brandName = button.childNodes[0].textContent;
+            const countItem = array.filter((el) => el.brand === brandName).length;
+            addTitleAndCSS(button, countItem, 'brand');
         });
         categoryButtons.forEach((button) => {
             const categoryName = button.childNodes[0].textContent;
             const countItem = array.filter((el) => el.category === categoryName).length;
-            console.log(categoryName, countItem);
-            button.children[0].textContent = `${countItem}/`;
-            if (countItem === 0) {
-                button.classList.add('disable');
-            } else {
-                button.classList.remove('disable');
-            }
+            addTitleAndCSS(button, countItem, 'category');
         });
     }
 
@@ -160,6 +185,7 @@ class MainPage extends Page {
             elementDiv.textContent = element;
             elementDiv.append(currCount, maxCount);
 
+            /* Click filter buttons */
             elementDiv.addEventListener('click', () => {
                 if (!elementDiv.classList.contains('disable')) {
                     //let filteredArray: IPrototypeItem[] = [];
@@ -187,13 +213,20 @@ class MainPage extends Page {
                                 removeSearchParams([type]);
                                 elementDiv.classList.remove(`${type}_active`);
                                 selectBrand = undefined;
+                                if (selectCategory) {
+                                    catFilter = String(selectCategory.childNodes[0].textContent);
+                                }
                                 //tempArray = filterItems(shoes, brandFilter, catFilter);
                                 //this.createListItem(tempArray);
                             }
                         } else {
                             brandFilter = element;
                             elementDiv.classList.toggle(`${type}_active`);
-                            selectBrand = <HTMLDivElement>elementDiv;
+                            selectBrand = <HTMLDivElement>elementDiv;                            
+                            if (selectCategory) {
+                                brandFilter = element;
+                                catFilter = String(selectCategory.childNodes[0].textContent);
+                            }
                             setSearchParams(brandFilter, catFilter);
                             //tempArray = filterItems(shoes, brandFilter, catFilter);
                             //this.createListItem(tempArray);
@@ -213,6 +246,9 @@ class MainPage extends Page {
                                 removeSearchParams([type]);
                                 elementDiv.classList.remove(`${type}_active`);
                                 selectCategory = undefined;
+                                if (selectBrand) {
+                                    brandFilter = String(selectBrand.childNodes[0].textContent);
+                                }
                                 //tempArray = filterItems(shoes, brandFilter, catFilter);
                                 //this.createListItem(tempArray);
                             }
@@ -220,6 +256,10 @@ class MainPage extends Page {
                             catFilter = element;
                             setSearchParams(brandFilter, catFilter);
                             elementDiv.classList.toggle(`${type}_active`);
+                            if (selectBrand) {
+                                catFilter = element;
+                                brandFilter = String(selectBrand.childNodes[0].textContent);
+                            }
                             selectCategory = <HTMLDivElement>elementDiv;
                             //tempArray = filterItems(shoes, brandFilter, catFilter);
                             //this.createListItem(tempArray);
@@ -231,6 +271,7 @@ class MainPage extends Page {
                     viewButtonAddClick();
                 }
             });
+            /* End Click filter buttons */
 
             filterElement.appendChild(elementDiv);
         });
@@ -239,10 +280,13 @@ class MainPage extends Page {
 
     private handleQueryStorage(params: URLSearchParams) {
         const brand = <string>params.get('brand');
-        setSearchParams(brand, '');
-        const filteredArray = filterItems(shoes, brand, '');
+        const category = <string>params.get('category');
+        setSearchParams(brand, category);
+        const filteredArray = filterItems(shoes, brand, category);
         this.createListItem(filteredArray);
-
+        this.createTitleButtons(filteredArray, [brand, category]);
+        
+        /*
         setTimeout(() => {
             if (brand) {
                 const buttonsList: NodeListOf<HTMLDivElement> = document.querySelectorAll('.brand');
@@ -253,18 +297,22 @@ class MainPage extends Page {
                     }
                 });
             }
-        }, 100);
+        }, 100);*/
     }
 
     render() {
-        if (window.location.search) {
-            const userSearchParams = new URLSearchParams(window.location.search);
-            this.handleQueryStorage(userSearchParams);
-        } else {
+        this.container.append(this.createFilters(), this.createMainItem());
+        //if (!window.location.href.includes('#')) {
+            if (window.location.search) {
+                const userSearchParams = new URLSearchParams(window.location.search);
+                this.handleQueryStorage(userSearchParams);
+            } else {
+                this.createListItem(shoes);
+            }
+       /* } else { //if click logo (Store Online) then del all href - simulate a new page load
+            window.history.pushState({}, document.title, "/");
             this.createListItem(shoes);
-        }
-        const main = <HTMLElement>document.querySelector('main');
-        this.createFilters();
+        }*/
         return this.container;
     }
 }
