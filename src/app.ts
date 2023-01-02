@@ -14,6 +14,7 @@ import iconsSVG from './pages/templates/icons';
 //let itemsAddCartButton: NodeList;
 let arrCart: ItemCart[];
 let clickItem: IPrototypeItem;
+let mainLayout: string;
 
 function findInCart(itemID: number): number {
     const findIndex = arrCart.findIndex((el) => el.id === itemID);
@@ -33,8 +34,6 @@ function loadIconForItems(): void {
         }
     });
 }
-
-
 
 export const enum PageIDs {
     //MainPage = 'main',
@@ -83,6 +82,13 @@ function updateHeader(): void {
 
 function getArrCart(): ItemCart[] {
     return arrCart;
+}
+
+function getMainLayout(): string {
+    return mainLayout;
+}
+function setMainLayout(value: string): void {
+    mainLayout = value;
 }
 
 function addToCart(elem: Node): void {
@@ -176,13 +182,22 @@ function loadLocalStorage() {
         arrCart = JSON.parse(String(localStorage.getItem('arrCart'))).map((el: ItemCart) => {
             const { id, name, brand, category, thumbnail, amount, limit, price } = el;
             return new ItemCart(id, name, brand, category, thumbnail, amount, limit, price);
-        });
+        });        
         updateHeader();
         loadIconForItems();
         /*const hash: string = window.location.hash.slice(1).split('/')[0];
         App.renderNewPage(hash);*/
     } else {
         arrCart = [];
+    }
+
+    if (localStorage.getItem('mainLayout')) {
+        mainLayout = String(localStorage.getItem('mainLayout'));
+    } else {
+        if (document.body.clientWidth < 750)
+            mainLayout = 'list';
+        else
+            mainLayout = 'grid';
     }
     /*console.log('localStorage', arrCart);
     updateHeader();
@@ -290,6 +305,7 @@ class App {
 //save parameter in localStorage
 function saveLocalStorage() {
     localStorage.setItem('arrCart', JSON.stringify(arrCart));
+    localStorage.setItem('mainLayout', mainLayout);
 }
 
 window.addEventListener('beforeunload', saveLocalStorage);
@@ -312,4 +328,4 @@ window.addEventListener('beforeunload', saveLocalStorage);
 
 // }
 
-export { App, removeItemFromCart, updateHeader, addItemToCart, buyNow, getArrCart, findInCart, arrCart };
+export { App, removeItemFromCart, updateHeader, addItemToCart, buyNow, getArrCart, findInCart, arrCart, getMainLayout, setMainLayout };

@@ -3,7 +3,8 @@ import { createCartItemFromMain, IPrototypeItem } from '../templates/items';
 //import ItemCart from '../components/itemCart/itemCart';
 import shoes from '../../db/shoes';
 import { setSearchParams, removeSearchParams, filterItems } from '../templates/filters';
-import { updateHeader, viewButtonAddClick } from '../../app';
+import { getMainLayout, setMainLayout, updateHeader, viewButtonAddClick } from '../../app';
+import iconsSVG from '../templates/icons';
 
 let selectBrand: HTMLDivElement | undefined;
 let selectCategory: HTMLDivElement | undefined;
@@ -14,13 +15,95 @@ let brandFilter: string | '';
 let catFilter: string | '';
 
 class MainPage extends Page {
+    private layout: string;
     constructor(id: string) {
         super(id);
+        this.layout = getMainLayout();
+    }
+
+    private createSearchPanel(itemCollection: HTMLDivElement): HTMLDivElement {
+        const searchPanel: HTMLDivElement = document.createElement('div');
+
+        const paramPanel: HTMLDivElement = document.createElement('div');
+        const totalTitleParam: HTMLSpanElement = document.createElement('span'); //Title for Total
+        const totalParam: HTMLSpanElement = document.createElement('span'); //count item in search query
+
+        const searchInputPanel: HTMLDivElement = document.createElement('div');
+        const searchInputTitle: HTMLDivElement = document.createElement('div');
+        const searchInput: HTMLInputElement = document.createElement('input');
+        const searchInputCleaner: HTMLLabelElement = document.createElement('label');
+
+        const layoutPanel: HTMLDivElement = document.createElement('div');  //grid or list
+        const gridLayout: HTMLButtonElement = document.createElement('button');
+        const listLayout: HTMLButtonElement = document.createElement('button');
+
+        //Parameter Panel
+        totalTitleParam.className = 'search__total-title';
+        totalTitleParam.textContent = 'Total:';
+
+        totalParam.className = 'search__total-count';
+        totalParam.textContent = '0';        
+
+        paramPanel.className = 'search__parameter-panel';
+        paramPanel.append(totalTitleParam, totalParam);
+
+        //Search Input Panel
+        searchInputTitle.className = 'search__input-title';
+        searchInputTitle.textContent = 'Search:';
+
+        searchInput.className = 'search__input';
+        searchInput.id = 'search__input';
+        searchInput.type = 'text';
+        searchInput.addEventListener('input', () => {
+            if (searchInput.value)
+                searchInputCleaner.classList.remove('hidden');
+            else
+                searchInputCleaner.classList.add('hidden');
+        });
+
+        searchInputCleaner.className = 'search__input-cleaner hidden';
+        searchInputCleaner.htmlFor = 'search__input';
+        searchInputCleaner.innerHTML = iconsSVG.clean;
+        searchInputCleaner.addEventListener('click', () => {
+            searchInput.value = '';
+            searchInputCleaner.classList.toggle('hidden');
+        });
+
+        searchInputPanel.className = 'search__input-panel';
+        searchInputPanel.append(searchInputTitle, searchInput, searchInputCleaner);
+
+        //Layout Panel        
+        gridLayout.className = 'search__grid-layout btn';
+        gridLayout.innerHTML = iconsSVG.grid;
+        gridLayout.addEventListener('click', () => {
+            itemCollection.classList.remove('list');
+            itemCollection.classList.add('grid');
+            setMainLayout('grid');
+        });
+
+        listLayout.className = 'search__list-layout btn';
+        listLayout.innerHTML = iconsSVG.list;
+        listLayout.addEventListener('click', () => {
+            itemCollection.classList.remove('grid');
+            itemCollection.classList.add('list');
+            setMainLayout('list');
+        });
+
+        layoutPanel.className = 'search__layout-panel';
+        layoutPanel.append(gridLayout, listLayout);
+
+        //Search Panel
+        searchPanel.className = 'main__search-panel';
+        searchPanel.append(paramPanel, searchInputPanel, layoutPanel);
+        return searchPanel;
     }
 
     private createMainItem(): HTMLDivElement {
         const mainItem: HTMLDivElement = document.createElement('div');
+        const itemCollection: HTMLDivElement = document.createElement('div');
         mainItem.className = 'main__items';
+        itemCollection.className = `main__items-collection ${this.layout}`;
+        mainItem.append(this.createSearchPanel(itemCollection), itemCollection);
         return mainItem;
     }
 
@@ -50,9 +133,9 @@ class MainPage extends Page {
     }
 
     private createListItem(array: IPrototypeItem[]): void {
-        this.container.children[1].innerHTML = '';
+        (this.container.children[1].childNodes[1] as HTMLDivElement).innerHTML = '';  //main-wrapper -> main__items -> main__items-collection
         array.forEach((el) => {
-            this.container.children[1].appendChild(createCartItemFromMain(el));
+            this.container.children[1].childNodes[1].appendChild(createCartItemFromMain(el));
         });
     }       
 

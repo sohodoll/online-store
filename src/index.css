@@ -19,6 +19,7 @@
     --darkgray: darkgray;
     --button-disable: darkgray;
     --button-enable: #ffbd32;
+    --border-gray: #c5c5c5;
 }
 
 html {

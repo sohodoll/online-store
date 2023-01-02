@@ -40,7 +40,7 @@ class Item {
 function createCartItemFromMain(item: IPrototypeItem): HTMLDivElement {
     const elem: HTMLDivElement = document.createElement('div');
     const brandLogo: HTMLImageElement = document.createElement('img');
-    const elemTumb: HTMLImageElement = document.createElement('img');
+    const elemTumb: HTMLDivElement = document.createElement('div');
     const elemTitle: HTMLDivElement = document.createElement('div');
     const elemName: HTMLParagraphElement = document.createElement('p');
     const elemPrice: HTMLParagraphElement = document.createElement('p');
@@ -59,8 +59,10 @@ function createCartItemFromMain(item: IPrototypeItem): HTMLDivElement {
 
     //Tumbnail
     elemTumb.className = 'main__item-tumb';
-    elemTumb.src = item.thumbnail;
-    elemTumb.alt = `${item.brand} ${item.name}`;
+    elemTumb.style.backgroundImage = `url(${item.thumbnail})`;
+    //elemTumb.alt = `${item.brand} ${item.name}`;
+
+    elemTumb.appendChild(brandLogo);
 
     //Title
     elemTitle.className = 'main__item-title';
@@ -69,13 +71,13 @@ function createCartItemFromMain(item: IPrototypeItem): HTMLDivElement {
     elemPrice.className = 'main__item-price';
     elemPrice.textContent = `${item.price.toString()}`;
 
-    appendChildElements(elemTitle, [elemName, elemPrice]) //Name and Price
+    elemTitle.append(elemName, elemPrice); //Name and Price
 
     //Buttons
     elemButtons.className = 'main__item_btn-collection';
 
     //-- View
-    elemBtnView.className = 'main__item-btn btn-view';
+    elemBtnView.className = 'main__item-btn btn-view btn';
     elemBtnView.textContent = 'View';
     elemBtnView.value = item.id.toString();
     elemBtnView.addEventListener('click', function () {
@@ -83,7 +85,7 @@ function createCartItemFromMain(item: IPrototypeItem): HTMLDivElement {
     });
 
     //-- Add to Cart
-    elemBtnToCart.className = 'main__item-btn btn-to-cart';
+    elemBtnToCart.className = 'main__item-btn btn-to-cart btn';
     elemBtnToCart.value = item.id.toString();
     if (getArrCart()) {
         if (findInCart(item.id) < 0) {
@@ -106,10 +108,10 @@ function createCartItemFromMain(item: IPrototypeItem): HTMLDivElement {
         }
     });
 
-    appendChildElements(elemButtons, [elemBtnView, elemBtnToCart]);
+    elemButtons.append(elemBtnView, elemBtnToCart);
     //------------
 
-    appendChildElements(elem, [brandLogo, elemTumb, elemTitle, elemButtons]); //Brand Logo, Tumbnail, Title and Button View
+    elem.append(elemTumb, elemTitle, elemButtons); //Brand Logo, Tumbnail, Title and Button View
     return elem;
 }
 //}
