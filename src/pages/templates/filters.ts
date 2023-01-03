@@ -11,7 +11,7 @@ import shoes from '../../db/shoes';
 
 // export { IsearchParams };
 
-function setSearchParams(brand: string, category: string) {
+function setSearchParams(brand: string, category: string, searchString: string) {
     // const brandElem = document.querySelector('.brand');
     // let paramsObject: { [key: string]: string } = {};
     // paramsObject.brand = brand;
@@ -22,6 +22,9 @@ function setSearchParams(brand: string, category: string) {
     }
     if (category) {
         url.searchParams.set('category', category);
+    }
+    if (searchString) {
+        url.searchParams.set('search', searchString);
     }
     window.history.replaceState(null, 'null', url);
 }

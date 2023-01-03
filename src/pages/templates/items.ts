@@ -1,5 +1,4 @@
 import { addItemToCart, findInCart, getArrCart } from '../../app';
-import { appendChildElements } from '../components/itemCart/itemCart';
 import iconsSVG from './icons';
 
 interface IPrototypeItem {
@@ -13,6 +12,17 @@ interface IPrototypeItem {
     thumbnail: string;
     images: string[];
 }
+
+function searchItem(item: IPrototypeItem, searchString: string): boolean {
+    if (item.brand.toLowerCase().includes(searchString)) return true;
+    if (item.name.toLowerCase().includes(searchString)) return true;
+    if (item.description.toLowerCase().includes(searchString)) return true;
+    if (item.category.toLowerCase().includes(searchString)) return true;
+    if (item.price >= parseInt(searchString)) return true;
+    if (item.stock >= parseInt(searchString)) return true;
+    return false;
+}
+
 /*
 class Item {
     id: number;
@@ -116,4 +126,4 @@ function createCartItemFromMain(item: IPrototypeItem): HTMLDivElement {
 }
 //}
 
-export { createCartItemFromMain, IPrototypeItem };
+export { createCartItemFromMain, IPrototypeItem, searchItem };

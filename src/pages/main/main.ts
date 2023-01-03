@@ -1,5 +1,5 @@
 import Page from '../templates/page';
-import { createCartItemFromMain, IPrototypeItem } from '../templates/items';
+import { createCartItemFromMain, IPrototypeItem, searchItem } from '../templates/items';
 //import ItemCart from '../components/itemCart/itemCart';
 import shoes from '../../db/shoes';
 import { setSearchParams, removeSearchParams, filterItems } from '../templates/filters';
@@ -14,6 +14,7 @@ let tempArray: IPrototypeItem[] = shoes;
 
 let brandFilter: string | '';
 let catFilter: string | '';
+let searchString: string | '';
 
 class MainPage extends Page {
     private layout: string;
@@ -25,6 +26,10 @@ class MainPage extends Page {
     private updateTotalCount(value: number): void {
         const totalCount: HTMLSpanElement = <HTMLSpanElement>this.container.children[1].childNodes[0].childNodes[1].childNodes[1];
         totalCount.textContent = `${value}`;
+    }
+
+    private searchItems(array: IPrototypeItem[]): IPrototypeItem[] {
+        return array.filter((el) => searchItem(el, searchString));
     }
 
     private createSearchPanel(itemCollection: HTMLDivElement): HTMLDivElement {
@@ -71,6 +76,8 @@ class MainPage extends Page {
             selectCategory?.classList.remove('category_active');
             brandFilter = '';
             catFilter = '';
+            searchString = '';
+            searchInput.value = '';
             selectBrand = undefined;
             selectCategory = undefined;
             const filteredArray = filterItems(shoes, brandFilter, catFilter);
@@ -100,6 +107,20 @@ class MainPage extends Page {
                 searchInputCleaner.classList.remove('hidden');
             else
                 searchInputCleaner.classList.add('hidden');
+        });
+        searchInput.addEventListener('change', () => {
+            if (searchInput.value) {
+                searchString = String(searchInput.value);
+                const filteredArray = filterItems(shoes, brandFilter, catFilter);
+                const searchArray: IPrototypeItem[] = this.searchItems(filteredArray);
+                setSearchParams(brandFilter, catFilter, searchString);
+                this.createListItem(searchArray);
+            }
+            else {
+                removeSearchParams(['search']);
+                const filteredArray = filterItems(shoes, brandFilter, catFilter);
+                this.createListItem(filteredArray);
+            }
         });
 
         searchInputCleaner.className = 'search__input-cleaner hidden';
@@ -151,8 +172,9 @@ class MainPage extends Page {
     private createMainItem(): HTMLDivElement {
         const mainItem: HTMLDivElement = document.createElement('div');
         const itemCollection: HTMLDivElement = document.createElement('div');
-        mainItem.className = 'main__items';
+        
         itemCollection.className = `main__items-collection ${this.layout}`;
+        mainItem.className = 'main__items';
         mainItem.append(this.createSearchPanel(itemCollection), itemCollection);
         return mainItem;
     }
@@ -339,7 +361,7 @@ class MainPage extends Page {
                                 elementDiv.classList.toggle(`${type}_active`);
                                 selectBrand = <HTMLDivElement>elementDiv;
                                 brandFilter = element;
-                                setSearchParams(brandFilter, catFilter);
+                                setSearchParams(brandFilter, catFilter, searchString);
                                 //tempArray = filterItems(shoes, brandFilter, catFilter);
                                 //this.createListItem(tempArray);
                             } else {
@@ -361,7 +383,7 @@ class MainPage extends Page {
                                 brandFilter = element;
                                 catFilter = String(selectCategory.childNodes[0].textContent);
                             }
-                            setSearchParams(brandFilter, catFilter);
+                            setSearchParams(brandFilter, catFilter, searchString);
                             //tempArray = filterItems(shoes, brandFilter, catFilter);
                             //this.createListItem(tempArray);
                         }
@@ -372,7 +394,7 @@ class MainPage extends Page {
                                 elementDiv.classList.toggle(`${type}_active`);
                                 selectCategory = <HTMLDivElement>elementDiv;
                                 catFilter = element;
-                                setSearchParams(brandFilter, catFilter);
+                                setSearchParams(brandFilter, catFilter, searchString);
                                 //tempArray = filterItems(shoes, brandFilter, catFilter);
                                 //this.createListItem(tempArray);
                             } else {
@@ -388,7 +410,7 @@ class MainPage extends Page {
                             }
                         } else {
                             catFilter = element;
-                            setSearchParams(brandFilter, catFilter);
+                            setSearchParams(brandFilter, catFilter, searchString);
                             elementDiv.classList.toggle(`${type}_active`);
                             if (selectBrand) {
                                 catFilter = element;
@@ -413,10 +435,21 @@ class MainPage extends Page {
     }
 
     private handleQueryStorage(params: URLSearchParams) {
-        const brand = <string>params.get('brand');
-        const category = <string>params.get('category');
-        setSearchParams(brand, category);
-        const filteredArray = filterItems(shoes, brand, category);
+        const brand: string = <string>params.get('brand');
+        const category: string = <string>params.get('category');
+        const search: string = <string>params.get('search');
+        setSearchParams(brand, category, search);
+        brandFilter = brand;
+        catFilter = category;
+        searchString = search;
+        let searchArray: IPrototypeItem[];
+        let filteredArray: IPrototypeItem[] = filterItems(shoes, brand, category);
+        if (searchString) {
+            const searchInput: HTMLInputElement = <HTMLInputElement>this.container.children[1].childNodes[0].childNodes[1].childNodes[3];
+            searchInput.value = searchString;
+            searchArray = this.searchItems(filteredArray);
+            filteredArray = searchArray;
+        }        
         this.createListItem(filteredArray);
         this.createTitleButtons(filteredArray, [brand, category]);
         
