@@ -23,7 +23,7 @@ class MainPage extends Page {
     }
 
     private updateTotalCount(value: number): void {
-        const totalCount: HTMLSpanElement = <HTMLSpanElement>this.container.children[1].childNodes[0].childNodes[0].childNodes[1];
+        const totalCount: HTMLSpanElement = <HTMLSpanElement>this.container.children[1].childNodes[0].childNodes[1].childNodes[1];
         totalCount.textContent = `${value}`;
     }
 
@@ -31,9 +31,11 @@ class MainPage extends Page {
         const searchPanel: HTMLDivElement = document.createElement('div');
 
         const paramPanel: HTMLDivElement = document.createElement('div');
-        const totalTitleParam: HTMLSpanElement = document.createElement('span'); //Title for Total
-        const totalParam: HTMLSpanElement = document.createElement('span'); //count item in search query
+        const copyQuery: HTMLDivElement = document.createElement('div');
+        const resetFilters: HTMLDivElement = document.createElement('div');
 
+        const foundTitleParam: HTMLSpanElement = document.createElement('span'); //Title for Total
+        const foundParam: HTMLSpanElement = document.createElement('span'); //count item in search query
         const searchInputPanel: HTMLDivElement = document.createElement('div');
         const searchInputTitle: HTMLDivElement = document.createElement('div');
         const searchInput: HTMLInputElement = document.createElement('input');
@@ -44,16 +46,49 @@ class MainPage extends Page {
         const listLayout: HTMLButtonElement = document.createElement('button');
 
         //Parameter Panel
-        totalTitleParam.className = 'search__total-title';
-        totalTitleParam.textContent = 'Total:';
 
-        totalParam.className = 'search__total-count';
-        totalParam.textContent = '0';        
+        
+        copyQuery.innerText = 'Copy Link';
+        copyQuery.className = 'search__copy-query btn';
+        copyQuery.id = 'copy-query';
+        resetFilters.innerHTML = 'Reset';
+        resetFilters.className = 'search__reset btn';
+        resetFilters.id = 'reset';
+
+        copyQuery.addEventListener('click', () => {
+            const currentQuery = window.location.href;
+            navigator.clipboard.writeText(currentQuery);
+            copyQuery.classList.add('copy_active');
+            copyQuery.innerText = 'Copied!';
+            setTimeout(() => {
+                copyQuery.classList.remove('copy_active');
+                copyQuery.innerText = 'Copy Link';
+            }, 1000);
+        });    
+
+        resetFilters.addEventListener('click', () => {
+            selectBrand?.classList.remove('brand_active');
+            selectCategory?.classList.remove('category_active');
+            brandFilter = '';
+            catFilter = '';
+            selectBrand = undefined;
+            selectCategory = undefined;
+            const filteredArray = filterItems(shoes, brandFilter, catFilter);
+            this.createListItem(filteredArray);
+            this.createTitleButtons(filteredArray, [brandFilter, catFilter]);
+            removeSearchParams(['brand', 'category']);
+        });
 
         paramPanel.className = 'search__parameter-panel';
-        paramPanel.append(totalTitleParam, totalParam);
+        paramPanel.append(resetFilters, copyQuery);
 
         //Search Input Panel
+        foundTitleParam.className = 'search__found-title';
+        foundTitleParam.textContent = 'Found:';
+
+        foundParam.className = 'search__found-count';
+        foundParam.textContent = '0';   
+
         searchInputTitle.className = 'search__input-title';
         searchInputTitle.textContent = 'Search:';
 
@@ -76,7 +111,7 @@ class MainPage extends Page {
         });
 
         searchInputPanel.className = 'search__input-panel';
-        searchInputPanel.append(searchInputTitle, searchInput, searchInputCleaner);
+        searchInputPanel.append(foundTitleParam, foundParam, searchInputTitle, searchInput, searchInputCleaner);
 
         //Layout Panel        
         gridLayout.className = 'search__grid-layout btn';

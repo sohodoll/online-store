@@ -106,12 +106,26 @@
 }
 
 /* Parameters */
+.search__reset,
+.search__copy-query {
+    padding: 5px 10px;
+    text-align: center;
+}
 
-.search__total-count {
-    width: 40px;
+.search__copy-query {
+    width: 100px;
+}
+
+.copy_active {
+    background-color: var(--darkmain);
+    color: #fff;
 }
 
 /* Search Input*/
+
+.search__found-count {
+    width: 40px;
+}
 
 .search__input-panel {
     flex-grow: 1;
