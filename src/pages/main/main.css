@@ -160,7 +160,8 @@
     gap: 20px;
 }
 
-.search__grid-layout, .search__list-layout {
+.search__grid-layout,
+.search__list-layout {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -168,11 +169,16 @@
     height: 36px;
     padding: 7px;
 }
-/* -------------------------- */
 
-/* ITEMS */
+.search__grid-layout.select,
+.search__list-layout.select {
+    background-color: var(--main);
+    fill: var(--lightaccent);
+}
+    /* -------------------------- */
+    /* ITEMS */
 
-.main__items-collection {
+    .main__items-collection {
     display: grid;
     gap: 20px 20px;
     width: 100%;

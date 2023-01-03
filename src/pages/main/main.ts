@@ -22,6 +22,11 @@ class MainPage extends Page {
         this.layout = getMainLayout();
     }
 
+    private updateTotalCount(value: number): void {
+        const totalCount: HTMLSpanElement = <HTMLSpanElement>this.container.children[1].childNodes[0].childNodes[0].childNodes[1];
+        totalCount.textContent = `${value}`;
+    }
+
     private createSearchPanel(itemCollection: HTMLDivElement): HTMLDivElement {
         const searchPanel: HTMLDivElement = document.createElement('div');
 
@@ -77,6 +82,8 @@ class MainPage extends Page {
         gridLayout.className = 'search__grid-layout btn';
         gridLayout.innerHTML = iconsSVG.grid;
         gridLayout.addEventListener('click', () => {
+            gridLayout.classList.add('select');
+            listLayout.classList.remove('select');
             itemCollection.classList.remove('list');
             itemCollection.classList.add('grid');
             setMainLayout('grid');
@@ -85,10 +92,17 @@ class MainPage extends Page {
         listLayout.className = 'search__list-layout btn';
         listLayout.innerHTML = iconsSVG.list;
         listLayout.addEventListener('click', () => {
+            listLayout.classList.add('select');
+            gridLayout.classList.remove('select');            
             itemCollection.classList.remove('grid');
             itemCollection.classList.add('list');
             setMainLayout('list');
         });
+
+        if (this.layout === 'grid')
+            gridLayout.classList.add('select');
+        else
+            listLayout.classList.add('select');
 
         layoutPanel.className = 'search__layout-panel';
         layoutPanel.append(gridLayout, listLayout);
@@ -138,6 +152,7 @@ class MainPage extends Page {
         array.forEach((el) => {
             this.container.children[1].childNodes[1].appendChild(createCartItemFromMain(el));
         });
+        this.updateTotalCount(array.length);
     }       
 
     /* updateCount() {
@@ -350,7 +365,7 @@ class MainPage extends Page {
                         }
                     }
                     tempArray = filterItems(shoes, brandFilter, catFilter);
-                    this.createListItem(tempArray);
+                    this.createListItem(tempArray);                    
                     this.createTitleButtons(tempArray);
                     viewButtonAddClick();
                 }
