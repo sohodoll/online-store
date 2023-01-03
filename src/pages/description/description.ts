@@ -2,6 +2,7 @@ import { IPrototypeItem } from '../templates/items';
 import Page from '../templates/page';
 import { appendChildElements } from '../components/itemCart/itemCart';
 import { addItemToCart, buyNow, findInCart, getArrCart, arrCart } from '../../app';
+import { setCurrPage } from '../cart/cart';
 
 let selectImg: HTMLImageElement;
 
@@ -72,12 +73,14 @@ function createLeftDescriptionPanel(shoe: IPrototypeItem): HTMLDivElement {
             imageChoice.classList.toggle('select');
             selectImg = imageChoice;
             imageChoice.src = shoe.thumbnail;
-        } else imageChoice.src = shoe.images[i - 1];
+        } else
+            imageChoice.src = shoe.images[i - 1];
         imageChoice.alt = shoe.name;
         //click image
         imageChoice.addEventListener('click', function () {
             image.src = this.src;
-            if (selectImg) selectImg.classList.toggle('select');
+            if (selectImg)
+                selectImg.classList.toggle('select');
             this.classList.toggle('select');
             selectImg = <HTMLImageElement>this;
         });
@@ -93,12 +96,17 @@ function createLeftDescriptionPanel(shoe: IPrototypeItem): HTMLDivElement {
 
     btnAddToCart.className = 'description__button-add-cart btn';
     //if (findInCart(shoe.id) < 0)
-    if (arrCart.findIndex((el) => el.id === shoe.id) < 0) btnAddToCart.textContent = 'Add To Cart';
-    else btnAddToCart.textContent = 'Remove From Cart';
+    console.log(getArrCart());
+    if (arrCart.findIndex((el) => el.id === shoe.id) < 0)
+        btnAddToCart.textContent = 'Add To Cart';
+    else
+        btnAddToCart.textContent = 'Remove From Cart';
     btnAddToCart.addEventListener('click', function () {
         addItemToCart(shoe.id);
-        if (this.textContent === 'Add To Cart') this.textContent = 'Remove From Cart';
-        else this.textContent = 'Add To Cart';
+        if (this.textContent === 'Add To Cart')
+            this.textContent = 'Remove From Cart';
+        else 
+            this.textContent = 'Add To Cart'
     });
     appendChildElements(buttons, [btnBuyNow, btnAddToCart]);
     appendChildElements(descriptionLeft, [highlights, imgCollection, buttons]);
@@ -107,7 +115,7 @@ function createLeftDescriptionPanel(shoe: IPrototypeItem): HTMLDivElement {
 
 //create right description panel
 function createRightDescriptionPanel(shoe: IPrototypeItem): HTMLDivElement {
-    const descriptionRight: HTMLDivElement = document.createElement('div');
+    const descriptionRight: HTMLDivElement = document.createElement('div')
     const itemLeft: HTMLDivElement = document.createElement('div');
     const itemNaming: HTMLDivElement = document.createElement('div');
     const namingUpper: HTMLDivElement = document.createElement('div');
@@ -191,6 +199,8 @@ class DescriptionPage extends Page {
     render() {
         let breadcrumbs: HTMLDivElement = document.createElement('div');
         let description__container: HTMLDivElement = document.createElement('div');
+
+        setCurrPage(1);
         breadcrumbs = createBreadCrumbs(this.shoe.brand, this.shoe.name);
         description__container = createDescriptionPanel(this.shoe);
         appendChildElements(this.container, [breadcrumbs, description__container]);
@@ -217,7 +227,7 @@ class DescriptionPage extends Page {
                     </div>
                     <div class="description__image-choice">
                         <img class="image-choice" src="${this.shoePictures[0]}" alt="${this.shoeName}" />
-                    </div>
+                    </div>                            
                     <div class="description__image-choice">
                         <img class="image-choice" src="${this.shoePictures[1]}" alt="${this.shoeName}" />
                     </div>

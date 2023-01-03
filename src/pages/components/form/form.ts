@@ -121,18 +121,24 @@ function validateCardNum(): void {
     const isNum = /^\d+$/.test(stringValue);
     const error = setErrorMessage(cardNumField, 'Card number required or wrong format');
     if (!stringValue.length) {
-        cardFiller.src = '../../assets/icons/card-filler.png';
+        cardFiller.src = '../../assets/png/card-filler.png';
     }
     if (stringValue.length) {
+        switch (stringValue[0]) {
+            case '4': cardFiller.src = '../../assets/svg/visa.svg'; break;
+            case '5': cardFiller.src = '../../assets/svg/mastercard.svg'; break;
+            case '6': cardFiller.src = '../../assets/svg/paypal.svg'; break;
+        }
+        /*
         if (stringValue[0] === '4') {
-            cardFiller.src = '../../assets/icons/visa-logo-svg-vector.svg';
+            cardFiller.src = '../../assets/svg/visa.svg';
         }
         if (stringValue[0] === '5') {
-            cardFiller.src = '../../assets/icons/mastercard.png';
+            cardFiller.src = '../../assets/svg/mastercard.svg';
         }
         if (stringValue[0] === '6') {
-            cardFiller.src = '../../assets/icons/paypal.png';
-        }
+            cardFiller.src = '../../assets/svg/paypal.svg';
+        }*/
         if (stringValue.length === 16) {
             if (!isNum) {
                 error;
@@ -145,7 +151,7 @@ function validateCardNum(): void {
     }
 }
 
-function validateValidDate() {
+function validateValidDate(): void {
     const cardValidField = <HTMLInputElement>document.querySelector('#card-valid');
     const value = cardValidField.value;
     const error = setErrorMessage(cardValidField, 'Expiration date required or wrong format');
@@ -155,7 +161,6 @@ function validateValidDate() {
     }
     if (currValue[0] && currValue[2] && currValue[3] && currValue[4]) {
         if (Number(currValue[0] + currValue[1]) > 12 || (currValue[0] === '0' && currValue[1] === '0')) {
-            console.log('err');
             error;
         } else if (Number(currValue[3] + currValue[4]) > 31 || (currValue[3] === '0' && currValue[4] === '0')) {
             error;
@@ -165,7 +170,7 @@ function validateValidDate() {
     }
 }
 
-function validateCVV() {
+function validateCVV(): void {
     const cardCVVField = <HTMLInputElement>document.querySelector('#card-cvv');
     const value = cardCVVField.value;
     const error = setErrorMessage(cardCVVField, 'CVV required or wrong format');
@@ -176,7 +181,7 @@ function validateCVV() {
     }
 }
 
-function validateAllInputs() {
+function validateAllInputs(): boolean {
     const nameField = <HTMLInputElement>document.querySelector('#name');
     const phoneField = <HTMLInputElement>document.querySelector('#phone');
     const addressField = <HTMLInputElement>document.querySelector('#address');
@@ -209,22 +214,83 @@ function validateAllInputs() {
             isValid = true;
         }
     }
-    console.log(values);
     return isValid;
 }
 
-function submitFrom() {
-    let isValid = validateAllInputs();
+function submitFrom(): void {
+    const isValid = validateAllInputs();
     if (isValid) {
-        alert('Purchase completed! Emptying cart, redirecting to main...');
+        alert('Purchase completed!\n\nEmptying cart, redirecting to main...');
     } else {
-        console.log('cannot do!');
+        alert('Invalid data entered, please try again!!!');
     }
 }
 
 class Form {
-    render() {
-        return `
+    render(): HTMLFormElement {
+        const modalForm: HTMLFormElement = document.createElement('form');
+        modalForm.id = 'form';
+        modalForm.action = '/';
+        modalForm.innerHTML = `
+            <h1>Personal details</h1>
+            <div class="input-control">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" placeholder="Casey Neistat" />
+                <div class="error"></div>
+            </div>
+            <div class="input-control">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" placeholder="+4956902244" />
+                <div class="error"></div>
+            </div>
+            <div class="input-control">
+                <label for="address">Address</label>
+                <input type="text" id="address" name="address" placeholder="United States, Washington" />
+                <div class="error"></div>
+            </div>
+            <div class="input-control">
+                <label for="email">Email</label>
+                <input type="text" id="email" name="email" placeholder="email@email.com" />
+                <div class="error"></div>
+            </div>
+            <div class="input-control card-num-input-control">
+                <label for="card-num">Card Number</label>
+                <input
+                    class="card-num__input"
+                    type="number"
+                    id="card-num"
+                    name="card-num"
+                    placeholder="4997557688956757"
+                    onKeyPress="if(this.value.length==16) return false;"
+                />
+                <img id="card-filler" src="../../assets/png/card-filler.png" alt="card-brand" />
+                <div class="error"></div>
+            </div>
+            <div class="input-control">
+                <label for="card-valid">Valid Thru</label>
+                <input
+                    type="text"
+                    id="card-valid"
+                    name="card-valid"
+                    placeholder="04/24"
+                    onKeyPress="if(this.value.length==5) return false;"
+                />
+                <div class="error"></div>
+            </div>
+            <div class="input-control">
+                <label for="card-cvv">CVV</label>
+                <input
+                    type="text"
+                    id="card-cvv"
+                    name="card-cvv"
+                    placeholder="717"
+                    onKeyPress="if(this.value.length==3) return false;"
+                />
+                <div class="error"></div>
+            </div>
+            <button class="submit-button" type="submit">Submit</button>`;
+        return modalForm;
+/*        return `
         <form id="form" action="/">
             <h1>Personal details</h1>
             <div class="input-control">
@@ -283,9 +349,9 @@ class Form {
                 <div class="error"></div>
             </div>
             <button class="submit-button" type="submit">Submit</button>
-        </form>`;
+        </form>`;*/
     }
-    listen() {
+    listen(): void {
         const nameField = <HTMLInputElement>document.querySelector('#name');
         const phoneField = <HTMLInputElement>document.querySelector('#phone');
         const addressField = <HTMLInputElement>document.querySelector('#address');

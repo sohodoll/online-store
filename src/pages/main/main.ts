@@ -5,6 +5,7 @@ import shoes from '../../db/shoes';
 import { setSearchParams, removeSearchParams, filterItems } from '../templates/filters';
 import { getMainLayout, setMainLayout, updateHeader, viewButtonAddClick } from '../../app';
 import iconsSVG from '../templates/icons';
+import { setCurrPage } from '../cart/cart';
 
 let selectBrand: HTMLDivElement | undefined;
 let selectCategory: HTMLDivElement | undefined;
@@ -390,12 +391,17 @@ class MainPage extends Page {
                 const userSearchParams = new URLSearchParams(window.location.search);
                 this.handleQueryStorage(userSearchParams);
             } else {
+                setCurrPage(1);
                 this.createListItem(shoes);
             }
        /* } else { //if click logo (Store Online) then del all href - simulate a new page load
             window.history.pushState({}, document.title, "/");
             this.createListItem(shoes);
         }*/
+        /*const title = this.createHTML(MainPage.TextObject.MainTitle);
+        this.container.appendChild(title);*/
+        //this.createHTML(MainPage.TextObject.MainTitle);
+
         return this.container;
     }
 }
