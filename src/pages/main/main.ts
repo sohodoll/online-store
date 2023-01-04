@@ -24,7 +24,9 @@ class MainPage extends Page {
     }
 
     private updateTotalCount(value: number): void {
-        const totalCount: HTMLSpanElement = <HTMLSpanElement>this.container.children[1].childNodes[0].childNodes[1].childNodes[1];
+        const totalCount: HTMLSpanElement = <HTMLSpanElement>(
+            this.container.children[1].childNodes[0].childNodes[1].childNodes[1]
+        );
         totalCount.textContent = `${value}`;
     }
 
@@ -46,13 +48,12 @@ class MainPage extends Page {
         const searchInput: HTMLInputElement = document.createElement('input');
         const searchInputCleaner: HTMLLabelElement = document.createElement('label');
 
-        const layoutPanel: HTMLDivElement = document.createElement('div');  //grid or list
+        const layoutPanel: HTMLDivElement = document.createElement('div'); //grid or list
         const gridLayout: HTMLButtonElement = document.createElement('button');
         const listLayout: HTMLButtonElement = document.createElement('button');
 
         //Parameter Panel
 
-        
         copyQuery.innerText = 'Copy Link';
         copyQuery.className = 'search__copy-query btn';
         copyQuery.id = 'copy-query';
@@ -69,7 +70,7 @@ class MainPage extends Page {
                 copyQuery.classList.remove('copy_active');
                 copyQuery.innerText = 'Copy Link';
             }, 1000);
-        });    
+        });
 
         resetFilters.addEventListener('click', () => {
             selectBrand?.classList.remove('brand_active');
@@ -83,7 +84,7 @@ class MainPage extends Page {
             const filteredArray = filterItems(shoes, brandFilter, catFilter);
             this.createListItem(filteredArray);
             this.createTitleButtons(filteredArray, [brandFilter, catFilter]);
-            removeSearchParams(['brand', 'category']);
+            removeSearchParams(['brand', 'category', 'search']);
         });
 
         paramPanel.className = 'search__parameter-panel';
@@ -94,7 +95,7 @@ class MainPage extends Page {
         foundTitleParam.textContent = 'Found:';
 
         foundParam.className = 'search__found-count';
-        foundParam.textContent = '0';   
+        foundParam.textContent = '0';
 
         searchInputTitle.className = 'search__input-title';
         searchInputTitle.textContent = 'Search:';
@@ -103,10 +104,8 @@ class MainPage extends Page {
         searchInput.id = 'search__input';
         searchInput.type = 'text';
         searchInput.addEventListener('input', () => {
-            if (searchInput.value)
-                searchInputCleaner.classList.remove('hidden');
-            else
-                searchInputCleaner.classList.add('hidden');
+            if (searchInput.value) searchInputCleaner.classList.remove('hidden');
+            else searchInputCleaner.classList.add('hidden');
         });
         searchInput.addEventListener('change', () => {
             if (searchInput.value) {
@@ -115,8 +114,7 @@ class MainPage extends Page {
                 const searchArray: IPrototypeItem[] = this.searchItems(filteredArray);
                 setSearchParams(brandFilter, catFilter, searchString);
                 this.createListItem(searchArray);
-            }
-            else {
+            } else {
                 removeSearchParams(['search']);
                 const filteredArray = filterItems(shoes, brandFilter, catFilter);
                 this.createListItem(filteredArray);
@@ -134,7 +132,7 @@ class MainPage extends Page {
         searchInputPanel.className = 'search__input-panel';
         searchInputPanel.append(foundTitleParam, foundParam, searchInputTitle, searchInput, searchInputCleaner);
 
-        //Layout Panel        
+        //Layout Panel
         gridLayout.className = 'search__grid-layout btn';
         gridLayout.innerHTML = iconsSVG.grid;
         gridLayout.addEventListener('click', () => {
@@ -149,16 +147,14 @@ class MainPage extends Page {
         listLayout.innerHTML = iconsSVG.list;
         listLayout.addEventListener('click', () => {
             listLayout.classList.add('select');
-            gridLayout.classList.remove('select');            
+            gridLayout.classList.remove('select');
             itemCollection.classList.remove('grid');
             itemCollection.classList.add('list');
             setMainLayout('list');
         });
 
-        if (this.layout === 'grid')
-            gridLayout.classList.add('select');
-        else
-            listLayout.classList.add('select');
+        if (this.layout === 'grid') gridLayout.classList.add('select');
+        else listLayout.classList.add('select');
 
         layoutPanel.className = 'search__layout-panel';
         layoutPanel.append(gridLayout, listLayout);
@@ -172,7 +168,7 @@ class MainPage extends Page {
     private createMainItem(): HTMLDivElement {
         const mainItem: HTMLDivElement = document.createElement('div');
         const itemCollection: HTMLDivElement = document.createElement('div');
-        
+
         itemCollection.className = `main__items-collection ${this.layout}`;
         mainItem.className = 'main__items';
         mainItem.append(this.createSearchPanel(itemCollection), itemCollection);
@@ -205,12 +201,12 @@ class MainPage extends Page {
     }
 
     private createListItem(array: IPrototypeItem[]): void {
-        (this.container.children[1].childNodes[1] as HTMLDivElement).innerHTML = '';  //main-wrapper -> main__items -> main__items-collection
+        (this.container.children[1].childNodes[1] as HTMLDivElement).innerHTML = ''; //main-wrapper -> main__items -> main__items-collection
         array.forEach((el) => {
             this.container.children[1].childNodes[1].appendChild(createCartItemFromMain(el));
         });
         this.updateTotalCount(array.length);
-    }       
+    }
 
     /* updateCount() {
         const brandFiltersList: NodeListOf<HTMLDivElement> = document.querySelectorAll('.brand');
@@ -274,7 +270,7 @@ class MainPage extends Page {
     /**
      * @param array  - filtredArray after click to the filter button
      * */
-    createTitleButtons(array: IPrototypeItem[], searchParam?: string[]): void {        
+    createTitleButtons(array: IPrototypeItem[], searchParam?: string[]): void {
         //const brandButtons: NodeListOf<HTMLDivElement> = document.querySelectorAll('.brand');
         //const categoryButtons: NodeListOf<HTMLDivElement> = document.querySelectorAll('.category');
         const brandButtons: NodeListOf<ChildNode> = this.container.children[0].childNodes[1].childNodes; //main-wrapper -> main__filter -> brand__filter -> items
@@ -294,18 +290,16 @@ class MainPage extends Page {
         function addTitleAndCSS(button: ChildNode, countItem: number, type: string): void {
             button.childNodes[1].textContent = `${countItem}/`;
             if (countItem === 0) {
-                (button as HTMLDivElement).classList.add('disable');                
+                (button as HTMLDivElement).classList.add('disable');
                 (button as HTMLDivElement).classList.remove(`${type}_active`);
             } else {
                 (button as HTMLDivElement).classList.remove('disable');
                 if (searchParam?.includes(String(button.childNodes[0].textContent))) {
                     (button as HTMLDivElement).classList.add(`${type}_active`);
-                    if (type === 'brand')
-                        selectBrand = <HTMLDivElement>button;
-                    if (type === 'category')
-                        selectCategory = <HTMLDivElement>button;
+                    if (type === 'brand') selectBrand = <HTMLDivElement>button;
+                    if (type === 'category') selectCategory = <HTMLDivElement>button;
                 }
-            }            
+            }
         }
 
         brandButtons.forEach((button) => {
@@ -378,7 +372,7 @@ class MainPage extends Page {
                         } else {
                             brandFilter = element;
                             elementDiv.classList.toggle(`${type}_active`);
-                            selectBrand = <HTMLDivElement>elementDiv;                            
+                            selectBrand = <HTMLDivElement>elementDiv;
                             if (selectCategory) {
                                 brandFilter = element;
                                 catFilter = String(selectCategory.childNodes[0].textContent);
@@ -422,7 +416,7 @@ class MainPage extends Page {
                         }
                     }
                     tempArray = filterItems(shoes, brandFilter, catFilter);
-                    this.createListItem(tempArray);                    
+                    this.createListItem(tempArray);
                     this.createTitleButtons(tempArray);
                     viewButtonAddClick();
                 }
@@ -445,14 +439,16 @@ class MainPage extends Page {
         let searchArray: IPrototypeItem[];
         let filteredArray: IPrototypeItem[] = filterItems(shoes, brand, category);
         if (searchString) {
-            const searchInput: HTMLInputElement = <HTMLInputElement>this.container.children[1].childNodes[0].childNodes[1].childNodes[3];
+            const searchInput: HTMLInputElement = <HTMLInputElement>(
+                this.container.children[1].childNodes[0].childNodes[1].childNodes[3]
+            );
             searchInput.value = searchString;
             searchArray = this.searchItems(filteredArray);
             filteredArray = searchArray;
-        }        
+        }
         this.createListItem(filteredArray);
         this.createTitleButtons(filteredArray, [brand, category]);
-        
+
         /*
         setTimeout(() => {
             if (brand) {
@@ -470,14 +466,14 @@ class MainPage extends Page {
     render() {
         this.container.append(this.createFilters(), this.createMainItem());
         //if (!window.location.href.includes('#')) {
-            if (window.location.search) {
-                const userSearchParams = new URLSearchParams(window.location.search);
-                this.handleQueryStorage(userSearchParams);
-            } else {
-                setCurrPage(1);
-                this.createListItem(shoes);
-            }
-       /* } else { //if click logo (Store Online) then del all href - simulate a new page load
+        if (window.location.search) {
+            const userSearchParams = new URLSearchParams(window.location.search);
+            this.handleQueryStorage(userSearchParams);
+        } else {
+            setCurrPage(1);
+            this.createListItem(shoes);
+        }
+        /* } else { //if click logo (Store Online) then del all href - simulate a new page load
             window.history.pushState({}, document.title, "/");
             this.createListItem(shoes);
         }*/
