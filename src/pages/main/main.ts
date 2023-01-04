@@ -200,6 +200,345 @@ class MainPage extends Page {
         return filterElement;
     }
 
+    //DUAL SLIDERS
+
+    private createDualSliders() {
+        const maxPrice: number = Math.max(...shoes.map((shoe) => shoe.price));
+        const maxStock: number = Math.max(...shoes.map((shoe) => shoe.stock));
+
+        //price slider
+
+        const rangeContainer = <HTMLDivElement>document.createElement('div');
+        rangeContainer.className = 'range_container';
+        const slidersControl = <HTMLDivElement>document.createElement('div');
+        slidersControl.className = 'sliders_control';
+        const fromSlider = <HTMLInputElement>document.createElement('input');
+        const toSlider = <HTMLInputElement>document.createElement('input');
+        fromSlider.id = 'fromSlider';
+        fromSlider.type = 'range';
+        fromSlider.value = '10';
+        fromSlider.min = '0';
+        fromSlider.max = String(maxPrice);
+        toSlider.id = 'toSlider';
+        toSlider.type = 'range';
+        toSlider.value = '150';
+        toSlider.min = '0';
+        toSlider.max = String(maxPrice);
+        slidersControl.append(fromSlider, toSlider);
+        const formControl = <HTMLDivElement>document.createElement('div');
+        formControl.className = 'form-control';
+        const formControlContainer = <HTMLDivElement>document.createElement('div');
+        formControlContainer.className = 'form_control_container';
+        const controlMin = <HTMLDivElement>document.createElement('div');
+        controlMin.className = 'form_control_container__time';
+        controlMin.innerText = 'Min';
+        const controlMinInput = <HTMLInputElement>document.createElement('input');
+        controlMinInput.className = 'form_control_container__time__input';
+        controlMinInput.id = 'fromInput';
+        controlMinInput.type = 'number';
+        controlMinInput.value = '10';
+        controlMinInput.min = '0';
+        controlMinInput.max = String(maxPrice);
+        formControlContainer.append(controlMin, controlMinInput);
+        const formControlContainerMax = <HTMLDivElement>document.createElement('div');
+        formControlContainerMax.className = 'form_control_container';
+        const controlMax = <HTMLDivElement>document.createElement('div');
+        controlMax.className = 'form_control_container__time';
+        controlMax.innerText = 'Max';
+        const controlMaxInput = <HTMLInputElement>document.createElement('input');
+        controlMaxInput.className = 'form_control_container__time__input';
+        controlMaxInput.id = 'toInput';
+        controlMaxInput.type = 'number';
+        controlMaxInput.value = '150';
+        controlMaxInput.min = '0';
+        controlMaxInput.max = String(maxPrice);
+        formControlContainerMax.append(controlMax, controlMaxInput);
+
+        formControl.append(formControlContainer, formControlContainerMax);
+        rangeContainer.append(slidersControl, formControl);
+
+        //stock slider
+
+        const rangeContainerStock = <HTMLDivElement>document.createElement('div');
+        rangeContainerStock.className = 'range_containerStock';
+        const slidersControlStock = <HTMLDivElement>document.createElement('div');
+        slidersControlStock.className = 'sliders_controlStock';
+        const fromSliderStock = <HTMLInputElement>document.createElement('input');
+        const toSliderStock = <HTMLInputElement>document.createElement('input');
+        fromSliderStock.id = 'fromSliderStock';
+        fromSliderStock.type = 'range';
+        fromSliderStock.value = '5';
+        fromSliderStock.min = '0';
+        fromSliderStock.max = String(maxStock);
+        toSliderStock.id = 'toSliderStock';
+        toSliderStock.type = 'range';
+        toSliderStock.value = '15';
+        toSliderStock.min = '0';
+        toSliderStock.max = String(maxStock);
+        slidersControlStock.append(fromSliderStock, toSliderStock);
+        const formControlStock = <HTMLDivElement>document.createElement('div');
+        formControlStock.className = 'form-controlStock';
+        const formControlContainerStock = <HTMLDivElement>document.createElement('div');
+        formControlContainerStock.className = 'form_control_containerStock';
+        const controlMinStock = <HTMLDivElement>document.createElement('div');
+        controlMinStock.className = 'form_control_container__timeStock';
+        controlMinStock.innerText = 'Min';
+        const controlMinInputStock = <HTMLInputElement>document.createElement('input');
+        controlMinInputStock.className = 'form_control_container__time__inputStock';
+        controlMinInputStock.id = 'fromInputStock';
+        controlMinInputStock.type = 'number';
+        controlMinInputStock.value = '5';
+        controlMinInputStock.min = '0';
+        controlMinInputStock.max = String(maxStock);
+        formControlContainerStock.append(controlMinStock, controlMinInputStock);
+        const formControlContainerMaxStock = <HTMLDivElement>document.createElement('div');
+        formControlContainerMaxStock.className = 'form_control_containerStock';
+        const controlMaxStock = <HTMLDivElement>document.createElement('div');
+        controlMaxStock.className = 'form_control_container__timeStock';
+        controlMaxStock.innerText = 'Max';
+        const controlMaxInputStock = <HTMLInputElement>document.createElement('input');
+        controlMaxInputStock.className = 'form_control_container__time__inputStock';
+        controlMaxInputStock.id = 'toInputStock';
+        controlMaxInputStock.type = 'number';
+        controlMaxInputStock.value = '15';
+        controlMaxInputStock.min = '0';
+        controlMaxInputStock.max = String(maxStock);
+        formControlContainerMaxStock.append(controlMaxStock, controlMaxInputStock);
+
+        formControlStock.append(formControlContainerStock, formControlContainerMaxStock);
+        rangeContainerStock.append(slidersControlStock, formControlStock);
+
+        const mainFilters = <HTMLDivElement>document.querySelector('.main__filters');
+        console.log('duals!');
+        mainFilters.append(rangeContainer, rangeContainerStock);
+        setTimeout(() => {
+            this.managePriceSlider();
+            this.manageStockSlider();
+        }, 200);
+    }
+
+    private managePriceSlider() {
+        function controlFromInput(
+            fromSlider: HTMLInputElement,
+            fromInput: HTMLInputElement,
+            toInput: HTMLInputElement,
+            controlSlider: HTMLInputElement
+        ) {
+            const [from, to] = getParsed(fromInput, toInput);
+            fillSlider(fromInput, toInput, '#C6C6C6', '#25daa5', controlSlider);
+            if (from > to) {
+                fromSlider.value = String(to);
+                fromInput.value = String(to);
+            } else {
+                fromSlider.value = String(from);
+            }
+        }
+
+        function controlToInput(
+            toSlider: HTMLInputElement,
+            fromInput: HTMLInputElement,
+            toInput: HTMLInputElement,
+            controlSlider: HTMLInputElement
+        ) {
+            const [from, to] = getParsed(fromInput, toInput);
+            fillSlider(fromInput, toInput, '#C6C6C6', '#25daa5', controlSlider);
+            setToggleAccessible(toInput);
+            if (from <= to) {
+                toSlider.value = String(to);
+                toInput.value = String(to);
+            } else {
+                toInput.value = String(from);
+            }
+        }
+
+        function controlFromSlider(
+            fromSlider: HTMLInputElement,
+            toSlider: HTMLInputElement,
+            fromInput: HTMLInputElement
+        ) {
+            const [from, to] = getParsed(fromSlider, toSlider);
+            fillSlider(fromSlider, toSlider, '#C6C6C6', '#655588', toSlider);
+            if (from > to) {
+                fromSlider.value = String(to);
+                fromInput.value = String(to);
+            } else {
+                fromInput.value = String(from);
+            }
+        }
+
+        function controlToSlider(fromSlider: HTMLInputElement, toSlider: HTMLInputElement, toInput: HTMLInputElement) {
+            const [from, to] = getParsed(fromSlider, toSlider);
+            fillSlider(fromSlider, toSlider, '#C6C6C6', '#655588', toSlider);
+            setToggleAccessible(toSlider);
+            if (from <= to) {
+                toSlider.value = String(to);
+                toInput.value = String(to);
+            } else {
+                toInput.value = String(from);
+                toSlider.value = String(from);
+            }
+        }
+
+        function getParsed(currentFrom: HTMLInputElement, currentTo: HTMLInputElement) {
+            const from = parseInt(currentFrom.value, 10);
+            const to = parseInt(currentTo.value, 10);
+            return [from, to];
+        }
+
+        function fillSlider(
+            from: HTMLInputElement,
+            to: HTMLInputElement,
+            sliderColor: string,
+            rangeColor: string,
+            controlSlider: HTMLInputElement
+        ) {
+            const rangeDistance = Number(to.max) - Number(to.min);
+            const fromPosition = Number(from.value) - Number(to.min);
+            const toPosition = Number(to.value) - Number(to.min);
+            controlSlider.style.background = `linear-gradient(
+              to right,
+              ${sliderColor} 0%,
+              ${sliderColor} ${(fromPosition / rangeDistance) * 100}%,
+              ${rangeColor} ${(fromPosition / rangeDistance) * 100}%,
+              ${rangeColor} ${(toPosition / rangeDistance) * 100}%,
+              ${sliderColor} ${(toPosition / rangeDistance) * 100}%,
+              ${sliderColor} 100%)`;
+        }
+
+        function setToggleAccessible(currentTarget: HTMLInputElement) {
+            const toSlider = <HTMLInputElement>document.querySelector('#toSlider');
+            if (Number(currentTarget.value) <= 0) {
+                toSlider.style.zIndex = String(2);
+            } else {
+                toSlider.style.zIndex = String(0);
+            }
+        }
+
+        const fromSlider = <HTMLInputElement>document.querySelector('#fromSlider');
+        const toSlider = <HTMLInputElement>document.querySelector('#toSlider');
+        const fromInput = <HTMLInputElement>document.querySelector('#fromInput');
+        const toInput = <HTMLInputElement>document.querySelector('#toInput');
+        // const controlSlider = document.querySelector('sliders_control');
+        fillSlider(fromSlider, toSlider, '#C6C6C6', '#655588', toSlider);
+        setToggleAccessible(toSlider);
+
+        fromSlider.oninput = () => controlFromSlider(fromSlider, toSlider, fromInput);
+        toSlider.oninput = () => controlToSlider(fromSlider, toSlider, toInput);
+        fromInput.oninput = () => controlFromInput(fromSlider, fromInput, toInput, toSlider);
+        toInput.oninput = () => controlToInput(toSlider, fromInput, toInput, toSlider);
+    }
+
+    private manageStockSlider() {
+        function controlFromInput(
+            fromSlider: HTMLInputElement,
+            fromInput: HTMLInputElement,
+            toInput: HTMLInputElement,
+            controlSlider: HTMLInputElement
+        ) {
+            const [from, to] = getParsed(fromInput, toInput);
+            fillSlider(fromInput, toInput, '#C6C6C6', '#655588', controlSlider);
+            if (from > to) {
+                fromSlider.value = String(to);
+                fromInput.value = String(to);
+            } else {
+                fromSlider.value = String(from);
+            }
+        }
+
+        function controlToInput(
+            toSlider: HTMLInputElement,
+            fromInput: HTMLInputElement,
+            toInput: HTMLInputElement,
+            controlSlider: HTMLInputElement
+        ) {
+            const [from, to] = getParsed(fromInput, toInput);
+            fillSlider(fromInput, toInput, '#C6C6C6', '#655588', controlSlider);
+            setToggleAccessible(toInput);
+            if (from <= to) {
+                toSlider.value = String(to);
+                toInput.value = String(to);
+            } else {
+                toInput.value = String(from);
+            }
+        }
+
+        function controlFromSlider(
+            fromSlider: HTMLInputElement,
+            toSlider: HTMLInputElement,
+            fromInput: HTMLInputElement
+        ) {
+            const [from, to] = getParsed(fromSlider, toSlider);
+            fillSlider(fromSlider, toSlider, '#C6C6C6', '#655588', toSlider);
+            if (from > to) {
+                fromSlider.value = String(to);
+                fromInput.value = String(to);
+            } else {
+                fromInput.value = String(from);
+            }
+        }
+
+        function controlToSlider(fromSlider: HTMLInputElement, toSlider: HTMLInputElement, toInput: HTMLInputElement) {
+            const [from, to] = getParsed(fromSlider, toSlider);
+            fillSlider(fromSlider, toSlider, '#C6C6C6', '#655588', toSlider);
+            setToggleAccessible(toSlider);
+            if (from <= to) {
+                toSlider.value = String(to);
+                toInput.value = String(to);
+            } else {
+                toInput.value = String(from);
+                toSlider.value = String(from);
+            }
+        }
+
+        function getParsed(currentFrom: HTMLInputElement, currentTo: HTMLInputElement) {
+            const from = parseInt(currentFrom.value, 10);
+            const to = parseInt(currentTo.value, 10);
+            return [from, to];
+        }
+
+        function fillSlider(
+            from: HTMLInputElement,
+            to: HTMLInputElement,
+            sliderColor: string,
+            rangeColor: string,
+            controlSlider: HTMLInputElement
+        ) {
+            const rangeDistance = Number(to.max) - Number(to.min);
+            const fromPosition = Number(from.value) - Number(to.min);
+            const toPosition = Number(to.value) - Number(to.min);
+            controlSlider.style.background = `linear-gradient(
+              to right,
+              ${sliderColor} 0%,
+              ${sliderColor} ${(fromPosition / rangeDistance) * 100}%,
+              ${rangeColor} ${(fromPosition / rangeDistance) * 100}%,
+              ${rangeColor} ${(toPosition / rangeDistance) * 100}%,
+              ${sliderColor} ${(toPosition / rangeDistance) * 100}%,
+              ${sliderColor} 100%)`;
+        }
+
+        function setToggleAccessible(currentTarget: HTMLInputElement) {
+            const toSlider = <HTMLInputElement>document.querySelector('#toSliderStock');
+            if (Number(currentTarget.value) <= 0) {
+                toSlider.style.zIndex = String(2);
+            } else {
+                toSlider.style.zIndex = String(0);
+            }
+        }
+
+        const fromSlider = <HTMLInputElement>document.querySelector('#fromSliderStock');
+        const toSlider = <HTMLInputElement>document.querySelector('#toSliderStock');
+        const fromInput = <HTMLInputElement>document.querySelector('#fromInputStock');
+        const toInput = <HTMLInputElement>document.querySelector('#toInputStock');
+        // const controlSlider = document.querySelector('sliders_control');
+        fillSlider(fromSlider, toSlider, '#C6C6C6', '#655588', toSlider);
+        setToggleAccessible(toSlider);
+
+        fromSlider.oninput = () => controlFromSlider(fromSlider, toSlider, fromInput);
+        toSlider.oninput = () => controlToSlider(fromSlider, toSlider, toInput);
+        fromInput.oninput = () => controlFromInput(fromSlider, fromInput, toInput, toSlider);
+        toInput.oninput = () => controlToInput(toSlider, fromInput, toInput, toSlider);
+    }
+
     private createListItem(array: IPrototypeItem[]): void {
         (this.container.children[1].childNodes[1] as HTMLDivElement).innerHTML = ''; //main-wrapper -> main__items -> main__items-collection
         array.forEach((el) => {
@@ -465,6 +804,9 @@ class MainPage extends Page {
 
     render() {
         this.container.append(this.createFilters(), this.createMainItem());
+        setTimeout(() => {
+            this.createDualSliders();
+        }, 300);
         //if (!window.location.href.includes('#')) {
         if (window.location.search) {
             const userSearchParams = new URLSearchParams(window.location.search);
