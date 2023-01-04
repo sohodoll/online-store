@@ -4,6 +4,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
+const NetlifyPlugin = require('netlify-webpack-plugin');
 
 module.exports = {
     entry: './src/index.ts',
@@ -38,6 +39,15 @@ module.exports = {
         }),
         new CopyPlugin({
             patterns: [{ from: 'src/assets', to: 'assets' }],
+        }),
+        new NetlifyPlugin({
+            redirects: [
+                {
+                    from: '/*',
+                    to: '/index.html',
+                    status: 200,
+                },
+            ],
         }),
     ],
     optimization: {
