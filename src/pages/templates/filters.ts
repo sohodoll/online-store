@@ -37,7 +37,36 @@ function removeSearchParams(types: string[]) {
     window.history.replaceState(null, 'null', url);
 }
 
-function filterItems(array: IPrototypeItem[], brand: string, category: string): IPrototypeItem[] {
+function filterItems(array: IPrototypeItem[], parameters: string[][]): IPrototypeItem[] {
+    let filteredArray: IPrototypeItem[] = array.concat();
+    parameters.forEach((param) => {
+        if (param[0] !== undefined) {
+            if (param.length === 1) {                
+                const key: string = param[0].split('=')[0];
+                const value: string = param[0].split('=')[1];
+                console.log(key, value);
+                switch (key) {
+                    case 'brand': filteredArray = filteredArray.filter((element) => element.brand === value); break;
+                    case 'category': filteredArray = filteredArray.filter((element) => element.category === value); break;
+                }
+            } else {
+                const key: string = param[0].split('>')[0];
+                const min: number = parseInt(param[0].split('>')[1]);
+                const max: number = parseInt(param[1].split('<')[1]);
+                console.log(key, min, max);
+                switch (key) {
+                    case 'price': filteredArray = filteredArray.filter((element) => { return element.price >= min && element.price <= max }); break;
+                    case 'stock': filteredArray = filteredArray.filter((element) => { return element.stock >= min && element.stock <= max }); break;
+                }
+            }
+        } else {
+            console.log(`${param} is undefined`);
+        }
+    });
+    return filteredArray;
+}
+
+/*function filterItems(array: IPrototypeItem[], brand: string, category: string): IPrototypeItem[] {
     let filteredArray: IPrototypeItem[] = [];
     if (brand && category) {
         filteredArray = array.filter((element) => {
@@ -54,6 +83,6 @@ function filterItems(array: IPrototypeItem[], brand: string, category: string): 
         }
     }
     return filteredArray;
-}
+}*/
 
 export { setSearchParams, removeSearchParams, filterItems };

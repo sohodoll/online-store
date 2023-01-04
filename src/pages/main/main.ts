@@ -81,9 +81,11 @@ class MainPage extends Page {
             searchInput.value = '';
             selectBrand = undefined;
             selectCategory = undefined;
-            const filteredArray = filterItems(shoes, brandFilter, catFilter);
+            /*const filteredArray = filterItems(shoes, [[brandFilter], [catFilter], [], []]);
             this.createListItem(filteredArray);
-            this.createTitleButtons(filteredArray, [brandFilter, catFilter]);
+            this.createTitleButtons(filteredArray, [brandFilter, catFilter]);*/
+            this.createListItem(shoes);
+            this.createTitleButtons(shoes, [brandFilter, catFilter]);
             removeSearchParams(['brand', 'category', 'search']);
         });
 
@@ -110,13 +112,13 @@ class MainPage extends Page {
         searchInput.addEventListener('change', () => {
             if (searchInput.value) {
                 searchString = String(searchInput.value);
-                const filteredArray = filterItems(shoes, brandFilter, catFilter);
+                const filteredArray = filterItems(shoes, [[brandFilter], [catFilter], [], []]);
                 const searchArray: IPrototypeItem[] = this.searchItems(filteredArray);
                 setSearchParams(brandFilter, catFilter, searchString);
                 this.createListItem(searchArray);
             } else {
                 removeSearchParams(['search']);
-                const filteredArray = filterItems(shoes, brandFilter, catFilter);
+                const filteredArray = filterItems(shoes, [[brandFilter], [catFilter], [], []]);
                 this.createListItem(filteredArray);
             }
         });
@@ -193,239 +195,133 @@ class MainPage extends Page {
         categoryFilters.classList.add('category__filter');
         filterElement.className = 'main__filters';
         filterElement.append(categoryFilters, brandFilters);
-
+        this.createDualSliders(filterElement);
         return filterElement;
     }
 
     //DUAL SLIDERS
 
-    private createDualSliders() {
+    private getSlidersValues(): string[] {
+        const priceFromSlider: HTMLInputElement = <HTMLInputElement>document.querySelector('#priceFromSlider');
+        const priceToSlider: HTMLInputElement = <HTMLInputElement>document.querySelector('#priceToSlider');
+        const stockFromSlider: HTMLInputElement = <HTMLInputElement>document.querySelector('#stockFromSlider');
+        const stockToSlider: HTMLInputElement = <HTMLInputElement>document.querySelector('#stockToSlider');
+        return [priceFromSlider.value, priceToSlider.value, stockFromSlider.value, stockToSlider.value];
+    }
+
+    private createSlider(maxValue: number, nameFilter: string): HTMLDivElement {
+        const sliderContainer: HTMLDivElement = <HTMLDivElement>document.createElement('div');        
+        const slidersControl: HTMLDivElement = <HTMLDivElement>document.createElement('div');
+        const fromSlider: HTMLInputElement = <HTMLInputElement>document.createElement('input');
+        const toSlider: HTMLInputElement = <HTMLInputElement>document.createElement('input');
+
+        function sliderFilter(type: string, minValue: number, maxValue: number): IPrototypeItem[] {
+            let filteredArray: IPrototypeItem[];
+            if (type === 'price') {
+                filteredArray = tempArray.filter((el) => {
+                    return el.price >= minValue && el.price <= maxValue;
+                });
+            } else {
+                filteredArray = tempArray.filter((el) => {
+                    return el.stock >= minValue && el.stock <= maxValue;
+                });
+            }
+            return filteredArray;
+        }
+
+        fromSlider.id = `${nameFilter}FromSlider`;
+        fromSlider.type = 'range';
+        fromSlider.min = '0';
+        fromSlider.max = `${maxValue}`;
+        fromSlider.value = '0';
+        fromSlider.addEventListener('mouseup', () => {
+            const [priceMin, priceMax, stockMin, stockMax] = this.getSlidersValues();
+            tempArray = filterItems(shoes, [
+                [brandFilter],
+                [catFilter],
+                [`price>${priceMin}`, `price<${priceMax}`],
+                [`stock>${stockMin}`, `stock<${stockMax}`]
+            ]);
+            this.createListItem(tempArray);
+            this.createTitleButtons(tempArray);
+        })
+
+        toSlider.id = `${nameFilter}ToSlider`;
+        toSlider.type = 'range';
+        toSlider.min = '0';
+        toSlider.max = `${maxValue}`;
+        toSlider.value = `${maxValue}`;
+        toSlider.addEventListener('mouseup', () => {
+            const [priceMin, priceMax, stockMin, stockMax] = this.getSlidersValues();
+            tempArray = filterItems(shoes, [
+                [brandFilter],
+                [catFilter],
+                [`price>${priceMin}`, `price<${priceMax}`],
+                [`stock>${stockMin}`, `stock<${stockMax}`]
+            ]);
+            this.createListItem(tempArray);
+            this.createTitleButtons(tempArray);
+        })
+
+        slidersControl.className = `${nameFilter}-sliders`;
+        slidersControl.append(fromSlider, toSlider);
+
+        const sliderValues: HTMLDivElement = <HTMLDivElement>document.createElement('div');        
+        const sliderValuesMin: HTMLDivElement = <HTMLDivElement>document.createElement('div');
+        const controlMin: HTMLDivElement = <HTMLDivElement>document.createElement('div');
+        const controlMinInput: HTMLInputElement = <HTMLInputElement>document.createElement('input');
+            
+        controlMin.className = 'slider-values-min-title';
+        controlMin.innerText = 'Min';
+        
+        controlMinInput.className = 'slider-values-min-input';
+        controlMinInput.id = `${nameFilter}FromInput`;
+        controlMinInput.type = 'number';
+        controlMinInput.value = '0';
+        controlMinInput.min = '0';
+        controlMinInput.max = `${maxValue}`;
+
+        sliderValuesMin.className = 'slider-values-min';
+        sliderValuesMin.append(controlMin, controlMinInput);
+
+        const sliderValuesMax: HTMLDivElement = <HTMLDivElement>document.createElement('div');
+        const controlMax: HTMLDivElement = <HTMLDivElement>document.createElement('div');
+        const controlMaxInput: HTMLInputElement = <HTMLInputElement>document.createElement('input');
+
+        controlMax.className = 'slider-values-max-title';
+        controlMax.innerText = 'Max';
+        
+        controlMaxInput.className = 'slider-values-max-input';
+        controlMaxInput.id = `${nameFilter}ToInput`;
+        controlMaxInput.type = 'number';
+        controlMaxInput.value = `${maxValue}`;
+        controlMaxInput.min = '0';
+        controlMaxInput.max = `${maxValue}`;
+
+        sliderValuesMax.className = 'slider-values-max';
+        sliderValuesMax.append(controlMax, controlMaxInput);
+
+        sliderValues.className = `slider-values`;
+        sliderValues.append(sliderValuesMin, sliderValuesMax);
+
+        sliderContainer.className = `${nameFilter}__filter`;
+        sliderContainer.append(slidersControl, sliderValues);
+
+        this.manageSlider(fromSlider, toSlider, controlMinInput, controlMaxInput);
+        return sliderContainer;
+    }
+
+    private createDualSliders(parent: HTMLDivElement): void {
         const maxPrice: number = Math.max(...shoes.map((shoe) => shoe.price));
         const maxStock: number = Math.max(...shoes.map((shoe) => shoe.stock));
 
-        //price slider
+        const priceContainer: HTMLDivElement = this.createSlider(maxPrice, 'price');
+        const stockContainer: HTMLDivElement = this.createSlider(maxStock, 'stock');
 
-        const rangeContainer = <HTMLDivElement>document.createElement('div');
-        rangeContainer.className = 'range_container';
-        const slidersControl = <HTMLDivElement>document.createElement('div');
-        slidersControl.className = 'sliders_control';
-        const fromSlider = <HTMLInputElement>document.createElement('input');
-        const toSlider = <HTMLInputElement>document.createElement('input');
-        fromSlider.id = 'fromSlider';
-        fromSlider.type = 'range';
-        fromSlider.value = '0';
-        fromSlider.min = '0';
-        fromSlider.max = String(maxPrice);
-        toSlider.id = 'toSlider';
-        toSlider.type = 'range';
-        toSlider.value = `${String(maxPrice)}`;
-        toSlider.min = '0';
-        toSlider.max = String(maxPrice);
-        slidersControl.append(fromSlider, toSlider);
-        const formControl = <HTMLDivElement>document.createElement('div');
-        formControl.className = 'form-control';
-        const formControlContainer = <HTMLDivElement>document.createElement('div');
-        formControlContainer.className = 'form_control_container';
-        const controlMin = <HTMLDivElement>document.createElement('div');
-        controlMin.className = 'form_control_container__time';
-        controlMin.innerText = 'Min';
-        const controlMinInput = <HTMLInputElement>document.createElement('input');
-        controlMinInput.className = 'form_control_container__time__input';
-        controlMinInput.id = 'fromInput';
-        controlMinInput.type = 'number';
-        controlMinInput.value = '10';
-        controlMinInput.min = '0';
-        controlMinInput.max = String(maxPrice);
-        formControlContainer.append(controlMin, controlMinInput);
-        const formControlContainerMax = <HTMLDivElement>document.createElement('div');
-        formControlContainerMax.className = 'form_control_container';
-        const controlMax = <HTMLDivElement>document.createElement('div');
-        controlMax.className = 'form_control_container__time';
-        controlMax.innerText = 'Max';
-        const controlMaxInput = <HTMLInputElement>document.createElement('input');
-        controlMaxInput.className = 'form_control_container__time__input';
-        controlMaxInput.id = 'toInput';
-        controlMaxInput.type = 'number';
-        controlMaxInput.value = '150';
-        controlMaxInput.min = '0';
-        controlMaxInput.max = String(maxPrice);
-        formControlContainerMax.append(controlMax, controlMaxInput);
-
-        formControl.append(formControlContainer, formControlContainerMax);
-        rangeContainer.append(slidersControl, formControl);
-
-        //stock slider
-
-        const rangeContainerStock = <HTMLDivElement>document.createElement('div');
-        rangeContainerStock.className = 'range_containerStock';
-        const slidersControlStock = <HTMLDivElement>document.createElement('div');
-        slidersControlStock.className = 'sliders_controlStock';
-        const fromSliderStock = <HTMLInputElement>document.createElement('input');
-        const toSliderStock = <HTMLInputElement>document.createElement('input');
-        fromSliderStock.id = 'fromSliderStock';
-        fromSliderStock.type = 'range';
-        fromSliderStock.value = '5';
-        fromSliderStock.min = '0';
-        fromSliderStock.max = String(maxStock);
-        toSliderStock.id = 'toSliderStock';
-        toSliderStock.type = 'range';
-        toSliderStock.value = '15';
-        toSliderStock.min = '0';
-        toSliderStock.max = String(maxStock);
-        slidersControlStock.append(fromSliderStock, toSliderStock);
-        const formControlStock = <HTMLDivElement>document.createElement('div');
-        formControlStock.className = 'form-controlStock';
-        const formControlContainerStock = <HTMLDivElement>document.createElement('div');
-        formControlContainerStock.className = 'form_control_containerStock';
-        const controlMinStock = <HTMLDivElement>document.createElement('div');
-        controlMinStock.className = 'form_control_container__timeStock';
-        controlMinStock.innerText = 'Min';
-        const controlMinInputStock = <HTMLInputElement>document.createElement('input');
-        controlMinInputStock.className = 'form_control_container__time__inputStock';
-        controlMinInputStock.id = 'fromInputStock';
-        controlMinInputStock.type = 'number';
-        controlMinInputStock.value = '5';
-        controlMinInputStock.min = '0';
-        controlMinInputStock.max = String(maxStock);
-        formControlContainerStock.append(controlMinStock, controlMinInputStock);
-        const formControlContainerMaxStock = <HTMLDivElement>document.createElement('div');
-        formControlContainerMaxStock.className = 'form_control_containerStock';
-        const controlMaxStock = <HTMLDivElement>document.createElement('div');
-        controlMaxStock.className = 'form_control_container__timeStock';
-        controlMaxStock.innerText = 'Max';
-        const controlMaxInputStock = <HTMLInputElement>document.createElement('input');
-        controlMaxInputStock.className = 'form_control_container__time__inputStock';
-        controlMaxInputStock.id = 'toInputStock';
-        controlMaxInputStock.type = 'number';
-        controlMaxInputStock.value = '15';
-        controlMaxInputStock.min = '0';
-        controlMaxInputStock.max = String(maxStock);
-        formControlContainerMaxStock.append(controlMaxStock, controlMaxInputStock);
-
-        formControlStock.append(formControlContainerStock, formControlContainerMaxStock);
-        rangeContainerStock.append(slidersControlStock, formControlStock);
-
-        const mainFilters = <HTMLDivElement>document.querySelector('.main__filters');
-        console.log('duals!');
-        mainFilters.append(rangeContainer, rangeContainerStock);
-        setTimeout(() => {
-            this.managePriceSlider();
-            this.manageStockSlider();
-        }, 200);
+        parent.append(priceContainer, stockContainer);
     }
 
-    private managePriceSlider() {
-        function controlFromInput(
-            fromSlider: HTMLInputElement,
-            fromInput: HTMLInputElement,
-            toInput: HTMLInputElement,
-            controlSlider: HTMLInputElement
-        ) {
-            const [from, to] = getParsed(fromInput, toInput);
-            fillSlider(fromInput, toInput, '#C6C6C6', '#25daa5', controlSlider);
-            if (from > to) {
-                fromSlider.value = String(to);
-                fromInput.value = String(to);
-            } else {
-                fromSlider.value = String(from);
-            }
-        }
-
-        function controlToInput(
-            toSlider: HTMLInputElement,
-            fromInput: HTMLInputElement,
-            toInput: HTMLInputElement,
-            controlSlider: HTMLInputElement
-        ) {
-            const [from, to] = getParsed(fromInput, toInput);
-            fillSlider(fromInput, toInput, '#C6C6C6', '#25daa5', controlSlider);
-            setToggleAccessible(toInput);
-            if (from <= to) {
-                toSlider.value = String(to);
-                toInput.value = String(to);
-            } else {
-                toInput.value = String(from);
-            }
-        }
-
-        function controlFromSlider(
-            fromSlider: HTMLInputElement,
-            toSlider: HTMLInputElement,
-            fromInput: HTMLInputElement
-        ) {
-            const [from, to] = getParsed(fromSlider, toSlider);
-            fillSlider(fromSlider, toSlider, '#C6C6C6', '#655588', toSlider);
-            if (from > to) {
-                fromSlider.value = String(to);
-                fromInput.value = String(to);
-            } else {
-                fromInput.value = String(from);
-            }
-        }
-
-        function controlToSlider(fromSlider: HTMLInputElement, toSlider: HTMLInputElement, toInput: HTMLInputElement) {
-            const [from, to] = getParsed(fromSlider, toSlider);
-            fillSlider(fromSlider, toSlider, '#C6C6C6', '#655588', toSlider);
-            setToggleAccessible(toSlider);
-            if (from <= to) {
-                toSlider.value = String(to);
-                toInput.value = String(to);
-            } else {
-                toInput.value = String(from);
-                toSlider.value = String(from);
-            }
-        }
-
-        function getParsed(currentFrom: HTMLInputElement, currentTo: HTMLInputElement) {
-            const from = parseInt(currentFrom.value, 10);
-            const to = parseInt(currentTo.value, 10);
-            return [from, to];
-        }
-
-        function fillSlider(
-            from: HTMLInputElement,
-            to: HTMLInputElement,
-            sliderColor: string,
-            rangeColor: string,
-            controlSlider: HTMLInputElement
-        ) {
-            const rangeDistance = Number(to.max) - Number(to.min);
-            const fromPosition = Number(from.value) - Number(to.min);
-            const toPosition = Number(to.value) - Number(to.min);
-            controlSlider.style.background = `linear-gradient(
-              to right,
-              ${sliderColor} 0%,
-              ${sliderColor} ${(fromPosition / rangeDistance) * 100}%,
-              ${rangeColor} ${(fromPosition / rangeDistance) * 100}%,
-              ${rangeColor} ${(toPosition / rangeDistance) * 100}%,
-              ${sliderColor} ${(toPosition / rangeDistance) * 100}%,
-              ${sliderColor} 100%)`;
-        }
-
-        function setToggleAccessible(currentTarget: HTMLInputElement) {
-            const toSlider = <HTMLInputElement>document.querySelector('#toSlider');
-            if (Number(currentTarget.value) <= 0) {
-                toSlider.style.zIndex = String(2);
-            } else {
-                toSlider.style.zIndex = String(0);
-            }
-        }
-
-        const fromSlider = <HTMLInputElement>document.querySelector('#fromSlider');
-        const toSlider = <HTMLInputElement>document.querySelector('#toSlider');
-        const fromInput = <HTMLInputElement>document.querySelector('#fromInput');
-        const toInput = <HTMLInputElement>document.querySelector('#toInput');
-        // const controlSlider = document.querySelector('sliders_control');
-        fillSlider(fromSlider, toSlider, '#C6C6C6', '#655588', toSlider);
-        setToggleAccessible(toSlider);
-
-        fromSlider.oninput = () => controlFromSlider(fromSlider, toSlider, fromInput);
-        toSlider.oninput = () => controlToSlider(fromSlider, toSlider, toInput);
-        fromInput.oninput = () => controlFromInput(fromSlider, fromInput, toInput, toSlider);
-        toInput.oninput = () => controlToInput(toSlider, fromInput, toInput, toSlider);
-    }
-
-    private manageStockSlider() {
+    private manageSlider(fromSlider: HTMLInputElement, toSlider: HTMLInputElement, fromInput: HTMLInputElement, toInput: HTMLInputElement): void {
         function controlFromInput(
             fromSlider: HTMLInputElement,
             fromInput: HTMLInputElement,
@@ -514,18 +410,18 @@ class MainPage extends Page {
         }
 
         function setToggleAccessible(currentTarget: HTMLInputElement) {
-            const toSlider = <HTMLInputElement>document.querySelector('#toSliderStock');
+            //const toSlider = <HTMLInputElement>document.querySelector('#stockToSlider');
             if (Number(currentTarget.value) <= 0) {
                 toSlider.style.zIndex = String(2);
             } else {
                 toSlider.style.zIndex = String(0);
             }
         }
-
-        const fromSlider = <HTMLInputElement>document.querySelector('#fromSliderStock');
-        const toSlider = <HTMLInputElement>document.querySelector('#toSliderStock');
-        const fromInput = <HTMLInputElement>document.querySelector('#fromInputStock');
-        const toInput = <HTMLInputElement>document.querySelector('#toInputStock');
+        /*
+        const fromSlider = <HTMLInputElement>document.querySelector('#stockFromSlider');
+        const toSlider = <HTMLInputElement>document.querySelector('#stockToSlider');
+        const fromInput = <HTMLInputElement>document.querySelector('#stockFromInput');
+        const toInput = <HTMLInputElement>document.querySelector('#stockToInput');*/
         // const controlSlider = document.querySelector('sliders_control');
         fillSlider(fromSlider, toSlider, '#C6C6C6', '#655588', toSlider);
         setToggleAccessible(toSlider);
@@ -661,11 +557,13 @@ class MainPage extends Page {
             const maxCount = document.createElement('div');
             currCount.id = `${element}-count`;
             if (type === 'brand') {
-                const filteredArray = filterItems(shoes, element, '');
+                //const filteredArray = filterItems(shoes, element, '');
+                const filteredArray = shoes.filter((el) => el.brand === element);
                 currCount.textContent = `${filteredArray.length}/`;
                 maxCount.textContent = `${filteredArray.length}`;
             } else if (type === 'category') {
-                const filteredArray = filterItems(shoes, '', element);
+                //const filteredArray = filterItems(shoes, '', element);
+                const filteredArray = shoes.filter((el) => el.category === element);
                 currCount.textContent = `${filteredArray.length}/`;
                 maxCount.textContent = `${filteredArray.length}`;
             }
@@ -693,7 +591,7 @@ class MainPage extends Page {
                                 selectBrand.classList.toggle(`${type}_active`);
                                 elementDiv.classList.toggle(`${type}_active`);
                                 selectBrand = <HTMLDivElement>elementDiv;
-                                brandFilter = element;
+                                brandFilter = `brand=${element}`;
                                 setSearchParams(brandFilter, catFilter, searchString);
                                 //tempArray = filterItems(shoes, brandFilter, catFilter);
                                 //this.createListItem(tempArray);
@@ -703,18 +601,18 @@ class MainPage extends Page {
                                 elementDiv.classList.remove(`${type}_active`);
                                 selectBrand = undefined;
                                 if (selectCategory) {
-                                    catFilter = String(selectCategory.childNodes[0].textContent);
+                                    catFilter = `category=${String(selectCategory.childNodes[0].textContent)}`;
                                 }
                                 //tempArray = filterItems(shoes, brandFilter, catFilter);
                                 //this.createListItem(tempArray);
                             }
                         } else {
-                            brandFilter = element;
+                            brandFilter = `brand=${element}`;
                             elementDiv.classList.toggle(`${type}_active`);
                             selectBrand = <HTMLDivElement>elementDiv;
                             if (selectCategory) {
-                                brandFilter = element;
-                                catFilter = String(selectCategory.childNodes[0].textContent);
+                                brandFilter = `brand=${element}`;
+                                catFilter = `category=${String(selectCategory.childNodes[0].textContent)}`;
                             }
                             setSearchParams(brandFilter, catFilter, searchString);
                             //tempArray = filterItems(shoes, brandFilter, catFilter);
@@ -726,7 +624,7 @@ class MainPage extends Page {
                                 selectCategory.classList.toggle(`${type}_active`);
                                 elementDiv.classList.toggle(`${type}_active`);
                                 selectCategory = <HTMLDivElement>elementDiv;
-                                catFilter = element;
+                                catFilter = `category=${element}`;
                                 setSearchParams(brandFilter, catFilter, searchString);
                                 //tempArray = filterItems(shoes, brandFilter, catFilter);
                                 //this.createListItem(tempArray);
@@ -736,25 +634,25 @@ class MainPage extends Page {
                                 elementDiv.classList.remove(`${type}_active`);
                                 selectCategory = undefined;
                                 if (selectBrand) {
-                                    brandFilter = String(selectBrand.childNodes[0].textContent);
+                                    brandFilter = `brand=${String(selectBrand.childNodes[0].textContent)}`;
                                 }
                                 //tempArray = filterItems(shoes, brandFilter, catFilter);
                                 //this.createListItem(tempArray);
                             }
                         } else {
-                            catFilter = element;
+                            catFilter = `category=${element}`;
                             setSearchParams(brandFilter, catFilter, searchString);
                             elementDiv.classList.toggle(`${type}_active`);
                             if (selectBrand) {
-                                catFilter = element;
-                                brandFilter = String(selectBrand.childNodes[0].textContent);
+                                catFilter = `category=${element}`;
+                                brandFilter = `brand=${String(selectBrand.childNodes[0].textContent)}`;
                             }
                             selectCategory = <HTMLDivElement>elementDiv;
                             //tempArray = filterItems(shoes, brandFilter, catFilter);
                             //this.createListItem(tempArray);
                         }
                     }
-                    tempArray = filterItems(shoes, brandFilter, catFilter);
+                    tempArray = filterItems(shoes, [[brandFilter], [catFilter], [], []]);
                     this.createListItem(tempArray);
                     this.createTitleButtons(tempArray);
                     viewButtonAddClick();
@@ -772,11 +670,11 @@ class MainPage extends Page {
         const category: string = <string>params.get('category');
         const search: string = <string>params.get('search');
         setSearchParams(brand, category, search);
-        brandFilter = brand;
-        catFilter = category;
+        brandFilter = `brand=${brand}`;
+        catFilter = `category=${category}`;
         searchString = search;
         let searchArray: IPrototypeItem[];
-        let filteredArray: IPrototypeItem[] = filterItems(shoes, brand, category);
+        let filteredArray: IPrototypeItem[] = filterItems(shoes, [[brand], [category], [], []]);
         if (searchString) {
             const searchInput: HTMLInputElement = <HTMLInputElement>(
                 this.container.children[0].childNodes[1].childNodes[3]//.childNodes[3]
@@ -806,9 +704,9 @@ class MainPage extends Page {
         const itemCollection: HTMLDivElement = document.createElement('div');
         itemCollection.className = `main__items-collection ${this.layout}`;
         this.container.append(this.createSearchPanel(itemCollection), this.createMainItem(itemCollection));
-        setTimeout(() => {
+        /*setTimeout(() => {
             this.createDualSliders();
-        }, 300);
+        }, 300);*/
         //if (!window.location.href.includes('#')) {
         if (window.location.search) {
             const userSearchParams = new URLSearchParams(window.location.search);
