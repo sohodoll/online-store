@@ -2,7 +2,7 @@ import Page from '../templates/page';
 import { createCartItemFromMain, IPrototypeItem, searchItem } from '../templates/items';
 //import ItemCart from '../components/itemCart/itemCart';
 import shoes from '../../db/shoes';
-import { setSearchParams, removeSearchParams, filterItems } from '../templates/filters';
+import { setSearchParams, removeSearchParams, filterItems, sortItems } from '../templates/filters';
 import { getMainLayout, setMainLayout, updateHeader, viewButtonAddClick } from '../../app';
 import iconsSVG from '../templates/icons';
 import { setCurrPage } from '../cart/cart';
@@ -82,11 +82,16 @@ class MainPage extends Page {
                     break;
             }
 
-            option.addEventListener('click', function () {
+            option.addEventListener('click', () => {
                 sortBoxOptions.classList.toggle('hidden');
                 sortBoxText.classList.toggle('open');
-                sortBoxText.textContent = this.textContent;
-                sortOption = String(this.textContent);
+                sortBoxText.textContent = option.textContent;
+                sortOption = String(option.textContent);
+                const parameter = String(option.textContent).split(' ')[0].toLowerCase();
+                const order = String(option.textContent).split(' ')[1].toLowerCase();
+                console.log(parameter, order);
+                tempArray = sortItems(tempArray, parameter, order);
+                this.createListItem(tempArray);
             });
             option.addEventListener('mouseenter', function (): void {
                 this.classList.add('select');

@@ -56,4 +56,20 @@ function filterItems(array: IPrototypeItem[], brand: string, category: string): 
     return filteredArray;
 }
 
-export { setSearchParams, removeSearchParams, filterItems };
+function sortItems(array: IPrototypeItem[], parameter: string, order: string) {
+    if (parameter === 'price') {
+        if (order === 'asc') {
+            return array.sort((a: IPrototypeItem, b: IPrototypeItem) => a.price - b.price);
+        } else {
+            return array.sort((a: IPrototypeItem, b: IPrototypeItem) => b.price - a.price);
+        }
+    } else {
+        if (order === 'asc') {
+            return array.sort((a: IPrototypeItem, b: IPrototypeItem) => a.stock - b.stock);
+        } else {
+            return array.sort((a: IPrototypeItem, b: IPrototypeItem) => b.stock - a.stock);
+        }
+    }
+}
+
+export { setSearchParams, removeSearchParams, filterItems, sortItems };
