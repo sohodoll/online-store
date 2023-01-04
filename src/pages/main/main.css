@@ -1,8 +1,9 @@
 .main-wrapper {
     display: flex;
+    flex-direction: column;
     justify-content: stretch;
-    align-items: flex-start;
-    gap: 25px;
+    align-items: stretch;
+    gap: 15px;
     height: 100%;
 }
 
@@ -74,7 +75,6 @@
 /* MAIN */
 .main__items {
     display: flex;
-    flex-direction: column;
     justify-content: stretch;
     align-items: stretch;
     flex-grow: 1;

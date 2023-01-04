@@ -25,7 +25,7 @@ class MainPage extends Page {
 
     private updateTotalCount(value: number): void {
         const totalCount: HTMLSpanElement = <HTMLSpanElement>(
-            this.container.children[1].childNodes[0].childNodes[1].childNodes[1]
+            this.container.children[0].childNodes[1].childNodes[1]
         );
         totalCount.textContent = `${value}`;
     }
@@ -95,7 +95,7 @@ class MainPage extends Page {
         foundTitleParam.textContent = 'Found:';
 
         foundParam.className = 'search__found-count';
-        foundParam.textContent = '0';
+        foundParam.textContent = `${ shoes.length }`;
 
         searchInputTitle.className = 'search__input-title';
         searchInputTitle.textContent = 'Search:';
@@ -165,13 +165,10 @@ class MainPage extends Page {
         return searchPanel;
     }
 
-    private createMainItem(): HTMLDivElement {
+    private createMainItem(itemCollection: HTMLDivElement): HTMLDivElement {
         const mainItem: HTMLDivElement = document.createElement('div');
-        const itemCollection: HTMLDivElement = document.createElement('div');
-
-        itemCollection.className = `main__items-collection ${this.layout}`;
         mainItem.className = 'main__items';
-        mainItem.append(this.createSearchPanel(itemCollection), itemCollection);
+        mainItem.append(this.createFilters(), itemCollection);
         return mainItem;
     }
 
@@ -216,12 +213,12 @@ class MainPage extends Page {
         const toSlider = <HTMLInputElement>document.createElement('input');
         fromSlider.id = 'fromSlider';
         fromSlider.type = 'range';
-        fromSlider.value = '10';
+        fromSlider.value = '0';
         fromSlider.min = '0';
         fromSlider.max = String(maxPrice);
         toSlider.id = 'toSlider';
         toSlider.type = 'range';
-        toSlider.value = '150';
+        toSlider.value = `${String(maxPrice)}`;
         toSlider.min = '0';
         toSlider.max = String(maxPrice);
         slidersControl.append(fromSlider, toSlider);
@@ -541,9 +538,12 @@ class MainPage extends Page {
 
     private createListItem(array: IPrototypeItem[]): void {
         (this.container.children[1].childNodes[1] as HTMLDivElement).innerHTML = ''; //main-wrapper -> main__items -> main__items-collection
-        array.forEach((el) => {
-            this.container.children[1].childNodes[1].appendChild(createCartItemFromMain(el));
-        });
+        if (array.length > 0)
+            array.forEach((el) => {
+                this.container.children[1].childNodes[1].appendChild(createCartItemFromMain(el));
+            });
+        else
+            this.container.children[1].childNodes[1].textContent = 'Nothing found.';
         this.updateTotalCount(array.length);
     }
 
@@ -612,8 +612,8 @@ class MainPage extends Page {
     createTitleButtons(array: IPrototypeItem[], searchParam?: string[]): void {
         //const brandButtons: NodeListOf<HTMLDivElement> = document.querySelectorAll('.brand');
         //const categoryButtons: NodeListOf<HTMLDivElement> = document.querySelectorAll('.category');
-        const brandButtons: NodeListOf<ChildNode> = this.container.children[0].childNodes[1].childNodes; //main-wrapper -> main__filter -> brand__filter -> items
-        const categoryButtons: NodeListOf<ChildNode> = this.container.children[0].childNodes[0].childNodes; //main-wrapper -> main__filter -> category__filter -> items
+        const brandButtons: NodeListOf<ChildNode> = this.container.children[1].childNodes[0].childNodes[1].childNodes; //main-wrapper -> main__filter -> brand__filter -> items
+        const categoryButtons: NodeListOf<ChildNode> = this.container.children[1].childNodes[0].childNodes[0].childNodes; //main-wrapper -> main__filter -> category__filter -> items
         //const categoryButtons: NodeListOf<HTMLDivElement> = document.querySelectorAll('.category');
         /*brandButtons.forEach((button) => {
             const brandName = button.childNodes[0].textContent;
@@ -779,7 +779,7 @@ class MainPage extends Page {
         let filteredArray: IPrototypeItem[] = filterItems(shoes, brand, category);
         if (searchString) {
             const searchInput: HTMLInputElement = <HTMLInputElement>(
-                this.container.children[1].childNodes[0].childNodes[1].childNodes[3]
+                this.container.children[0].childNodes[1].childNodes[3]//.childNodes[3]
             );
             searchInput.value = searchString;
             searchArray = this.searchItems(filteredArray);
@@ -803,7 +803,9 @@ class MainPage extends Page {
     }
 
     render() {
-        this.container.append(this.createFilters(), this.createMainItem());
+        const itemCollection: HTMLDivElement = document.createElement('div');
+        itemCollection.className = `main__items-collection ${this.layout}`;
+        this.container.append(this.createSearchPanel(itemCollection), this.createMainItem(itemCollection));
         setTimeout(() => {
             this.createDualSliders();
         }, 300);
