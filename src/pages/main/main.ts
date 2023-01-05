@@ -3,7 +3,7 @@ import { createCartItemFromMain, IPrototypeItem, searchItem } from '../templates
 //import ItemCart from '../components/itemCart/itemCart';
 import shoes from '../../db/shoes';
 import { setSearchParams, removeSearchParams, filterItems, sortItems } from '../templates/filters';
-import { getMainLayout, setMainLayout, updateHeader, viewButtonAddClick } from '../../app';
+import { arrCart, getMainLayout, setMainLayout, updateHeader, viewButtonAddClick } from '../../app';
 import iconsSVG from '../templates/icons';
 import { setCurrPage } from '../cart/cart';
 
@@ -17,6 +17,7 @@ let catFilter: string | '';
 let searchString: string | '';
 
 let sortOption: string = 'Sort';
+let sortType: string | '' = '';
 
 class MainPage extends Page {
     private layout: string;
@@ -89,7 +90,8 @@ class MainPage extends Page {
                 sortOption = String(option.textContent);
                 const parameter = String(option.textContent).split(' ')[0].toLowerCase();
                 const order = String(option.textContent).split(' ')[1].toLowerCase();
-                console.log(parameter, order);
+                sortType = `${parameter}-${order}`;
+                setSearchParams(brandFilter, catFilter, searchString, sortType);
                 tempArray = sortItems(tempArray, parameter, order);
                 this.createListItem(tempArray);
             });
@@ -101,6 +103,19 @@ class MainPage extends Page {
             });
             sortBoxOptions.appendChild(option);
         }
+
+        window.addEventListener('load', () => {
+            const url = new URL(window.location.href);
+            const sortType: string = <string>url.searchParams.get('sort');
+            const options: NodeList = document.querySelectorAll('.sort__combobox-option');
+            if (sortType) {
+                Array.from(options).forEach((option) => {
+                    if (sortType === option.textContent?.toLowerCase().split(' ').join('-')) {
+                        sortBoxText.textContent = option.textContent;
+                    }
+                });
+            }
+        });
 
         sortBox.append(sortBoxText, sortBoxOptions);
 
@@ -168,7 +183,7 @@ class MainPage extends Page {
                 searchString = String(searchInput.value);
                 const filteredArray = filterItems(shoes, brandFilter, catFilter);
                 const searchArray: IPrototypeItem[] = this.searchItems(filteredArray);
-                setSearchParams(brandFilter, catFilter, searchString);
+                setSearchParams(brandFilter, catFilter, searchString, sortType);
                 this.createListItem(searchArray);
             } else {
                 removeSearchParams(['search']);
@@ -750,7 +765,7 @@ class MainPage extends Page {
                                 elementDiv.classList.toggle(`${type}_active`);
                                 selectBrand = <HTMLDivElement>elementDiv;
                                 brandFilter = element;
-                                setSearchParams(brandFilter, catFilter, searchString);
+                                setSearchParams(brandFilter, catFilter, searchString, sortType);
                                 //tempArray = filterItems(shoes, brandFilter, catFilter);
                                 //this.createListItem(tempArray);
                             } else {
@@ -772,7 +787,7 @@ class MainPage extends Page {
                                 brandFilter = element;
                                 catFilter = String(selectCategory.childNodes[0].textContent);
                             }
-                            setSearchParams(brandFilter, catFilter, searchString);
+                            setSearchParams(brandFilter, catFilter, searchString, sortType);
                             //tempArray = filterItems(shoes, brandFilter, catFilter);
                             //this.createListItem(tempArray);
                         }
@@ -783,7 +798,7 @@ class MainPage extends Page {
                                 elementDiv.classList.toggle(`${type}_active`);
                                 selectCategory = <HTMLDivElement>elementDiv;
                                 catFilter = element;
-                                setSearchParams(brandFilter, catFilter, searchString);
+                                setSearchParams(brandFilter, catFilter, searchString, sortType);
                                 //tempArray = filterItems(shoes, brandFilter, catFilter);
                                 //this.createListItem(tempArray);
                             } else {
@@ -799,7 +814,7 @@ class MainPage extends Page {
                             }
                         } else {
                             catFilter = element;
-                            setSearchParams(brandFilter, catFilter, searchString);
+                            setSearchParams(brandFilter, catFilter, searchString, sortType);
                             elementDiv.classList.toggle(`${type}_active`);
                             if (selectBrand) {
                                 catFilter = element;
@@ -827,7 +842,9 @@ class MainPage extends Page {
         const brand: string = <string>params.get('brand');
         const category: string = <string>params.get('category');
         const search: string = <string>params.get('search');
-        setSearchParams(brand, category, search);
+        const sortType: string = <string>params.get('sort');
+        setSearchParams(brand, category, search, sortType);
+        console.log(sortType);
         brandFilter = brand;
         catFilter = category;
         searchString = search;
@@ -840,6 +857,9 @@ class MainPage extends Page {
             searchInput.value = searchString;
             searchArray = this.searchItems(filteredArray);
             filteredArray = searchArray;
+        }
+        if (sortType) {
+            filteredArray = sortItems(filteredArray, sortType.split('-')[0], sortType.split('-')[1]);
         }
         this.createListItem(filteredArray);
         this.createTitleButtons(filteredArray, [brand, category]);
