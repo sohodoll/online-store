@@ -2,8 +2,8 @@ import Page from '../templates/page';
 import { createCartItemFromMain, IPrototypeItem, searchItem } from '../templates/items';
 //import ItemCart from '../components/itemCart/itemCart';
 import shoes from '../../db/shoes';
-import { setSearchParams, removeSearchParams, filterItems } from '../templates/filters';
-import { getMainLayout, setMainLayout, updateHeader, viewButtonAddClick } from '../../app';
+import { setSearchParams, removeSearchParams, filterItems, sortItems } from '../templates/filters';
+import { arrCart, getMainLayout, setMainLayout, updateHeader, viewButtonAddClick } from '../../app';
 import iconsSVG from '../templates/icons';
 import { setCurrPage } from '../cart/cart';
 
@@ -16,6 +16,9 @@ let brandFilter: string | '';
 let catFilter: string | '';
 let searchString: string | '';
 
+let sortOption: string = 'Sort';
+let sortType: string | '' = '';
+
 class MainPage extends Page {
     private layout: string;
     constructor(id: string) {
@@ -24,9 +27,7 @@ class MainPage extends Page {
     }
 
     private updateTotalCount(value: number): void {
-        const totalCount: HTMLSpanElement = <HTMLSpanElement>(
-            this.container.children[0].childNodes[1].childNodes[1]
-        );
+        const totalCount: HTMLSpanElement = <HTMLSpanElement>this.container.children[0].childNodes[1].childNodes[1];
         totalCount.textContent = `${value}`;
     }
 
@@ -47,6 +48,76 @@ class MainPage extends Page {
         const searchInputTitle: HTMLDivElement = document.createElement('div');
         const searchInput: HTMLInputElement = document.createElement('input');
         const searchInputCleaner: HTMLLabelElement = document.createElement('label');
+
+        const sortBox: HTMLDivElement = document.createElement('div');
+        const sortBoxText: HTMLDivElement = document.createElement('div');
+        const sortBoxOptions: HTMLDivElement = document.createElement('div');
+
+        sortBox.className = 'sort__combobox';
+
+        sortBoxText.className = 'sort__combobox-text';
+        sortBoxText.textContent = sortOption;
+        sortBoxText.addEventListener('click', () => {
+            sortBoxOptions.classList.toggle('hidden');
+            sortBoxText.classList.toggle('open');
+        });
+
+        sortBoxOptions.className = 'sort__combobox-options hidden';
+        for (let i = 0; i < 4; i += 1) {
+            const option: HTMLDivElement = document.createElement('div');
+            option.className = 'sort__combobox-option';
+            // option.dataset.items = (i + 1).toString();
+
+            switch (i) {
+                case 0:
+                    option.textContent = 'Price Desc';
+                    break;
+                case 1:
+                    option.textContent = 'Price Asc';
+                    break;
+                case 2:
+                    option.textContent = 'Stock Desc';
+                    break;
+                case 3:
+                    option.textContent = 'Stock Asc';
+                    break;
+            }
+
+            option.addEventListener('click', () => {
+                sortBoxOptions.classList.toggle('hidden');
+                sortBoxText.classList.toggle('open');
+                sortBoxText.textContent = option.textContent;
+                sortOption = String(option.textContent);
+                const parameter = String(option.textContent).split(' ')[0].toLowerCase();
+                const order = String(option.textContent).split(' ')[1].toLowerCase();
+                sortType = `${parameter}-${order}`;
+                setSearchParams(brandFilter, catFilter, searchString, sortType);
+                tempArray = sortItems(tempArray, parameter, order);
+                this.createListItem(tempArray);
+            });
+            option.addEventListener('mouseenter', function (): void {
+                this.classList.add('select');
+            });
+            option.addEventListener('mouseleave', function (): void {
+                this.classList.remove('select');
+            });
+            sortBoxOptions.appendChild(option);
+        }
+
+        window.addEventListener('load', () => {
+            const url = new URL(window.location.href);
+            const sortType: string = <string>url.searchParams.get('sort');
+            const options: NodeList = document.querySelectorAll('.sort__combobox-option');
+            if (sortType) {
+                Array.from(options).forEach((option) => {
+                    if (sortType === option.textContent?.toLowerCase().split(' ').join('-')) {
+                        sortBoxText.textContent = option.textContent;
+                    }
+                });
+            }
+        });
+
+        sortBox.append(sortBoxText, sortBoxOptions);
 
         const layoutPanel: HTMLDivElement = document.createElement('div'); //grid or list
         const gridLayout: HTMLButtonElement = document.createElement('button');
@@ -97,7 +168,7 @@ class MainPage extends Page {
         foundTitleParam.textContent = 'Found:';
 
         foundParam.className = 'search__found-count';
-        foundParam.textContent = `${ shoes.length }`;
+        foundParam.textContent = `${shoes.length}`;
 
         searchInputTitle.className = 'search__input-title';
         searchInputTitle.textContent = 'Search:';
@@ -114,7 +185,7 @@ class MainPage extends Page {
                 searchString = String(searchInput.value);
                 const filteredArray = filterItems(shoes, [[brandFilter], [catFilter], [], []]);
                 const searchArray: IPrototypeItem[] = this.searchItems(filteredArray);
-                setSearchParams(brandFilter, catFilter, searchString);
+                setSearchParams(brandFilter, catFilter, searchString, sortType);
                 this.createListItem(searchArray);
             } else {
                 removeSearchParams(['search']);
@@ -163,7 +234,7 @@ class MainPage extends Page {
 
         //Search Panel
         searchPanel.className = 'main__search-panel';
-        searchPanel.append(paramPanel, searchInputPanel, layoutPanel);
+        searchPanel.append(paramPanel, searchInputPanel, sortBox, layoutPanel);
         return searchPanel;
     }
 
@@ -438,8 +509,7 @@ class MainPage extends Page {
             array.forEach((el) => {
                 this.container.children[1].childNodes[1].appendChild(createCartItemFromMain(el));
             });
-        else
-            this.container.children[1].childNodes[1].textContent = 'Nothing found.';
+        else this.container.children[1].childNodes[1].textContent = 'Nothing found.';
         this.updateTotalCount(array.length);
     }
 
@@ -509,7 +579,8 @@ class MainPage extends Page {
         //const brandButtons: NodeListOf<HTMLDivElement> = document.querySelectorAll('.brand');
         //const categoryButtons: NodeListOf<HTMLDivElement> = document.querySelectorAll('.category');
         const brandButtons: NodeListOf<ChildNode> = this.container.children[1].childNodes[0].childNodes[1].childNodes; //main-wrapper -> main__filter -> brand__filter -> items
-        const categoryButtons: NodeListOf<ChildNode> = this.container.children[1].childNodes[0].childNodes[0].childNodes; //main-wrapper -> main__filter -> category__filter -> items
+        const categoryButtons: NodeListOf<ChildNode> =
+            this.container.children[1].childNodes[0].childNodes[0].childNodes; //main-wrapper -> main__filter -> category__filter -> items
         //const categoryButtons: NodeListOf<HTMLDivElement> = document.querySelectorAll('.category');
         /*brandButtons.forEach((button) => {
             const brandName = button.childNodes[0].textContent;
@@ -592,7 +663,7 @@ class MainPage extends Page {
                                 elementDiv.classList.toggle(`${type}_active`);
                                 selectBrand = <HTMLDivElement>elementDiv;
                                 brandFilter = `brand=${element}`;
-                                setSearchParams(brandFilter, catFilter, searchString);
+                                setSearchParams(brandFilter, catFilter, searchString, sortType);
                                 //tempArray = filterItems(shoes, brandFilter, catFilter);
                                 //this.createListItem(tempArray);
                             } else {
@@ -614,7 +685,7 @@ class MainPage extends Page {
                                 brandFilter = `brand=${element}`;
                                 catFilter = `category=${String(selectCategory.childNodes[0].textContent)}`;
                             }
-                            setSearchParams(brandFilter, catFilter, searchString);
+                            setSearchParams(brandFilter, catFilter, searchString, sortType);
                             //tempArray = filterItems(shoes, brandFilter, catFilter);
                             //this.createListItem(tempArray);
                         }
@@ -625,7 +696,7 @@ class MainPage extends Page {
                                 elementDiv.classList.toggle(`${type}_active`);
                                 selectCategory = <HTMLDivElement>elementDiv;
                                 catFilter = `category=${element}`;
-                                setSearchParams(brandFilter, catFilter, searchString);
+                                setSearchParams(brandFilter, catFilter, searchString, sortType);
                                 //tempArray = filterItems(shoes, brandFilter, catFilter);
                                 //this.createListItem(tempArray);
                             } else {
@@ -641,7 +712,7 @@ class MainPage extends Page {
                             }
                         } else {
                             catFilter = `category=${element}`;
-                            setSearchParams(brandFilter, catFilter, searchString);
+                            setSearchParams(brandFilter, catFilter, searchString, sortType);
                             elementDiv.classList.toggle(`${type}_active`);
                             if (selectBrand) {
                                 catFilter = `category=${element}`;
@@ -669,19 +740,23 @@ class MainPage extends Page {
         const brand: string = <string>params.get('brand');
         const category: string = <string>params.get('category');
         const search: string = <string>params.get('search');
-        setSearchParams(brand, category, search);
         brandFilter = `brand=${brand}`;
         catFilter = `category=${category}`;
+        const sortType: string = <string>params.get('sort');
+        setSearchParams(brand, category, search, sortType);
         searchString = search;
         let searchArray: IPrototypeItem[];
         let filteredArray: IPrototypeItem[] = filterItems(shoes, [[brand], [category], [], []]);
         if (searchString) {
             const searchInput: HTMLInputElement = <HTMLInputElement>(
-                this.container.children[0].childNodes[1].childNodes[3]//.childNodes[3]
+                this.container.children[0].childNodes[1].childNodes[3] //.childNodes[3]
             );
             searchInput.value = searchString;
             searchArray = this.searchItems(filteredArray);
             filteredArray = searchArray;
+        }
+        if (sortType) {
+            filteredArray = sortItems(filteredArray, sortType.split('-')[0], sortType.split('-')[1]);
         }
         this.createListItem(filteredArray);
         this.createTitleButtons(filteredArray, [brand, category]);

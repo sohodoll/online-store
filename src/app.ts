@@ -28,8 +28,7 @@ function loadIconForItems(): void {
         if (findInCart(parseInt(String((el as HTMLButtonElement).value))) >= 0) {
             (el as HTMLButtonElement).innerHTML = iconsSVG.remove;
             (el as HTMLButtonElement).dataset.icon = 'removeCart';
-        }
-        else {
+        } else {
             (el as HTMLButtonElement).innerHTML = iconsSVG.cart;
             (el as HTMLButtonElement).dataset.icon = 'cart';
         }
@@ -94,7 +93,7 @@ function setMainLayout(value: string): void {
 
 function addToCart(elem: Node): void {
     const itemID: number = parseInt((elem as HTMLButtonElement).value);
-    const clickItem: IPrototypeItem = <IPrototypeItem>shoes.find((el) => el.id === itemID);    
+    const clickItem: IPrototypeItem = <IPrototypeItem>shoes.find((el) => el.id === itemID);
     const cartItem: ItemCart = new ItemCart(
         clickItem.id,
         clickItem.name,
@@ -136,7 +135,14 @@ function removeItemFromCart(id: number): void {
 
 function shoesImportToItemCart(shoe: IPrototypeItem): ItemCart {
     const newItemCart: ItemCart = new ItemCart(
-        shoe.id, shoe.name, shoe.brand, shoe.category, shoe.thumbnail, 1, shoe.stock, shoe.price
+        shoe.id,
+        shoe.name,
+        shoe.brand,
+        shoe.category,
+        shoe.thumbnail,
+        1,
+        shoe.stock,
+        shoe.price
     );
     return newItemCart;
 }
@@ -147,7 +153,7 @@ function addItemToCart(itemID: number): void {
         arrCart.push(shoesImportToItemCart(shoes[itemID - 1]));
     } else {
         arrCart.splice(findInCart(itemID), 1);
-//        updateHeader();
+        //        updateHeader();
     }
     /* else {
         arrCart[findIndex].addAmount();
@@ -171,8 +177,7 @@ function addItemToCart(itemID: number): void {
 
 //Buy Now
 function buyNow(itemID: number): void {
-    if (findInCart(itemID) < 0)
-        arrCart.push(shoesImportToItemCart(shoes[itemID - 1]));
+    if (findInCart(itemID) < 0) arrCart.push(shoesImportToItemCart(shoes[itemID - 1]));
     updateHeader();
     App.renderNewPage(PageIDs.CartPage, true);
     new Form().listen();
@@ -184,7 +189,7 @@ function loadLocalStorage() {
         arrCart = JSON.parse(String(localStorage.getItem('arrCart'))).map((el: ItemCart) => {
             const { id, name, brand, category, thumbnail, amount, limit, price } = el;
             return new ItemCart(id, name, brand, category, thumbnail, amount, limit, price);
-        });        
+        });
         updateHeader();
         loadIconForItems();
         /*const hash: string = window.location.hash.slice(1).split('/')[0];
@@ -206,10 +211,8 @@ function loadLocalStorage() {
     if (localStorage.getItem('mainLayout')) {
         mainLayout = String(localStorage.getItem('mainLayout'));
     } else {
-        if (document.body.clientWidth < 750)
-            mainLayout = 'list';
-        else
-            mainLayout = 'grid';
+        if (document.body.clientWidth < 750) mainLayout = 'list';
+        else mainLayout = 'grid';
     }
     /*console.log('localStorage', arrCart);
     updateHeader();
@@ -231,13 +234,17 @@ class App {
     private footer: HTMLElement; // = <HTMLElement>document.createElement('footer');
 
     private handleRouting() {
-        window.addEventListener('hashchange', () => {
+        window.addEventListener('hashchange', (e) => {
+            e.preventDefault();
+            window.location.pathname = '/';
+            if (window.location.hash === '') {
+                App.renderNewPage('error404');
+            }
             const hash = window.location.hash.slice(1).split('/')[0];
             const currentShoe = window.location.hash.slice(1).split('/')[1];
             console.log(currentShoe);
             App.renderNewPage(hash);
         });
-        
     }
 
     static renderNewPage(pageId: string, showModalWindow?: boolean): void {
@@ -246,8 +253,7 @@ class App {
         if (pageId === PageIDs.MainPage) {
             page = new MainPage(pageId);
         } else if (pageId === PageIDs.CartPage) {
-            if (!showModalWindow)
-                showModalWindow = false;
+            if (!showModalWindow) showModalWindow = false;
             page = new CartPage(pageId, arrCart, showModalWindow);
         } else if (pageId === PageIDs.DescriptionPage) {
             const currentShoe = window.location.hash.slice(1).split('/')[1];
@@ -255,7 +261,7 @@ class App {
                 clickItem = <IPrototypeItem>shoes.find((el) => el.id === Number(currentShoe));
             }
             page = new DescriptionPage(pageId, clickItem);
-            console.log(currentShoe);/*
+            console.log(currentShoe); /*
             const Desc = new DescriptionPage(pageId, clickItem);
             setTimeout(() => {
                 Desc.listen();
@@ -289,7 +295,7 @@ class App {
         this.footer = Footer();
     }
 
-    run() {       
+    run() {
         App.container.prepend(this.header);
         loadLocalStorage();
         if (window.location.hash === '' || window.location.hash === '#') {
@@ -297,11 +303,11 @@ class App {
         } else {
             const hash = window.location.hash.slice(1).split('/')[0];
             const currentShoe = window.location.hash.slice(1).split('/')[1];
-            console.log(currentShoe);            
+            console.log(currentShoe);
             App.renderNewPage(hash);
         }
 
-        App.container.appendChild(this.footer);        
+        App.container.appendChild(this.footer);
         this.handleRouting();
         //viewButtonAddClick();
         //cartButtonAddClick();
@@ -344,4 +350,15 @@ window.addEventListener('beforeunload', saveLocalStorage);
 
 // }
 
-export { App, removeItemFromCart, updateHeader, addItemToCart, buyNow, getArrCart, findInCart, arrCart, getMainLayout, setMainLayout };
+export {
+    App,
+    removeItemFromCart,
+    updateHeader,
+    addItemToCart,
+    buyNow,
+    getArrCart,
+    findInCart,
+    arrCart,
+    getMainLayout,
+    setMainLayout,
+};

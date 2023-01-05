@@ -125,9 +125,15 @@ function validateCardNum(): void {
     }
     if (stringValue.length) {
         switch (stringValue[0]) {
-            case '4': cardFiller.src = '../../assets/svg/visa.svg'; break;
-            case '5': cardFiller.src = '../../assets/svg/mastercard.svg'; break;
-            case '6': cardFiller.src = '../../assets/svg/paypal.svg'; break;
+            case '4':
+                cardFiller.src = '../../assets/svg/visa.svg';
+                break;
+            case '5':
+                cardFiller.src = '../../assets/svg/mastercard.svg';
+                break;
+            case '6':
+                cardFiller.src = '../../assets/svg/paypal.svg';
+                break;
         }
         /*
         if (stringValue[0] === '4') {
@@ -221,6 +227,9 @@ function submitFrom(): void {
     const isValid = validateAllInputs();
     if (isValid) {
         alert('Purchase completed!\n\nEmptying cart, redirecting to main...');
+        setTimeout(() => {
+            window.location.hash = '';
+        }, 1000);
     } else {
         alert('Invalid data entered, please try again!!!');
     }
@@ -290,7 +299,7 @@ class Form {
             </div>
             <button class="submit-button" type="submit">Submit</button>`;
         return modalForm;
-/*        return `
+        /*        return `
         <form id="form" action="/">
             <h1>Personal details</h1>
             <div class="input-control">

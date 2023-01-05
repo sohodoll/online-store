@@ -11,7 +11,7 @@ import shoes from '../../db/shoes';
 
 // export { IsearchParams };
 
-function setSearchParams(brand: string, category: string, searchString: string) {
+function setSearchParams(brand: string, category: string, searchString: string, sort: string) {
     // const brandElem = document.querySelector('.brand');
     // let paramsObject: { [key: string]: string } = {};
     // paramsObject.brand = brand;
@@ -26,15 +26,19 @@ function setSearchParams(brand: string, category: string, searchString: string) 
     if (searchString) {
         url.searchParams.set('search', searchString);
     }
+    if (sort) {
+        url.searchParams.set('sort', sort);
+    }
     window.history.replaceState(null, 'null', url);
 }
 
 function removeSearchParams(types: string[]) {
     const url = new URL(window.location.href);
-    types.forEach((element) => {
-        url.searchParams.delete(element);
-    });
-    window.history.replaceState(null, 'null', url);
+    // types.forEach((element) => {
+    //     url.searchParams.delete(element);
+    // });
+    const newUrl = window.location.href.split('?')[0];
+    window.history.replaceState(null, 'null', newUrl);
 }
 
 function filterItems(array: IPrototypeItem[], parameters: string[][]): IPrototypeItem[] {
@@ -85,4 +89,20 @@ function filterItems(array: IPrototypeItem[], parameters: string[][]): IPrototyp
     return filteredArray;
 }*/
 
-export { setSearchParams, removeSearchParams, filterItems };
+function sortItems(array: IPrototypeItem[], parameter: string, order: string) {
+    if (parameter === 'price') {
+        if (order === 'asc') {
+            return array.sort((a: IPrototypeItem, b: IPrototypeItem) => a.price - b.price);
+        } else {
+            return array.sort((a: IPrototypeItem, b: IPrototypeItem) => b.price - a.price);
+        }
+    } else {
+        if (order === 'asc') {
+            return array.sort((a: IPrototypeItem, b: IPrototypeItem) => a.stock - b.stock);
+        } else {
+            return array.sort((a: IPrototypeItem, b: IPrototypeItem) => b.stock - a.stock);
+        }
+    }
+}
+
+export { setSearchParams, removeSearchParams, filterItems, sortItems };
