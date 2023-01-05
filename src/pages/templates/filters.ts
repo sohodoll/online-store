@@ -34,7 +34,7 @@ function removeSearchParams(types: string[]) {
     // types.forEach((element) => {
     //     url.searchParams.delete(element);
     // });
-    const newUrl = window.location.href.split('?')[0] + '#';
+    const newUrl = window.location.href.split('?')[0];
     window.history.replaceState(null, 'null', newUrl);
 }
 
