@@ -168,6 +168,12 @@ class MainPage extends Page {
             this.createTitleButtons(filteredArray, [brandFilter, catFilter]);*/
             this.createListItem(shoes);
             this.createTitleButtons(shoes, [brandFilter, catFilter]);
+            const priceSlider: HTMLDivElement = <HTMLDivElement>this.container.children[1].childNodes[0].childNodes[2];
+            const stockSlider: HTMLDivElement = <HTMLDivElement>this.container.children[1].childNodes[0].childNodes[3];
+            const maxPrice: number = Math.max(...shoes.map((shoe) => shoe.price));
+            const maxStock: number = Math.max(...shoes.map((shoe) => shoe.stock));
+            this.setValueSlider(priceSlider, '0', maxPrice.toString());
+            this.setValueSlider(stockSlider, '0', maxStock.toString());
             removeSearchParams(['brand', 'category', 'search', 'price', 'stock', 'sort']);
         });
 
@@ -195,7 +201,6 @@ class MainPage extends Page {
             if (searchInput.value) {
                 searchString = String(searchInput.value);
                 searchFilter = `search=${searchString}`;
-                console.log(searchFilter);
                 //tempArray = filterItems(shoes, [brandFilter, catFilter, priceFilter, stockFilter, searchFilter, sortFilter]);
                 //const searchArray: IPrototypeItem[] = this.searchItems(filteredArray);
                 setSearchParams(brandFilter, catFilter, searchFilter, priceFilter, stockFilter, sortFilter, layoutFilter);
@@ -204,10 +209,12 @@ class MainPage extends Page {
             } else {
                 searchInput.value = '';
                 searchInputCleaner.classList.toggle('hidden');
-                removeSearchParams(['search']);                
+                removeSearchParams(['search']);                  
             }
             tempArray = filterItems(shoes, [brandFilter, catFilter, priceFilter, stockFilter, searchFilter, sortFilter]);
             this.createListItem(tempArray);
+            this.createTitleButtons(tempArray);
+            this.updateValueDualSliders(tempArray);
         });
 
         searchInputCleaner.className = 'search__input-cleaner hidden';
@@ -221,6 +228,8 @@ class MainPage extends Page {
             removeSearchParams(['search']);
             tempArray = filterItems(shoes, [brandFilter, catFilter, priceFilter, stockFilter, searchFilter, sortFilter]);
             this.createListItem(tempArray);
+            this.createTitleButtons(tempArray);
+            this.updateValueDualSliders(tempArray);
         });
 
         searchInputPanel.className = 'search__input-panel';
@@ -305,6 +314,19 @@ class MainPage extends Page {
         const stockFromSlider: HTMLInputElement = <HTMLInputElement>document.querySelector('#stockFromSlider');
         const stockToSlider: HTMLInputElement = <HTMLInputElement>document.querySelector('#stockToSlider');
         return [priceFromSlider.value, priceToSlider.value, stockFromSlider.value, stockToSlider.value];
+    }
+
+    private updateValueDualSliders(array: IPrototypeItem[]): void {
+        const priceConteiner: HTMLDivElement = <HTMLDivElement>this.container.children[1].childNodes[0].childNodes[2];
+        const stockConteiner: HTMLDivElement = <HTMLDivElement>this.container.children[1].childNodes[0].childNodes[3];
+
+        const minPrice: number = Math.min(...array.map((shoe) => shoe.price));
+        const maxPrice: number = Math.max(...array.map((shoe) => shoe.price));
+        const minStock: number = Math.min(...array.map((shoe) => shoe.stock));
+        const maxStock: number = Math.max(...array.map((shoe) => shoe.stock));
+
+        this.setValueSlider(priceConteiner, minPrice.toString(), maxPrice.toString());
+        this.setValueSlider(stockConteiner, minStock.toString(), maxStock.toString());
     }
 
     private setValueSlider(slider: HTMLDivElement, min: string, max: string): void {
@@ -665,7 +687,7 @@ class MainPage extends Page {
             const categoryName = button.childNodes[0].textContent;
             const countItem = array.filter((el) => el.category === categoryName).length;
             addTitleAndCSS(button, countItem, 'category');
-        });
+        });        
     }
 
     createFilterElements(array: string[], type: string): HTMLDivElement {
@@ -774,6 +796,7 @@ class MainPage extends Page {
                     tempArray = filterItems(shoes, [brandFilter, catFilter, priceFilter, stockFilter, searchFilter, sortFilter]);
                     this.createListItem(tempArray);
                     this.createTitleButtons(tempArray);
+                    this.updateValueDualSliders(tempArray);
                     viewButtonAddClick();
                 }
             });
@@ -833,7 +856,7 @@ class MainPage extends Page {
         
         this.createListItem(tempArray);
         this.createTitleButtons(tempArray, [brand, category]);
-
+        
         /*
         setTimeout(() => {
             if (brand) {

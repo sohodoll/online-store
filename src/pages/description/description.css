@@ -124,6 +124,10 @@
     color: var(--main);
 }
 
+.item__model::before {
+    content: 'Model: ';
+}
+
 .item__stock::before {
     content: 'In Stock: ';
 }

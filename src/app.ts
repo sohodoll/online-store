@@ -194,7 +194,6 @@ function loadLocalStorage() {
             const { id, name, brand, category, thumbnail, amount, limit, price } = el;
             return new ItemCart(id, name, brand, category, thumbnail, amount, limit, price);
         });
-        console.log('load', arrCart);
         updateHeader();
         loadIconForItems();
         /*const hash: string = window.location.hash.slice(1).split('/')[0];
