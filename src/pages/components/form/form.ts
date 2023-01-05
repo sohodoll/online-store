@@ -1,5 +1,7 @@
 // const formElement = <HTMLFormElement>document.querySelector('#form');
 
+import { clearCart, updateHeader } from "../../../app";
+
 // const nameField = <HTMLInputElement>document.querySelector('#name');
 // const phoneField = <HTMLInputElement>document.querySelector('#phone');
 // const addressField = <HTMLInputElement>document.querySelector('#address');
@@ -227,6 +229,8 @@ function submitFrom(): void {
     const isValid = validateAllInputs();
     if (isValid) {
         alert('Purchase completed!\n\nEmptying cart, redirecting to main...');
+        clearCart();
+        updateHeader();
         setTimeout(() => {
             window.location.hash = '';
         }, 1000);

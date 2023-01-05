@@ -549,12 +549,13 @@ class MainPage extends Page {
     }
 
     private createListItem(array: IPrototypeItem[]): void {
-        (this.container.children[1].childNodes[1] as HTMLDivElement).innerHTML = ''; //main-wrapper -> main__items -> main__items-collection
+        const itemsCollection: HTMLDivElement = <HTMLDivElement>this.container.children[1].childNodes[1];
+        itemsCollection.innerHTML = ''; //main-wrapper -> main__items -> main__items-collection
         if (array.length > 0)
             array.forEach((el) => {
-                this.container.children[1].childNodes[1].appendChild(createCartItemFromMain(el));
+                itemsCollection.appendChild(createCartItemFromMain(el));
             });
-        else this.container.children[1].childNodes[1].textContent = 'Nothing found.';
+        else itemsCollection.textContent = 'Nothing found.';
         this.updateTotalCount(array.length);
     }
 

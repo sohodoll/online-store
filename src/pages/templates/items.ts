@@ -1,4 +1,4 @@
-import { addItemToCart, findInCart, getArrCart } from '../../app';
+import { addItemToCart, findInCart, getArrCart, saveLocalStorage } from '../../app';
 import iconsSVG from './icons';
 
 interface IPrototypeItem {
@@ -106,6 +106,7 @@ function createCartItemFromMain(item: IPrototypeItem): HTMLDivElement {
             this.dataset.icon = 'cart';
             this.innerHTML = iconsSVG.cart;
         }
+        saveLocalStorage();
     });
 
     elemButtons.append(elemBtnView, elemBtnToCart);
