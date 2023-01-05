@@ -12,7 +12,7 @@
 // const inputs: HTMLInputElement[] = [];
 // inputs.push(nameField, phoneField, addressField, emailField, cardNumField, cardValidField, cardCVVField);
 
-function validateIsNum(evt: UIEvent): void {
+export function validateIsNum(evt: UIEvent): void {
     if ((evt.which != 8 && evt.which != 0 && evt.which < 48) || evt.which > 57) {
         evt.preventDefault();
     }
@@ -223,7 +223,7 @@ function validateAllInputs(): boolean {
     return isValid;
 }
 
-function submitFrom(): void {
+export function submitFrom(): void {
     const isValid = validateAllInputs();
     if (isValid) {
         alert('Purchase completed!\n\nEmptying cart, redirecting to main...');
