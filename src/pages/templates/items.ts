@@ -13,16 +13,6 @@ interface IPrototypeItem {
     images: string[];
 }
 
-function searchItem(item: IPrototypeItem, searchString: string): boolean {
-    if (item.brand.toLowerCase().includes(searchString)) return true;
-    if (item.name.toLowerCase().includes(searchString)) return true;
-    if (item.description.toLowerCase().includes(searchString)) return true;
-    if (item.category.toLowerCase().includes(searchString)) return true;
-    if (item.price >= parseInt(searchString)) return true;
-    if (item.stock >= parseInt(searchString)) return true;
-    return false;
-}
-
 /*
 class Item {
     id: number;
@@ -126,4 +116,4 @@ function createCartItemFromMain(item: IPrototypeItem): HTMLDivElement {
 }
 //}
 
-export { createCartItemFromMain, IPrototypeItem, searchItem };
+export { createCartItemFromMain, IPrototypeItem };
