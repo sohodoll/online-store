@@ -31,10 +31,11 @@ function setSearchParams(brand: string, category: string, searchString: string) 
 
 function removeSearchParams(types: string[]) {
     const url = new URL(window.location.href);
-    types.forEach((element) => {
-        url.searchParams.delete(element);
-    });
-    window.history.replaceState(null, 'null', url);
+    // types.forEach((element) => {
+    //     url.searchParams.delete(element);
+    // });
+    const newUrl = window.location.href.split('?')[0] + '#';
+    window.history.replaceState(null, 'null', newUrl);
 }
 
 function filterItems(array: IPrototypeItem[], brand: string, category: string): IPrototypeItem[] {
