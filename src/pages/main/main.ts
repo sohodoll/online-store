@@ -3,7 +3,7 @@ import { createCartItemFromMain, IPrototypeItem } from '../templates/items';
 //import ItemCart from '../components/itemCart/itemCart';
 import shoes from '../../db/shoes';
 import { setSearchParams, removeSearchParams, filterItems, sortItems } from '../templates/filters';
-import { arrCart, getMainLayout, setMainLayout, updateHeader, viewButtonAddClick } from '../../app';
+import { arrCart, getMainLayout, saveLocalStorage, setMainLayout, updateHeader, viewButtonAddClick } from '../../app';
 import iconsSVG from '../templates/icons';
 import { setCurrPage } from '../cart/cart';
 
@@ -237,6 +237,7 @@ class MainPage extends Page {
             itemCollection.classList.add('grid');
             setMainLayout('grid');
             setSearchParams(brandFilter, catFilter, searchFilter, priceFilter, stockFilter, sortFilter, layoutFilter);
+            saveLocalStorage();
         });
 
         listLayout.className = 'search__list-layout btn';
@@ -249,6 +250,7 @@ class MainPage extends Page {
             itemCollection.classList.add('list');
             setMainLayout('list');
             setSearchParams(brandFilter, catFilter, searchFilter, priceFilter, stockFilter, sortFilter, layoutFilter);
+            saveLocalStorage();
         });
 
         if (this.layout === 'grid') gridLayout.classList.add('select');

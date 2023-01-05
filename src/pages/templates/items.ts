@@ -42,7 +42,10 @@ function createCartItemFromMain(item: IPrototypeItem): HTMLDivElement {
     const brandLogo: HTMLImageElement = document.createElement('img');
     const elemTumb: HTMLDivElement = document.createElement('div');
     const elemTitle: HTMLDivElement = document.createElement('div');
-    const elemName: HTMLParagraphElement = document.createElement('p');
+    const elemBrand: HTMLParagraphElement = document.createElement('p');
+    const elemModel: HTMLParagraphElement = document.createElement('p');
+    const elemCategory: HTMLParagraphElement = document.createElement('p');
+    const elemStock: HTMLParagraphElement = document.createElement('p');
     const elemPrice: HTMLParagraphElement = document.createElement('p');
     const elemButtons: HTMLDivElement = document.createElement('div');
     const elemBtnView: HTMLButtonElement = document.createElement('button');
@@ -66,12 +69,20 @@ function createCartItemFromMain(item: IPrototypeItem): HTMLDivElement {
 
     //Title
     elemTitle.className = 'main__item-title';
-    elemName.className = 'main__item-name';
-    elemName.textContent = `${item.brand} ${item.name}`;
+
+    elemBrand.className = 'main__item-brand';
+    elemBrand.textContent = `${item.brand}`;
+    elemModel.className = 'main__item-model';
+    elemModel.textContent = `${item.name}`;
+
+    elemCategory.className = 'main__item-category';
+    elemCategory.textContent = `${item.category}`;
+    elemStock.className = 'main__item-stock';
+    elemStock.textContent = `${item.stock.toString()}`;
     elemPrice.className = 'main__item-price';
     elemPrice.textContent = `${item.price.toString()}`;
 
-    elemTitle.append(elemName, elemPrice); //Name and Price
+    elemTitle.append(elemBrand, elemModel, elemCategory, elemStock, elemPrice); //Name and Price
 
     //Buttons
     elemButtons.className = 'main__item_btn-collection';
