@@ -14,7 +14,7 @@ import { clearCart, updateHeader } from "../../../app";
 // const inputs: HTMLInputElement[] = [];
 // inputs.push(nameField, phoneField, addressField, emailField, cardNumField, cardValidField, cardCVVField);
 
-export function validateIsNum(evt: UIEvent): void {
+function validateIsNum(evt: UIEvent): void {
     if ((evt.which != 8 && evt.which != 0 && evt.which < 48) || evt.which > 57) {
         evt.preventDefault();
     }
@@ -31,7 +31,7 @@ function setErrorMessage(element: HTMLElement, message: string): void {
     input.classList.remove('success');
 }
 
-export function setSuccess(element: HTMLElement): void {
+function setSuccess(element: HTMLElement): void {
     const inputControl = <HTMLElement>element.parentElement;
     const input = <HTMLElement>inputControl.querySelector('input');
     const errorDisplay = <HTMLElement>inputControl.querySelector('.error');
@@ -225,7 +225,7 @@ function validateAllInputs(): boolean {
     return isValid;
 }
 
-export function submitFrom(): void {
+function submitFrom(): void {
     const isValid = validateAllInputs();
     if (isValid) {
         alert('Purchase completed!\n\nEmptying cart, redirecting to main...');
