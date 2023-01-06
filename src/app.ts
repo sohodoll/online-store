@@ -43,7 +43,7 @@ export const enum PageIDs {
     ErrorPage = 'error404',
 }
 
-function updateCartAmount(/*arr: ItemCart[]*/): void {
+export function updateCartAmount(/*arr: ItemCart[]*/): void {
     const headerCartCount: HTMLImageElement = <HTMLImageElement>document.querySelector('.header__cart-count');
     //headerCartCount.textContent = arr.length.toString();
     /*headerCartCount.textContent = arrCart.length.toString();*/
@@ -51,7 +51,7 @@ function updateCartAmount(/*arr: ItemCart[]*/): void {
     headerCartCount.textContent = arrCart.reduce((a = 0, el) => a + el.getAmount(), 0).toString();
 }
 
-function updateCartPrice(/*arr: ItemCart[]*/): void {
+export function updateCartPrice(/*arr: ItemCart[]*/): void {
     const headerTotalPrice: HTMLImageElement = <HTMLImageElement>document.querySelector('.header__total-price');
     let total = 0;
     //arr.forEach((el) => {

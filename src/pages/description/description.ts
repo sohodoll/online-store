@@ -67,14 +67,12 @@ function createLeftDescriptionPanel(shoe: IPrototypeItem): HTMLDivElement {
             imageChoice.classList.toggle('select');
             selectImg = imageChoice;
             imageChoice.src = shoe.thumbnail;
-        } else
-            imageChoice.src = shoe.images[i - 1];
+        } else imageChoice.src = shoe.images[i - 1];
         imageChoice.alt = shoe.name;
         //click image
         imageChoice.addEventListener('click', function () {
             image.src = this.src;
-            if (selectImg)
-                selectImg.classList.toggle('select');
+            if (selectImg) selectImg.classList.toggle('select');
             this.classList.toggle('select');
             selectImg = <HTMLImageElement>this;
         });
@@ -82,10 +80,33 @@ function createLeftDescriptionPanel(shoe: IPrototypeItem): HTMLDivElement {
     }
     
     descriptionLeft.append(highlights, imgCollection);
+
+
+    buttons.className = 'description__buttons';
+    btnBuyNow.className = 'description__button-buy-now btn';
+    btnBuyNow.textContent = 'Buy Now';
+    btnBuyNow.addEventListener('click', () => {
+        buyNow(shoe.id);
+    });
+
+    btnAddToCart.className = 'description__button-add-cart btn';
+    //if (findInCart(shoe.id) < 0)
+    console.log(getArrCart());
+    if (arrCart.findIndex((el) => el.id === shoe.id) < 0) btnAddToCart.textContent = 'Add To Cart';
+    else btnAddToCart.textContent = 'Remove From Cart';
+    btnAddToCart.addEventListener('click', function () {
+        addItemToCart(shoe.id);
+        if (this.textContent === 'Add To Cart') this.textContent = 'Remove From Cart';
+        else this.textContent = 'Add To Cart';
+    });
+    appendChildElements(buttons, [btnBuyNow, btnAddToCart]);
+    appendChildElements(descriptionLeft, [highlights, imgCollection, buttons]);
+
     return descriptionLeft;
 }
 
 //create right description panel
+
 function createRightDescriptionPanel(shoe: IPrototypeItem): HTMLDivElement {
     const descriptionRight: HTMLDivElement = document.createElement('div')
     //const itemNaming: HTMLDivElement = document.createElement('div');
@@ -224,7 +245,7 @@ class DescriptionPage extends Page {
                     </div>
                     <div class="description__image-choice">
                         <img class="image-choice" src="${this.shoePictures[0]}" alt="${this.shoeName}" />
-                    </div>                            
+                    </div>
                     <div class="description__image-choice">
                         <img class="image-choice" src="${this.shoePictures[1]}" alt="${this.shoeName}" />
                     </div>

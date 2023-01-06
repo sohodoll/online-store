@@ -4,9 +4,9 @@ import { getArrCart, saveLocalStorage } from '../../app';
 import { Form } from '../components/form/form';
 import iconsSVG from '../templates/icons';
 
-let perPage: number;
-let currPage: number;
-let pageCount: number;
+export let perPage: number;
+export let currPage: number;
+export let pageCount: number;
 
 //Modal Window
 let modalWindow: HTMLDivElement;
@@ -17,8 +17,7 @@ function createModalWindow(show: boolean): HTMLDivElement {
 
     modalWindow = document.createElement('div');
     modalWindow.className = 'receipt__modal-window';
-    if (!show)
-        modalWindow.classList.add('hide');
+    if (!show) modalWindow.classList.add('hide');
 
     closeModal.className = 'modal-close';
     closeModal.innerHTML = iconsSVG.close;
@@ -48,13 +47,14 @@ function getCurrPage(): number {
     return currPage;
 }
 
-function loadPage(parentElem: Element, numPage: number, perPage: number): void {//HTMLDivElement {
+function loadPage(parentElem: Element, numPage: number, perPage: number): void {
+    //HTMLDivElement {
     //const items: HTMLDivElement = document.createElement('div');
     //items.className = 'cart__item-collection';
     const tempArray: ItemCart[] = getArrCart();
     if (tempArray.length > 0) {
         parentElem.innerHTML = '';
-        const n = Math.min(perPage, tempArray.length - ((currPage - 1) * perPage));
+        const n = Math.min(perPage, tempArray.length - (currPage - 1) * perPage);
         for (let i = 0; i < n; i += 1) {
             const index = (numPage - 1) * perPage + i;
             parentElem.appendChild(tempArray[index].createHTMLElement(index));
@@ -138,7 +138,7 @@ function createComboBox(): HTMLDivElement {
             const cartItemCollection = <HTMLDivElement>document.querySelector('.cart__item-collection');
             cartItemCollection.innerHTML = loadPage(currPage, perPage).innerHTML;*/
         });
-        option.addEventListener('mouseenter', function(): void {
+        option.addEventListener('mouseenter', function (): void {
             this.classList.add('select');
         });
         option.addEventListener('mouseleave', function (): void {
@@ -194,8 +194,7 @@ function createPagesList(): HTMLDivElement {
     if (currPage === 1) btnPrevPage.classList.add('disable');
     btnPrevPage.textContent = '<';
     btnPrevPage.addEventListener('click', function () {
-        if (currPage > 1)
-            currPage -= 1;
+        if (currPage > 1) currPage -= 1;
         clickPaginButton();
     });
 
@@ -203,8 +202,7 @@ function createPagesList(): HTMLDivElement {
     if (currPage === pageCount) btnNextPage.classList.add('disable');
     btnNextPage.textContent = '>';
     btnNextPage.addEventListener('click', function () {
-        if (currPage < pageCount)
-            currPage += 1;
+        if (currPage < pageCount) currPage += 1;
         clickPaginButton();
     });
 
@@ -273,7 +271,7 @@ class CartPage extends Page {
             itemCartCollection.innerHTML = '<h1>Cart is empty</h1>';
         } else {
             //itemCartCollection = loadPage(currPage, perPage);
-            loadPage(itemCartCollection, currPage, perPage);            
+            loadPage(itemCartCollection, currPage, perPage);
             /*
             this.arrCart.forEach((el, index) => {
                 itemCartCollection.appendChild(el.createHTMLElement(index));
