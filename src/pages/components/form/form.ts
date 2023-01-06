@@ -29,7 +29,7 @@ function setErrorMessage(element: HTMLElement, message: string): void {
     input.classList.remove('success');
 }
 
-function setSuccess(element: HTMLElement): void {
+export function setSuccess(element: HTMLElement): void {
     const inputControl = <HTMLElement>element.parentElement;
     const input = <HTMLElement>inputControl.querySelector('input');
     const errorDisplay = <HTMLElement>inputControl.querySelector('.error');
