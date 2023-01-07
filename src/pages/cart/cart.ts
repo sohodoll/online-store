@@ -4,9 +4,9 @@ import { getArrCart, saveLocalStorage } from '../../app';
 import { Form } from '../components/form/form';
 import iconsSVG from '../templates/icons';
 
-let perPage: number;
-let currPage: number;
-let pageCount: number;
+export let perPage: number;
+export let currPage: number;
+export let pageCount: number;
 
 //Modal Window
 let modalWindow: HTMLDivElement;

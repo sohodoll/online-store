@@ -54,7 +54,7 @@ function changeReceiptPrice(oldPrice: number, newPrice: number): void {
     receiptTotalPrice.textContent = totalPrice.toFixed(2);
 }
 
-function addUsedPromoCode(promo: Promocode): HTMLDivElement {
+export function addUsedPromoCode(promo: Promocode): HTMLDivElement {
     const usedPromoCode: HTMLDivElement = document.createElement('div');
     const codeName: HTMLSpanElement = document.createElement('span');
     const codeSeparator: HTMLSpanElement = document.createElement('span');
@@ -147,7 +147,7 @@ function createPromoPanel(): HTMLDivElement {
     return promoPanel;
 }
 
-function countItemsInCart(): number {
+export function countItemsInCart(): number {
     return getArrCart().reduce((a = 0, el) => a + el.getAmount(), 0);
 }
 
