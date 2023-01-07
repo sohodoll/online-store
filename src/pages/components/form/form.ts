@@ -1,5 +1,7 @@
 // const formElement = <HTMLFormElement>document.querySelector('#form');
 
+import { clearCart, updateHeader } from "../../../app";
+
 // const nameField = <HTMLInputElement>document.querySelector('#name');
 // const phoneField = <HTMLInputElement>document.querySelector('#phone');
 // const addressField = <HTMLInputElement>document.querySelector('#address');
@@ -12,7 +14,7 @@
 // const inputs: HTMLInputElement[] = [];
 // inputs.push(nameField, phoneField, addressField, emailField, cardNumField, cardValidField, cardCVVField);
 
-function validateIsNum(evt: UIEvent): void {
+export function validateIsNum(evt: UIEvent): void {
     if ((evt.which != 8 && evt.which != 0 && evt.which < 48) || evt.which > 57) {
         evt.preventDefault();
     }
@@ -125,9 +127,15 @@ function validateCardNum(): void {
     }
     if (stringValue.length) {
         switch (stringValue[0]) {
-            case '4': cardFiller.src = '../../assets/svg/visa.svg'; break;
-            case '5': cardFiller.src = '../../assets/svg/mastercard.svg'; break;
-            case '6': cardFiller.src = '../../assets/svg/paypal.svg'; break;
+            case '4':
+                cardFiller.src = '../../assets/svg/visa.svg';
+                break;
+            case '5':
+                cardFiller.src = '../../assets/svg/mastercard.svg';
+                break;
+            case '6':
+                cardFiller.src = '../../assets/svg/paypal.svg';
+                break;
         }
         /*
         if (stringValue[0] === '4') {
@@ -220,7 +228,12 @@ function validateAllInputs(): boolean {
 function submitFrom(): void {
     const isValid = validateAllInputs();
     if (isValid) {
-        alert('Purchase completed!\n\nEmptying cart, redirecting to main...');
+        alert('Purchase completed!\n\nEmptying cart, redirecting to main...');                
+        setTimeout(() => {
+            window.location.hash = '';
+            clearCart();
+            updateHeader();
+        }, 1000);        
     } else {
         alert('Invalid data entered, please try again!!!');
     }
@@ -290,7 +303,7 @@ class Form {
             </div>
             <button class="submit-button" type="submit">Submit</button>`;
         return modalForm;
-/*        return `
+        /*        return `
         <form id="form" action="/">
             <h1>Personal details</h1>
             <div class="input-control">

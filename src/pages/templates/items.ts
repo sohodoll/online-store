@@ -1,5 +1,4 @@
-import { addItemToCart, findInCart, getArrCart } from '../../app';
-import { appendChildElements } from '../components/itemCart/itemCart';
+import { addItemToCart, findInCart, getArrCart, saveLocalStorage } from '../../app';
 import iconsSVG from './icons';
 
 interface IPrototypeItem {
@@ -13,6 +12,7 @@ interface IPrototypeItem {
     thumbnail: string;
     images: string[];
 }
+
 /*
 class Item {
     id: number;
@@ -40,9 +40,12 @@ class Item {
 function createCartItemFromMain(item: IPrototypeItem): HTMLDivElement {
     const elem: HTMLDivElement = document.createElement('div');
     const brandLogo: HTMLImageElement = document.createElement('img');
-    const elemTumb: HTMLImageElement = document.createElement('img');
+    const elemTumb: HTMLDivElement = document.createElement('div');
     const elemTitle: HTMLDivElement = document.createElement('div');
-    const elemName: HTMLParagraphElement = document.createElement('p');
+    const elemBrand: HTMLParagraphElement = document.createElement('p');
+    const elemModel: HTMLParagraphElement = document.createElement('p');
+    const elemCategory: HTMLParagraphElement = document.createElement('p');
+    const elemStock: HTMLParagraphElement = document.createElement('p');
     const elemPrice: HTMLParagraphElement = document.createElement('p');
     const elemButtons: HTMLDivElement = document.createElement('div');
     const elemBtnView: HTMLButtonElement = document.createElement('button');
@@ -59,23 +62,33 @@ function createCartItemFromMain(item: IPrototypeItem): HTMLDivElement {
 
     //Tumbnail
     elemTumb.className = 'main__item-tumb';
-    elemTumb.src = item.thumbnail;
-    elemTumb.alt = `${item.brand} ${item.name}`;
+    elemTumb.style.backgroundImage = `url(${item.thumbnail})`;
+    //elemTumb.alt = `${item.brand} ${item.name}`;
+
+    elemTumb.appendChild(brandLogo);
 
     //Title
     elemTitle.className = 'main__item-title';
-    elemName.className = 'main__item-name';
-    elemName.textContent = `${item.brand} ${item.name}`;
+
+    elemBrand.className = 'main__item-brand';
+    elemBrand.textContent = `${item.brand}`;
+    elemModel.className = 'main__item-model';
+    elemModel.textContent = `${item.name}`;
+
+    elemCategory.className = 'main__item-category';
+    elemCategory.textContent = `${item.category}`;
+    elemStock.className = 'main__item-stock';
+    elemStock.textContent = `${item.stock.toString()}`;
     elemPrice.className = 'main__item-price';
     elemPrice.textContent = `${item.price.toString()}`;
 
-    appendChildElements(elemTitle, [elemName, elemPrice]) //Name and Price
+    elemTitle.append(elemBrand, elemModel, elemCategory, elemStock, elemPrice); //Name and Price
 
     //Buttons
     elemButtons.className = 'main__item_btn-collection';
 
     //-- View
-    elemBtnView.className = 'main__item-btn btn-view';
+    elemBtnView.className = 'main__item-btn btn-view btn';
     elemBtnView.textContent = 'View';
     elemBtnView.value = item.id.toString();
     elemBtnView.addEventListener('click', function () {
@@ -83,7 +96,7 @@ function createCartItemFromMain(item: IPrototypeItem): HTMLDivElement {
     });
 
     //-- Add to Cart
-    elemBtnToCart.className = 'main__item-btn btn-to-cart';
+    elemBtnToCart.className = 'main__item-btn btn-to-cart btn';
     elemBtnToCart.value = item.id.toString();
     if (getArrCart()) {
         if (findInCart(item.id) < 0) {
@@ -104,12 +117,13 @@ function createCartItemFromMain(item: IPrototypeItem): HTMLDivElement {
             this.dataset.icon = 'cart';
             this.innerHTML = iconsSVG.cart;
         }
+        saveLocalStorage();
     });
 
-    appendChildElements(elemButtons, [elemBtnView, elemBtnToCart]);
+    elemButtons.append(elemBtnView, elemBtnToCart);
     //------------
 
-    appendChildElements(elem, [brandLogo, elemTumb, elemTitle, elemButtons]); //Brand Logo, Tumbnail, Title and Button View
+    elem.append(elemTumb, elemTitle, elemButtons); //Brand Logo, Tumbnail, Title and Button View
     return elem;
 }
 //}

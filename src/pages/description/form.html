@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Form</title>
+        <link rel="stylesheet" href="./form.css" />
+    </head>
+    <body>
+        <div class="container">
+            <form id="form" action="/">
+                <h1>Personal details</h1>
+                <div class="input-control">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name" placeholder="Casey Neistat" />
+                    <div class="error"></div>
+                </div>
+                <div class="input-control">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" placeholder="+4956902244" />
+                    <div class="error"></div>
+                </div>
+                <div class="input-control">
+                    <label for="address">Address</label>
+                    <input type="text" id="address" name="address" placeholder="United States, Washington" />
+                    <div class="error"></div>
+                </div>
+                <div class="input-control">
+                    <label for="email">Email</label>
+                    <input type="text" id="email" name="email" placeholder="email@email.com" />
+                    <div class="error"></div>
+                </div>
+                <div class="input-control card-num-input-control">
+                    <label for="card-num">Card Number</label>
+                    <input
+                        class="card-num__input"
+                        type="number"
+                        id="card-num"
+                        name="card-num"
+                        placeholder="4997557688956757"
+                        onKeyPress="if(this.value.length==16) return false;"
+                    />
+                    <img id="card-filler" src="../../assets/icons/card-filler.png" alt="card-brand" />
+                    <div class="error"></div>
+                </div>
+                <div class="input-control">
+                    <label for="card-valid">Valid Thru</label>
+                    <input
+                        type="text"
+                        id="card-valid"
+                        name="card-valid"
+                        placeholder="04/24"
+                        onKeyPress="if(this.value.length==5) return false;"
+                    />
+                    <div class="error"></div>
+                </div>
+                <div class="input-control">
+                    <label for="card-cvv">CVV</label>
+                    <input
+                        type="text"
+                        id="card-cvv"
+                        name="card-cvv"
+                        placeholder="717"
+                        onKeyPress="if(this.value.length==3) return false;"
+                    />
+                    <div class="error"></div>
+                </div>
+                <button class="submit-button" type="submit">Submit</button>
+            </form>
+        </div>
+        <script src="./form.js"></script>
+    </body>
+</html>

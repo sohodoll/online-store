@@ -1,12 +1,12 @@
 import { ItemCart, createReceipt, appendChildElements } from '../components/itemCart/itemCart';
 import Page from '../templates/page';
-import { getArrCart } from '../../app';
+import { getArrCart, saveLocalStorage } from '../../app';
 import { Form } from '../components/form/form';
 import iconsSVG from '../templates/icons';
 
-let perPage: number;
-let currPage: number;
-let pageCount: number;
+export let perPage: number;
+export let currPage: number;
+export let pageCount: number;
 
 //Modal Window
 let modalWindow: HTMLDivElement;
@@ -68,25 +68,30 @@ function buttonPaginStyle(): void {
     const prevPage: HTMLButtonElement = <HTMLButtonElement>document.querySelector('.pagination__prev-btn');
     const nextPage: HTMLButtonElement = <HTMLButtonElement>document.querySelector('.pagination__next-btn');
     const lastPage: HTMLButtonElement = <HTMLButtonElement>document.querySelector('.pagination__last-btn');
+    
     if (currPage === 1) {
         firstPage.classList.add('disable');
         prevPage.classList.add('disable');
+        nextPage.classList.add('disable');
+        lastPage.classList.add('disable');
         if (currPage !== pageCount) {
             nextPage.classList.remove('disable');
             lastPage.classList.remove('disable');
         }
-    } else if (currPage === pageCount) {
-        nextPage.classList.add('disable');
-        lastPage.classList.add('disable');
-        if (currPage !== 1) {
+    } else {
+        if (currPage === pageCount) {
+            nextPage.classList.add('disable');
+            lastPage.classList.add('disable');
+            if (currPage !== 1) {
+                firstPage.classList.remove('disable');
+                prevPage.classList.remove('disable');
+            }
+        } else {
             firstPage.classList.remove('disable');
             prevPage.classList.remove('disable');
+            nextPage.classList.remove('disable');
+            lastPage.classList.remove('disable');
         }
-    } else {
-        firstPage.classList.remove('disable');
-        prevPage.classList.remove('disable');
-        nextPage.classList.remove('disable');
-        lastPage.classList.remove('disable');
     }
 }
 
@@ -128,7 +133,7 @@ function createComboBox(): HTMLDivElement {
             perPage = parseInt(String(this.textContent));
             //pageCount = Math.ceil(getArrCart().length / perPage);
             updatePaginParam();
-            
+            saveLocalStorage();
             /*
             const cartItemCollection = <HTMLDivElement>document.querySelector('.cart__item-collection');
             cartItemCollection.innerHTML = loadPage(currPage, perPage).innerHTML;*/
@@ -174,6 +179,7 @@ function createPagesList(): HTMLDivElement {
         //cartItemCollection.outerHTML = loadPage(currPage, perPage).outerHTML;
         loadPage(cartItemCollection, currPage, perPage);
         buttonPaginStyle();
+        saveLocalStorage();
     }
 
     btnFirstPage.className = 'pagination__first-btn btn';
@@ -215,7 +221,7 @@ function createPagesList(): HTMLDivElement {
     inputNumCurrentPage.type = 'text';
     inputNumCurrentPage.step = '1';
     inputNumCurrentPage.min = '1';
-    inputNumCurrentPage.value = '1';
+    inputNumCurrentPage.value = `${currPage}`;
     inputNumCurrentPage.max = pageCount.toString();
 
     pagesList.className = 'pagincation__page-list';

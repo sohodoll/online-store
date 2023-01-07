@@ -1,6 +1,6 @@
 import './index.css';
 import MainPage from './pages/main/main';
-import { CartPage, getCurrPage, getPerPage, setCurrPage, setPerPage, updatePaginParam } from './pages/cart/cart';
+import { CartPage, getCurrPage, getPerPage, perPage, setCurrPage, setPerPage, updatePaginParam } from './pages/cart/cart';
 import Page from './pages/templates/page';
 import DescriptionPage from './pages/description/description';
 import ErrorPage from './pages/error404/error404';
@@ -11,10 +11,12 @@ import { IPrototypeItem } from './pages/templates/items';
 import shoes from './db/shoes';
 import iconsSVG from './pages/templates/icons';
 import { Form } from './pages/components/form/form';
+import { removeSearchParams } from './pages/templates/filters';
 
 //let itemsAddCartButton: NodeList;
 let arrCart: ItemCart[];
 let clickItem: IPrototypeItem;
+let mainLayout: string;
 
 function findInCart(itemID: number): number {
     const findIndex = arrCart.findIndex((el) => el.id === itemID);
@@ -27,15 +29,12 @@ function loadIconForItems(): void {
         if (findInCart(parseInt(String((el as HTMLButtonElement).value))) >= 0) {
             (el as HTMLButtonElement).innerHTML = iconsSVG.remove;
             (el as HTMLButtonElement).dataset.icon = 'removeCart';
-        }
-        else {
+        } else {
             (el as HTMLButtonElement).innerHTML = iconsSVG.cart;
             (el as HTMLButtonElement).dataset.icon = 'cart';
         }
     });
 }
-
-
 
 export const enum PageIDs {
     //MainPage = 'main',
@@ -63,7 +62,7 @@ function updateCartPrice(/*arr: ItemCart[]*/): void {
     headerTotalPrice.textContent = `${total.toString()}`;
 }
 
-function viewButtonAddClick(): void {
+export function viewButtonAddClick(): void {
     const itemsViewButton: NodeList = <NodeList>document.querySelectorAll('.btn-view');
 
     itemsViewButton.forEach((el) => {
@@ -86,9 +85,16 @@ function getArrCart(): ItemCart[] {
     return arrCart;
 }
 
+function getMainLayout(): string {
+    return mainLayout;
+}
+function setMainLayout(value: string): void {
+    mainLayout = value;
+}
+
 function addToCart(elem: Node): void {
     const itemID: number = parseInt((elem as HTMLButtonElement).value);
-    const clickItem: IPrototypeItem = <IPrototypeItem>shoes.find((el) => el.id === itemID);    
+    const clickItem: IPrototypeItem = <IPrototypeItem>shoes.find((el) => el.id === itemID);
     const cartItem: ItemCart = new ItemCart(
         clickItem.id,
         clickItem.name,
@@ -128,20 +134,34 @@ function removeItemFromCart(id: number): void {
     App.renderNewPage('cart');
 }
 
+function clearCart(): void {
+    arrCart.splice(0, arrCart.length);
+    setPerPage(3);
+    saveLocalStorage();
+    removeSearchParams(['category']);
+}
+
 function shoesImportToItemCart(shoe: IPrototypeItem): ItemCart {
     const newItemCart: ItemCart = new ItemCart(
-        shoe.id, shoe.name, shoe.brand, shoe.category, shoe.thumbnail, 1, shoe.stock, shoe.price
+        shoe.id,
+        shoe.name,
+        shoe.brand,
+        shoe.category,
+        shoe.thumbnail,
+        1,
+        shoe.stock,
+        shoe.price
     );
     return newItemCart;
 }
 
-//Add Item To Cart
+//Add / Remove Item Cart
 function addItemToCart(itemID: number): void {
     if (findInCart(itemID) < 0) {
         arrCart.push(shoesImportToItemCart(shoes[itemID - 1]));
     } else {
         arrCart.splice(findInCart(itemID), 1);
-//        updateHeader();
+        //        updateHeader();
     }
     /* else {
         arrCart[findIndex].addAmount();
@@ -165,8 +185,7 @@ function addItemToCart(itemID: number): void {
 
 //Buy Now
 function buyNow(itemID: number): void {
-    if (findInCart(itemID) < 0)
-        arrCart.push(shoesImportToItemCart(shoes[itemID - 1]));
+    if (findInCart(itemID) < 0) arrCart.push(shoesImportToItemCart(shoes[itemID - 1]));
     updateHeader();
     App.renderNewPage(PageIDs.CartPage, true);
     new Form().listen();
@@ -174,7 +193,6 @@ function buyNow(itemID: number): void {
 
 //loading parameter from localStorage
 function loadLocalStorage() {
-    console.log('loadLocalStorage');
     if (localStorage.getItem('arrCart')) {
         arrCart = JSON.parse(String(localStorage.getItem('arrCart'))).map((el: ItemCart) => {
             const { id, name, brand, category, thumbnail, amount, limit, price } = el;
@@ -197,6 +215,13 @@ function loadLocalStorage() {
     } else {
         setCurrPage(1);
     }
+
+    if (localStorage.getItem('mainLayout')) {
+        mainLayout = String(localStorage.getItem('mainLayout'));
+    } else {
+        if (document.body.clientWidth < 750) mainLayout = 'list';
+        else mainLayout = 'grid';
+    }
     /*console.log('localStorage', arrCart);
     updateHeader();
     const hash: string = window.location.hash.slice(1).split('/')[0];
@@ -217,14 +242,17 @@ class App {
     private footer: HTMLElement; // = <HTMLElement>document.createElement('footer');
 
     private handleRouting() {
-        console.log('handleRouting');
-        window.addEventListener('hashchange', () => {
+        window.addEventListener('hashchange', (e) => {
+            e.preventDefault();
+            window.location.pathname = '/';
+            if (window.location.hash === '') {
+                App.renderNewPage('error404');
+            }
             const hash = window.location.hash.slice(1).split('/')[0];
             const currentShoe = window.location.hash.slice(1).split('/')[1];
             console.log(currentShoe);
             App.renderNewPage(hash);
         });
-        
     }
 
     static renderNewPage(pageId: string, showModalWindow?: boolean): void {
@@ -232,17 +260,15 @@ class App {
         let page: Page | null = null;
         if (pageId === PageIDs.MainPage) {
             page = new MainPage(pageId);
-        } else if (pageId === PageIDs.CartPage) {
-            if (!showModalWindow)
-                showModalWindow = false;
+        } else if (pageId === PageIDs.CartPage) {            
+            if (!showModalWindow) showModalWindow = false;
             page = new CartPage(pageId, arrCart, showModalWindow);
         } else if (pageId === PageIDs.DescriptionPage) {
             const currentShoe = window.location.hash.slice(1).split('/')[1];
             if (currentShoe) {
                 clickItem = <IPrototypeItem>shoes.find((el) => el.id === Number(currentShoe));
             }
-            page = new DescriptionPage(pageId, clickItem);
-            console.log(currentShoe);/*
+            page = new DescriptionPage(pageId, clickItem); /*
             const Desc = new DescriptionPage(pageId, clickItem);
             setTimeout(() => {
                 Desc.listen();
@@ -264,7 +290,7 @@ class App {
                     const id: number = parseInt((button as HTMLButtonElement).value);
                     button.addEventListener('click', () => {
                         removeItemFromCart(id);
-//                        this.renderNewPage(pageId);
+                        //                        this.renderNewPage(pageId);
                     });
                 });
             }*/
@@ -277,19 +303,17 @@ class App {
     }
 
     run() {
-        console.log('Start');        
         App.container.prepend(this.header);
-        loadLocalStorage();
+        loadLocalStorage();        
         if (window.location.hash === '' || window.location.hash === '#') {
             App.renderNewPage('');
         } else {
             const hash = window.location.hash.slice(1).split('/')[0];
             const currentShoe = window.location.hash.slice(1).split('/')[1];
-            console.log(currentShoe);            
             App.renderNewPage(hash);
         }
 
-        App.container.appendChild(this.footer);        
+        App.container.appendChild(this.footer);
         this.handleRouting();
         //viewButtonAddClick();
         //cartButtonAddClick();
@@ -306,12 +330,14 @@ class App {
 
 //save parameter in localStorage
 function saveLocalStorage() {
+    console.log('Save', arrCart);
     localStorage.setItem('arrCart', JSON.stringify(arrCart));
     localStorage.setItem('perPage', getPerPage().toString());
     localStorage.setItem('currPage', getCurrPage().toString());
+    localStorage.setItem('mainLayout', mainLayout);
 }
 
-window.addEventListener('beforeunload', saveLocalStorage);
+//window.addEventListener('beforeunload', saveLocalStorage);
 //window.addEventListener('load', loadLocalStorage);
 /* ------------------------- */
 
@@ -331,4 +357,17 @@ window.addEventListener('beforeunload', saveLocalStorage);
 
 // }
 
-export { App, removeItemFromCart, updateHeader, addItemToCart, buyNow, getArrCart, findInCart, arrCart };
+export {
+    App,
+    saveLocalStorage,
+    removeItemFromCart,
+    updateHeader,
+    addItemToCart,
+    buyNow,
+    getArrCart,
+    findInCart,
+    arrCart,
+    getMainLayout,
+    setMainLayout,
+    clearCart
+};

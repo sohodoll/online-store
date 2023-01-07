@@ -1,5 +1,5 @@
 import Promocode from '../../templates/promocode';
-import { getArrCart, removeItemFromCart, updateHeader } from '../../../app';
+import { getArrCart, removeItemFromCart, saveLocalStorage, updateHeader } from '../../../app';
 import iconsSVG from '../../templates/icons';
 import { Form } from '../form/form';
 //import { updatePaginParam } from '../../cart/cart';
@@ -54,7 +54,7 @@ function changeReceiptPrice(oldPrice: number, newPrice: number): void {
     receiptTotalPrice.textContent = totalPrice.toFixed(2);
 }
 
-function addUsedPromoCode(promo: Promocode): HTMLDivElement {
+export function addUsedPromoCode(promo: Promocode): HTMLDivElement {
     const usedPromoCode: HTMLDivElement = document.createElement('div');
     const codeName: HTMLSpanElement = document.createElement('span');
     const codeSeparator: HTMLSpanElement = document.createElement('span');
@@ -147,7 +147,7 @@ function createPromoPanel(): HTMLDivElement {
     return promoPanel;
 }
 
-function countItemsInCart(): number {
+export function countItemsInCart(): number {
     return getArrCart().reduce((a = 0, el) => a + el.getAmount(), 0);
 }
 
@@ -296,6 +296,7 @@ class ItemCart {
         itemAmountDown.addEventListener('click', () => {
             if (this.getAmount() === 1) {
                 removeItemFromCart(index);
+                saveLocalStorage();
             } else {
                 const oldPrice = this.getTotalPrice();
                 this.delAmount();
@@ -345,6 +346,7 @@ class ItemCart {
         itemRemove.addEventListener('click', function () {
             console.log(index);
             removeItemFromCart(index);
+            saveLocalStorage();
         });
         itemRemove.value = `${index + 1}`//`${this.id.toString()}`;
         /*itemRemove.innerHTML = `<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" xml:space="preserve">
