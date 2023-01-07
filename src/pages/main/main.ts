@@ -320,10 +320,22 @@ class MainPage extends Page {
         const priceConteiner: HTMLDivElement = <HTMLDivElement>this.container.children[1].childNodes[0].childNodes[2];
         const stockConteiner: HTMLDivElement = <HTMLDivElement>this.container.children[1].childNodes[0].childNodes[3];
 
-        const minPrice: number = Math.min(...array.map((shoe) => shoe.price));
-        const maxPrice: number = Math.max(...array.map((shoe) => shoe.price));
-        const minStock: number = Math.min(...array.map((shoe) => shoe.stock));
-        const maxStock: number = Math.max(...array.map((shoe) => shoe.stock));
+        let minPrice: number;
+        let maxPrice: number;
+        let minStock: number;
+        let maxStock: number;
+
+        if (!catFilter && !brandFilter && !searchFilter && !priceFilter && !stockFilter && !sortFilter) {
+            minPrice = 0;
+            maxPrice = Math.max(...shoes.map((shoe) => shoe.price));
+            minStock = 0;
+            maxStock = Math.max(...shoes.map((shoe) => shoe.stock));
+        } else {
+            minPrice = Math.min(...array.map((shoe) => shoe.price));
+            maxPrice = Math.max(...array.map((shoe) => shoe.price));
+            minStock = Math.min(...array.map((shoe) => shoe.stock));
+            maxStock = Math.max(...array.map((shoe) => shoe.stock));
+        }
 
         this.setValueSlider(priceConteiner, minPrice.toString(), maxPrice.toString());
         this.setValueSlider(stockConteiner, minStock.toString(), maxStock.toString());
@@ -339,6 +351,7 @@ class MainPage extends Page {
         maxValueSlider.value = max;
         minValueInput.value = min;
         maxValueInput.value = max;
+        this.manageSlider(minValueSlider, maxValueSlider, minValueInput, maxValueInput);
     }
 
     private sliderEndChange(slider: string, maxValue: string): void {
@@ -856,7 +869,7 @@ class MainPage extends Page {
         
         this.createListItem(tempArray);
         this.createTitleButtons(tempArray, [brand, category]);
-        
+        this.updateValueDualSliders(tempArray);
         /*
         setTimeout(() => {
             if (brand) {
