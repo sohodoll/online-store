@@ -296,6 +296,7 @@ class ItemCart {
         itemAmountDown.addEventListener('click', () => {
             if (this.getAmount() === 1) {
                 removeItemFromCart(index);
+                saveLocalStorage();
             } else {
                 const oldPrice = this.getTotalPrice();
                 this.delAmount();

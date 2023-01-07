@@ -228,12 +228,12 @@ function validateAllInputs(): boolean {
 function submitFrom(): void {
     const isValid = validateAllInputs();
     if (isValid) {
-        alert('Purchase completed!\n\nEmptying cart, redirecting to main...');
-        clearCart();
-        updateHeader();
+        alert('Purchase completed!\n\nEmptying cart, redirecting to main...');                
         setTimeout(() => {
             window.location.hash = '';
-        }, 1000);
+            clearCart();
+            updateHeader();
+        }, 1000);        
     } else {
         alert('Invalid data entered, please try again!!!');
     }

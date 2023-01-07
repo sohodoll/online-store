@@ -1,6 +1,6 @@
 import './index.css';
 import MainPage from './pages/main/main';
-import { CartPage, getCurrPage, getPerPage, setCurrPage, setPerPage, updatePaginParam } from './pages/cart/cart';
+import { CartPage, getCurrPage, getPerPage, perPage, setCurrPage, setPerPage, updatePaginParam } from './pages/cart/cart';
 import Page from './pages/templates/page';
 import DescriptionPage from './pages/description/description';
 import ErrorPage from './pages/error404/error404';
@@ -11,6 +11,7 @@ import { IPrototypeItem } from './pages/templates/items';
 import shoes from './db/shoes';
 import iconsSVG from './pages/templates/icons';
 import { Form } from './pages/components/form/form';
+import { removeSearchParams } from './pages/templates/filters';
 
 //let itemsAddCartButton: NodeList;
 let arrCart: ItemCart[];
@@ -135,6 +136,9 @@ function removeItemFromCart(id: number): void {
 
 function clearCart(): void {
     arrCart.splice(0, arrCart.length);
+    setPerPage(3);
+    saveLocalStorage();
+    removeSearchParams(['category']);
 }
 
 function shoesImportToItemCart(shoe: IPrototypeItem): ItemCart {
