@@ -1,3 +1,12 @@
-import './index.css';
+import { App } from './app';
 
-console.log('hey');
+const app = new App();
+
+app.run();
+
+window.addEventListener('load', (e) => {
+    e.preventDefault();
+    if (window.location.pathname !== '/') {
+        App.renderNewPage('error404');
+    }
+});

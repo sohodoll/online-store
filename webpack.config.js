@@ -4,6 +4,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
+const { NetlifyPlugin } = require('netlify-webpack-plugin');
 
 module.exports = {
     entry: './src/index.ts',
@@ -26,6 +27,7 @@ module.exports = {
     output: {
         filename: 'bundle.js',
         path: path.resolve(__dirname, 'dist'),
+        publicPath: '/',
     },
     plugins: [
         new HtmlWebpackPlugin({
@@ -38,6 +40,15 @@ module.exports = {
         new CopyPlugin({
             patterns: [{ from: 'src/assets', to: 'assets' }],
         }),
+        new NetlifyPlugin({
+            redirects: [
+                {
+                    from: '/*',
+                    to: '/index.html',
+                    status: 200,
+                },
+            ],
+        }),
     ],
     optimization: {
         minimizer: [new CssMinimizerPlugin(), new TerserPlugin()],
@@ -46,5 +57,6 @@ module.exports = {
         static: path.join(__dirname, 'dist'),
         compress: true,
         port: 4000,
+        historyApiFallback: true,
     },
 };
