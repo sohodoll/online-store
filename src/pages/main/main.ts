@@ -344,7 +344,7 @@ class MainPage extends Page {
     }
 
     private sliderEndChange(slider: string, maxValue: string): void {
-        const [priceMin, priceMax, stockMin, stockMax] = this.getSlidersValues();
+        let [priceMin, priceMax, stockMin, stockMax] = this.getSlidersValues();
         if (slider === 'price') {
             if (priceMin === '0' && priceMax === maxValue) {
                 removeSearchParams(['price']);
@@ -352,6 +352,8 @@ class MainPage extends Page {
             }
             else
                 priceFilter = `price=${priceMin}|${priceMax}`;
+
+
         }
         if (slider === 'stock') {
             if (stockMin === '0' && stockMax === maxValue) {
@@ -360,11 +362,25 @@ class MainPage extends Page {
             }
             else
                 stockFilter = `stock=${stockMin}|${stockMax}`;
+
         }
         setSearchParams(brandFilter, catFilter, searchFilter, priceFilter, stockFilter, sortFilter, layoutFilter);
         tempArray = filterItems(shoes, [brandFilter, catFilter, priceFilter, stockFilter, searchFilter, sortFilter]);
         this.createListItem(tempArray);
         this.createTitleButtons(tempArray);
+        if (slider === 'price') {
+            stockMin = Math.min(...tempArray.map((shoe) => shoe.stock)).toString();
+            stockMax = Math.max(...tempArray.map((shoe) => shoe.stock)).toString();
+            const stockSlider: HTMLDivElement = <HTMLDivElement>this.container.children[1].childNodes[0].childNodes[3];
+            this.setValueSlider(stockSlider, stockMin, stockMax);
+        }
+
+        if (slider === 'stock') {
+            priceMin = Math.min(...tempArray.map((shoe) => shoe.price)).toString();
+            priceMax = Math.max(...tempArray.map((shoe) => shoe.price)).toString();
+            const priceSlider: HTMLDivElement = <HTMLDivElement>this.container.children[1].childNodes[0].childNodes[2];
+            this.setValueSlider(priceSlider, priceMin, priceMax);
+        }
     }
 
     private createSlider(maxValue: number, nameFilter: string): HTMLDivElement {
