@@ -1,18 +1,4 @@
-// const formElement = <HTMLFormElement>document.querySelector('#form');
-
 import { clearCart, updateHeader } from "../../../app";
-
-// const nameField = <HTMLInputElement>document.querySelector('#name');
-// const phoneField = <HTMLInputElement>document.querySelector('#phone');
-// const addressField = <HTMLInputElement>document.querySelector('#address');
-// const emailField = <HTMLInputElement>document.querySelector('#email');
-// const cardNumField = <HTMLInputElement>document.querySelector('#card-num');
-// const cardValidField = <HTMLInputElement>document.querySelector('#card-valid');
-// const cardCVVField = <HTMLInputElement>document.querySelector('#card-cvv');
-// const submitButton = <HTMLInputElement>document.querySelector('.submit-button');
-// const cardFiller = <HTMLInputElement>document.querySelector('#card-filler');
-// const inputs: HTMLInputElement[] = [];
-// inputs.push(nameField, phoneField, addressField, emailField, cardNumField, cardValidField, cardCVVField);
 
 export function validateIsNum(evt: UIEvent): void {
     if ((evt.which != 8 && evt.which != 0 && evt.which < 48) || evt.which > 57) {
@@ -137,16 +123,7 @@ function validateCardNum(): void {
                 cardFiller.src = '../../assets/svg/paypal.svg';
                 break;
         }
-        /*
-        if (stringValue[0] === '4') {
-            cardFiller.src = '../../assets/svg/visa.svg';
-        }
-        if (stringValue[0] === '5') {
-            cardFiller.src = '../../assets/svg/mastercard.svg';
-        }
-        if (stringValue[0] === '6') {
-            cardFiller.src = '../../assets/svg/paypal.svg';
-        }*/
+
         if (stringValue.length === 16) {
             if (!isNum) {
                 error;
@@ -303,67 +280,8 @@ class Form {
             </div>
             <button class="submit-button" type="submit">Submit</button>`;
         return modalForm;
-        /*        return `
-        <form id="form" action="/">
-            <h1>Personal details</h1>
-            <div class="input-control">
-                <label for="name">Name</label>
-                <input type="text" id="name" name="name" placeholder="Casey Neistat" />
-                <div class="error"></div>
-            </div>
-            <div class="input-control">
-                <label for="phone">Phone Number</label>
-                <input type="tel" id="phone" name="phone" placeholder="+4956902244" />
-                <div class="error"></div>
-            </div>
-            <div class="input-control">
-                <label for="address">Address</label>
-                <input type="text" id="address" name="address" placeholder="United States, Washington" />
-                <div class="error"></div>
-            </div>
-            <div class="input-control">
-                <label for="email">Email</label>
-                <input type="text" id="email" name="email" placeholder="email@email.com" />
-                <div class="error"></div>
-            </div>
-            <div class="input-control card-num-input-control">
-                <label for="card-num">Card Number</label>
-                <input
-                    class="card-num__input"
-                    type="number"
-                    id="card-num"
-                    name="card-num"
-                    placeholder="4997557688956757"
-                    onKeyPress="if(this.value.length==16) return false;"
-                />
-                <img id="card-filler" src="../../assets/icons/card-filler.png" alt="card-brand" />
-                <div class="error"></div>
-            </div>
-            <div class="input-control">
-                <label for="card-valid">Valid Thru</label>
-                <input
-                    type="text"
-                    id="card-valid"
-                    name="card-valid"
-                    placeholder="04/24"
-                    onKeyPress="if(this.value.length==5) return false;"
-                />
-                <div class="error"></div>
-            </div>
-            <div class="input-control">
-                <label for="card-cvv">CVV</label>
-                <input
-                    type="text"
-                    id="card-cvv"
-                    name="card-cvv"
-                    placeholder="717"
-                    onKeyPress="if(this.value.length==3) return false;"
-                />
-                <div class="error"></div>
-            </div>
-            <button class="submit-button" type="submit">Submit</button>
-        </form>`;*/
     }
+
     listen(): void {
         const nameField = <HTMLInputElement>document.querySelector('#name');
         const phoneField = <HTMLInputElement>document.querySelector('#phone');

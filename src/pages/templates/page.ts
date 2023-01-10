@@ -12,9 +12,6 @@ abstract class Page {
     }
 
     protected createHTML(text: string): void {
-        /*const title = document.createElement('h1');
-        title.innerText = text;
-        return title;*/
         this.container.innerHTML = text;
     }
 

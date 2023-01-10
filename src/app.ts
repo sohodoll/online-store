@@ -13,7 +13,6 @@ import iconsSVG from './pages/templates/icons';
 import { Form } from './pages/components/form/form';
 import { removeSearchParams } from './pages/templates/filters';
 
-//let itemsAddCartButton: NodeList;
 let arrCart: ItemCart[];
 let clickItem: IPrototypeItem;
 let mainLayout: string;
@@ -37,25 +36,20 @@ function loadIconForItems(): void {
 }
 
 export const enum PageIDs {
-    //MainPage = 'main',
     MainPage = '',
     CartPage = 'cart',
     DescriptionPage = 'description',
     ErrorPage = 'error404',
 }
 
-function updateCartAmount(/*arr: ItemCart[]*/): void {
+function updateCartAmount(): void {
     const headerCartCount: HTMLImageElement = <HTMLImageElement>document.querySelector('.header__cart-count');
-    //headerCartCount.textContent = arr.length.toString();
-    /*headerCartCount.textContent = arrCart.length.toString();*/
-    //let a = 0;
     headerCartCount.textContent = arrCart.reduce((a = 0, el) => a + el.getAmount(), 0).toString();
 }
 
-function updateCartPrice(/*arr: ItemCart[]*/): void {
+function updateCartPrice(): void {
     const headerTotalPrice: HTMLImageElement = <HTMLImageElement>document.querySelector('.header__total-price');
     let total = 0;
-    //arr.forEach((el) => {
     arrCart.forEach((el) => {
         total += el.getTotalPrice();
     });
@@ -75,8 +69,6 @@ export function viewButtonAddClick(): void {
 }
 
 function updateHeader(): void {
-    /*updateCartAmount(arrCart);
-    updateCartPrice(arrCart);*/
     updateCartAmount();
     updateCartPrice();
 }
@@ -161,26 +153,8 @@ function addItemToCart(itemID: number): void {
         arrCart.push(shoesImportToItemCart(shoes[itemID - 1]));
     } else {
         arrCart.splice(findInCart(itemID), 1);
-        //        updateHeader();
     }
-    /* else {
-        arrCart[findIndex].addAmount();
-    }*/
     updateHeader();
-    //App.renderNewPage(PageIDs.CartPage);
-
-    /*if (arrCart.length > 0) {
-        if (arrCart.find((el) => el.id === itemID)) {
-            const findIndex = arrCart.findIndex((el) => el.id === itemID);
-
-        } else { //if not in cart
-            arrCart.push(shoesImportToItemCart(shoes[itemID - 1]));
-            App.renderNewPage(PageIDs.CartPage);
-        }
-    } else { //if cart is empty
-        arrCart.push(shoesImportToItemCart(shoes[itemID - 1]));
-        App.renderNewPage(PageIDs.CartPage);
-    }*/
 }
 
 //Buy Now
@@ -200,8 +174,6 @@ function loadLocalStorage() {
         });
         updateHeader();
         loadIconForItems();
-        /*const hash: string = window.location.hash.slice(1).split('/')[0];
-        App.renderNewPage(hash);*/
     } else {
         arrCart = [];
     }
@@ -222,24 +194,13 @@ function loadLocalStorage() {
         if (document.body.clientWidth < 750) mainLayout = 'list';
         else mainLayout = 'grid';
     }
-    /*console.log('localStorage', arrCart);
-    updateHeader();
-    const hash: string = window.location.hash.slice(1).split('/')[0];
-    console.log(`{${hash}}`);
-    switch (hash) {
-        case PageIDs.MainPage: App.renderNewPage(PageIDs.MainPage); break;
-        case PageIDs.DescriptionPage: App.renderNewPage(PageIDs.DescriptionPage); break;
-        case PageIDs.CartPage: App.renderNewPage(PageIDs.CartPage); break;
-    }
-    //App.renderNewPage(hash);
-    loadIconForItems();*/
 }
 
 class App {
     private static container: HTMLElement = <HTMLElement>document.body;
     private static mainHTML: HTMLElement = <HTMLElement>document.querySelector('.main');
-    private header: HTMLElement; // = <HTMLElement>document.createElement('header');
-    private footer: HTMLElement; // = <HTMLElement>document.createElement('footer');
+    private header: HTMLElement;
+    private footer: HTMLElement;
 
     private handleRouting() {
         window.addEventListener('hashchange', (e) => {
@@ -268,11 +229,7 @@ class App {
             if (currentShoe) {
                 clickItem = <IPrototypeItem>shoes.find((el) => el.id === Number(currentShoe));
             }
-            page = new DescriptionPage(pageId, clickItem); /*
-            const Desc = new DescriptionPage(pageId, clickItem);
-            setTimeout(() => {
-                Desc.listen();
-            }, 500);*/
+            page = new DescriptionPage(pageId, clickItem);
         } else {
             page = new ErrorPage(PageIDs.ErrorPage);
         }
@@ -280,20 +237,6 @@ class App {
         if (page) {
             const pageHTML = page.render();
             this.mainHTML.appendChild(pageHTML);
-            /*if (page instanceof MainPage) {
-                //viewButtonAddClick();
-                //cartButtonAddClick();
-            }
-            if (page instanceof CartPage) {
-                const buttonsItemRemove: NodeList = document.querySelectorAll('.cart__item-remove');
-                buttonsItemRemove.forEach((button) => {
-                    const id: number = parseInt((button as HTMLButtonElement).value);
-                    button.addEventListener('click', () => {
-                        removeItemFromCart(id);
-                        //                        this.renderNewPage(pageId);
-                    });
-                });
-            }*/
         }
     }
 
@@ -315,14 +258,6 @@ class App {
 
         App.container.appendChild(this.footer);
         this.handleRouting();
-        //viewButtonAddClick();
-        //cartButtonAddClick();
-
-        /*
-        const headerCartImg = document.querySelector('.header__cart-img');
-        headerCartImg?.addEventListener('click', () => {
-            console.log(arrCart);
-        });*/
     }
 }
 
@@ -336,26 +271,6 @@ function saveLocalStorage() {
     localStorage.setItem('currPage', getCurrPage().toString());
     localStorage.setItem('mainLayout', mainLayout);
 }
-
-//window.addEventListener('beforeunload', saveLocalStorage);
-//window.addEventListener('load', loadLocalStorage);
-/* ------------------------- */
-
-// getHeader() {
-//     this.header = document.getElementById('header') as HTMLElement;
-//     return this.header;
-// }
-
-// const header: HTMLElement = document.getElementById('header') as HTMLElement;
-// //const main: HTMLElement = document.getElementById('main') as HTMLElement;
-// const footer: HTMLElement = document.getElementById('footer') as HTMLElement;
-
-// run() {
-
-//     header.innerHTML = headerTemplate();
-//     footer.innerHTML = footerTemplate();
-
-// }
 
 export {
     App,

@@ -13,30 +13,6 @@ interface IPrototypeItem {
     images: string[];
 }
 
-/*
-class Item {
-    id: number;
-    brand: string;
-    name: string;
-    description: string;
-    price: number;
-    stock: number;
-    category: string;
-    thumbnail: string;
-    images: string[];
-
-    constructor(options: IPrototypeItem) {
-        this.id = options.id;
-        this.brand = options.brand;
-        this.name = options.name;
-        this.description = options.description;
-        this.price = options.price;
-        this.stock = options.stock;
-        this.category = options.category;
-        this.thumbnail = options.thumbnail;
-        this.images = options.images;
-    }*/
-
 function createCartItemFromMain(item: IPrototypeItem): HTMLDivElement {
     const elem: HTMLDivElement = document.createElement('div');
     const brandLogo: HTMLImageElement = document.createElement('img');
@@ -51,8 +27,6 @@ function createCartItemFromMain(item: IPrototypeItem): HTMLDivElement {
     const elemBtnView: HTMLButtonElement = document.createElement('button');
     const elemBtnToCart: HTMLButtonElement = document.createElement('button');
 
-    //const logoBrands = brandsLogo;
-
     elem.className = 'main__item';
     elem.id = `main__item_${item.id}`;
 
@@ -63,7 +37,6 @@ function createCartItemFromMain(item: IPrototypeItem): HTMLDivElement {
     //Tumbnail
     elemTumb.className = 'main__item-tumb';
     elemTumb.style.backgroundImage = `url(${item.thumbnail})`;
-    //elemTumb.alt = `${item.brand} ${item.name}`;
 
     elemTumb.appendChild(brandLogo);
 
@@ -123,9 +96,8 @@ function createCartItemFromMain(item: IPrototypeItem): HTMLDivElement {
     elemButtons.append(elemBtnView, elemBtnToCart);
     //------------
 
-    elem.append(elemTumb, elemTitle, elemButtons); //Brand Logo, Tumbnail, Title and Button View
+    elem.append(elemTumb, elemTitle, elemButtons);
     return elem;
 }
-//}
 
 export { createCartItemFromMain, IPrototypeItem };

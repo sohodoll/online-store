@@ -87,11 +87,7 @@ function createLeftDescriptionPanel(shoe: IPrototypeItem): HTMLDivElement {
 
 //create right description panel
 function createRightDescriptionPanel(shoe: IPrototypeItem): HTMLDivElement {
-    const descriptionRight: HTMLDivElement = document.createElement('div')
-    //const itemNaming: HTMLDivElement = document.createElement('div');
-    //const namingUpper: HTMLDivElement = document.createElement('div');
-    //const namingBottom: HTMLDivElement = document.createElement('div');
-    //const itemName: HTMLDivElement = document.createElement('div');
+    const descriptionRight: HTMLDivElement = document.createElement('div');
     const itemBrand: HTMLDivElement = document.createElement('div');
     const itemModel: HTMLDivElement = document.createElement('div');
     const itemDescription: HTMLDivElement = document.createElement('div');
@@ -104,27 +100,18 @@ function createRightDescriptionPanel(shoe: IPrototypeItem): HTMLDivElement {
 
     descriptionRight.className = 'description__right';
 
-    //itemNaming.className = 'item__naming naming';
-    //namingUpper.className = 'naming__upper';
-    //namingBottom.className = 'naming__bottom';
-    //itemName.className = 'item__name';
     itemBrand.className = 'item__brand';
     itemBrand.textContent = shoe.brand;
     itemModel.className = 'item__model';
     itemModel.textContent = shoe.name;
 
-    //itemName.append(itemBrand, itemModel);
     itemDescription.className = 'item__description';
     itemDescription.textContent = shoe.description;
-    //namingUpper.append(itemName, itemDescription);
 
     itemStock.className = 'item__stock';
     itemStock.textContent = shoe.stock.toString();
     itemCategory.className = 'item__category';
     itemCategory.textContent = shoe.category;
-    //namingBottom.append(itemStock, itemCategory);
-
-    //itemNaming.append(namingUpper, namingBottom);
 
     itemPrice.className = 'item__price';
     itemPrice.textContent = `${shoe.price}`;
@@ -137,7 +124,6 @@ function createRightDescriptionPanel(shoe: IPrototypeItem): HTMLDivElement {
     });
 
     btnAddToCart.className = 'description__button-add-cart btn';
-    //if (findInCart(shoe.id) < 0)
     if (arrCart.findIndex((el) => el.id === shoe.id) < 0)
         btnAddToCart.textContent = 'Add To Cart';
     else
@@ -169,30 +155,11 @@ function createDescriptionPanel(shoe: IPrototypeItem): HTMLDivElement {
 }
 
 class DescriptionPage extends Page {
-    /*shoeId: number;
-    shoeBrand: string;
-    shoeName: string;
-    shoeDescription: string;
-    shoePrice: string;
-    shoeStock: string;
-    shoeCategory: string;
-    shoeThumbnail: string;
-    shoePictures: string[];*/
     shoe: IPrototypeItem;
 
     constructor(id: string, shoe: IPrototypeItem) {
         super(id);
         this.shoe = shoe;
-        /*
-        this.shoeId = shoe.id;
-        this.shoeBrand = shoe.brand;
-        this.shoeName = shoe.name;
-        this.shoeDescription = shoe.description;
-        this.shoePrice = String(shoe.price);
-        this.shoeStock = String(shoe.stock);
-        this.shoeCategory = shoe.category;
-        this.shoeThumbnail = shoe.thumbnail;
-        this.shoePictures = shoe.images;*/
     }
 
     render() {
@@ -201,82 +168,8 @@ class DescriptionPage extends Page {
         setCurrPage(1);
         breadcrumbs = createBreadCrumbs(this.shoe.brand, this.shoe.name);
         this.container.append(breadcrumbs, createDescriptionPanel(this.shoe));
-        /* this.container.innerHTML = `
-        <div class="description__bread bread">
-            <div class="bread__store bread__item"><a href="/">Store</a></div>
-            <div class="bread__separator">>></div>
-            <div class="bread__type bread__item">Shoes</div>
-            <div class="bread__separator ">>></div>
-            <div class="bread__brand bread__item">${this.shoeBrand}</div>
-            <div class="bread__separator ">>></div>
-            <div class="bread__name bread__item">${this.shoeName}</div>
-        </div>
-
-        <div class="description__container">
-            <div class="description__left">
-                <div class="description__highlights">
-                    <img class="description__image" src="${this.shoeThumbnail}" alt="${this.shoeName}" />
-                    <div class="item__price">$<span class="item__price-number">${this.shoePrice}</span></div>
-                </div>
-                <div class="description__images">
-                    <div class="description__image-choice">
-                        <img class="image-choice" src="${this.shoeThumbnail}" alt="${this.shoeName}" />
-                    </div>
-                    <div class="description__image-choice">
-                        <img class="image-choice" src="${this.shoePictures[0]}" alt="${this.shoeName}" />
-                    </div>                            
-                    <div class="description__image-choice">
-                        <img class="image-choice" src="${this.shoePictures[1]}" alt="${this.shoeName}" />
-                    </div>
-                </div>
-                <div class="description__buttons">
-                    <div class="description__button-buy-now">Buy Now</div>
-                    <div class="description__button-add-cart">Add To Cart</div>
-                </div>
-            </div>
-            <div class="description__right item">
-                <div class="item__left">
-                    <div class="item__naming naming">
-                        <div class="naming__upper">
-                            <div class="naming__names">
-                                <div class="item__name">${this.shoeBrand}</div>
-                                <div class="item__model">${this.shoeName}</div>
-                            </div>
-                            <div class="item__description">${this.shoeDescription}</div>
-                        </div>
-                        <div class="naming__bottom">
-                            <div class="item__stock">In stock: <span class="item__stock-number">${this.shoeStock}</span></div>
-                            <div class="item__category">
-                                Category: <span class="item__category-name">${this.shoeCategory}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>`;*/
-        return this.container;
+         return this.container;
     }
-    /*
-    listen() {
-        const highlightImage = <HTMLImageElement>document.querySelector('.description__image');
-        const smallerImages = Array.from(document.querySelectorAll('.image-choice')) as HTMLImageElement[];
-        console.log(smallerImages);
-        smallerImages.forEach((image) => {
-            image.addEventListener('click', () => {
-                highlightImage.src = image.src;
-            });
-        });
-        const buttonBuyNow: HTMLDivElement = <HTMLDivElement>document.querySelector('.description__button-buy-now');
-        const buttonAddCart: HTMLDivElement = <HTMLDivElement>document.querySelector('.description__button-add-cart');
-        buttonBuyNow.addEventListener('click', () => {
-            buyNow(this.shoe.id);
-        });
-
-        buttonAddCart.addEventListener('click', () => {
-            addItemToCart(this.shoe.id);
-        });
-        console.log(highlightImage);
-    }*/
 }
 
 export default DescriptionPage;
