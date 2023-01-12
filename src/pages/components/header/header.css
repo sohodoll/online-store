@@ -1,0 +1,63 @@
+.header-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px var(--darkmain);
+}
+
+.header__logo-img,
+.header__cart-img {
+    cursor: pointer;
+}
+
+.header__total,
+.header__cart {
+    position: relative;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;    
+}
+
+.header__total {
+    gap: 10px;
+}
+
+/* Logo */
+.header__logo-img {
+    height: 80px;
+}
+
+/* Total Price */
+
+.header__total-price,
+.header__total-price::before {
+    font-size: 22px;
+    line-height: 30px;
+}
+
+.header__total-price {
+    color: var(--azure);
+}
+
+.header__total-price::before {
+    content: 'Total: $';
+    color: var(--main);
+}
+
+/* Cart */
+
+/*.header__cart-title,*/
+.header__cart-count {
+    text-align: center;
+    border: none;
+    border-radius: 50%;
+    font-size: 20px;
+    line-height: 26px;
+    /*background: radial-gradient(var(--accent), var(--accent50));
+    box-shadow: 0 0 8px var(--accent);*/
+    color: var(--accent);
+}
+
+.header__cart-img {
+    height: 40px;
+}

@@ -1,0 +1,67 @@
+@import url('./reset.css');
+@import url('./pages/components/footer/footer.css');
+@import url('./pages/components/header/header.css');
+@import url('./pages/cart/cart.css');
+@import url('./pages/components/form/form.css');
+@import url('./pages/components/itemCart/itemCart.css');
+@import url('./pages/main/main.css');
+@import url('./pages/error404/error404.css');
+@import url('./pages/description/description.css');
+@import url('./pages/components/form/form.css');
+
+:root {
+    --main: #655588;
+    --accent: #e77b42;
+    --accent50: #e77b42b5;
+    --darkmain: #42395a;
+    --lightaccent: #ffbd32;
+    --extra: #dddbf1;
+    --azure: #00a8cf;
+    --darkgray: darkgray;
+    --button-disable: darkgray;
+    --button-enable: #ffbd32;
+    --border-gray: #c5c5c5;
+}
+
+html {
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+}
+
+body {
+    background-color: #f3f3f3;
+    background-image: url(./assets/png/background-img.png);
+    background-repeat: repeat;
+    background-blend-mode: multiply;
+    width: 100vw;
+    min-height: 100vh;
+    height: 100vh;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+}
+
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.main {
+    flex-grow: 1;
+}
+
+.header,
+.main,
+.footer {
+    width: 100%;
+}
+
+.wrapper {
+    max-width: 1100px;
+    margin: 0 auto;
+    background: white;
+    padding: 30px;
+}
