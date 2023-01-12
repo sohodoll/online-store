@@ -2,7 +2,14 @@ import Page from '../templates/page';
 import { createCartItemFromMain, IPrototypeItem } from '../templates/items';
 import shoes from '../../db/shoes';
 import { setSearchParams, removeSearchParams, filterItems, sortItems } from '../templates/filters';
-import { arrCart, getMainLayout, saveLocalStorage, setMainLayout, updateHeader, viewButtonAddClick } from '../../app';
+import {
+    arrCart,
+    getMainLayout,
+    saveLocalStorage,
+    setMainLayout,
+    updateHeader,
+    viewButtonAddClick,
+} from '../../helpers/appFunctions';
 import iconsSVG from '../templates/icons';
 import { setCurrPage } from '../cart/cart';
 
@@ -86,12 +93,20 @@ class MainPage extends Page {
                 sortBoxOptions.classList.toggle('hidden');
                 sortBoxText.classList.toggle('open');
                 sortBoxText.textContent = option.textContent;
-                
+
                 const parameter = String(option.textContent).split(' ')[0].toLowerCase();
                 const order = String(option.textContent).split(' ')[1].toLowerCase();
                 sortType = `${parameter}-${order}`;
                 sortFilter = `sort=${sortType}`;
-                setSearchParams(brandFilter, catFilter, searchFilter, priceFilter, stockFilter, sortFilter, layoutFilter);
+                setSearchParams(
+                    brandFilter,
+                    catFilter,
+                    searchFilter,
+                    priceFilter,
+                    stockFilter,
+                    sortFilter,
+                    layoutFilter
+                );
                 tempArray = sortItems(tempArray, parameter, order);
                 this.createListItem(tempArray);
             });
@@ -194,13 +209,28 @@ class MainPage extends Page {
             if (searchInput.value) {
                 searchString = String(searchInput.value);
                 searchFilter = `search=${searchString}`;
-                setSearchParams(brandFilter, catFilter, searchFilter, priceFilter, stockFilter, sortFilter, layoutFilter);
+                setSearchParams(
+                    brandFilter,
+                    catFilter,
+                    searchFilter,
+                    priceFilter,
+                    stockFilter,
+                    sortFilter,
+                    layoutFilter
+                );
             } else {
                 searchInput.value = '';
                 searchInputCleaner.classList.toggle('hidden');
-                removeSearchParams(['search']);                  
+                removeSearchParams(['search']);
             }
-            tempArray = filterItems(shoes, [brandFilter, catFilter, priceFilter, stockFilter, searchFilter, sortFilter]);
+            tempArray = filterItems(shoes, [
+                brandFilter,
+                catFilter,
+                priceFilter,
+                stockFilter,
+                searchFilter,
+                sortFilter,
+            ]);
             this.createListItem(tempArray);
             this.createTitleButtons(tempArray);
             this.updateValueDualSliders(tempArray);
@@ -215,7 +245,14 @@ class MainPage extends Page {
             searchInput.value = '';
             searchInputCleaner.classList.toggle('hidden');
             removeSearchParams(['search']);
-            tempArray = filterItems(shoes, [brandFilter, catFilter, priceFilter, stockFilter, searchFilter, sortFilter]);
+            tempArray = filterItems(shoes, [
+                brandFilter,
+                catFilter,
+                priceFilter,
+                stockFilter,
+                searchFilter,
+                sortFilter,
+            ]);
             this.createListItem(tempArray);
             this.createTitleButtons(tempArray);
             this.updateValueDualSliders(tempArray);
@@ -349,20 +386,13 @@ class MainPage extends Page {
             if (priceMin === '0' && priceMax === maxValue) {
                 removeSearchParams(['price']);
                 priceFilter = '';
-            }
-            else
-                priceFilter = `price=${priceMin}|${priceMax}`;
-
-
+            } else priceFilter = `price=${priceMin}|${priceMax}`;
         }
         if (slider === 'stock') {
             if (stockMin === '0' && stockMax === maxValue) {
                 removeSearchParams(['stock']);
                 stockFilter = '';
-            }
-            else
-                stockFilter = `stock=${stockMin}|${stockMax}`;
-
+            } else stockFilter = `stock=${stockMin}|${stockMax}`;
         }
         setSearchParams(brandFilter, catFilter, searchFilter, priceFilter, stockFilter, sortFilter, layoutFilter);
         tempArray = filterItems(shoes, [brandFilter, catFilter, priceFilter, stockFilter, searchFilter, sortFilter]);
@@ -384,7 +414,7 @@ class MainPage extends Page {
     }
 
     private createSlider(maxValue: number, nameFilter: string): HTMLDivElement {
-        const sliderContainer: HTMLDivElement = <HTMLDivElement>document.createElement('div');        
+        const sliderContainer: HTMLDivElement = <HTMLDivElement>document.createElement('div');
         const slidersControl: HTMLDivElement = <HTMLDivElement>document.createElement('div');
         const fromSlider: HTMLInputElement = <HTMLInputElement>document.createElement('input');
         const toSlider: HTMLInputElement = <HTMLInputElement>document.createElement('input');
@@ -410,14 +440,14 @@ class MainPage extends Page {
         slidersControl.className = `${nameFilter}-sliders`;
         slidersControl.append(fromSlider, toSlider);
 
-        const sliderValues: HTMLDivElement = <HTMLDivElement>document.createElement('div');        
+        const sliderValues: HTMLDivElement = <HTMLDivElement>document.createElement('div');
         const sliderValuesMin: HTMLDivElement = <HTMLDivElement>document.createElement('div');
         const controlMin: HTMLDivElement = <HTMLDivElement>document.createElement('div');
         const controlMinInput: HTMLInputElement = <HTMLInputElement>document.createElement('input');
-            
+
         controlMin.className = 'slider-values-min-title';
         controlMin.innerText = 'Min';
-        
+
         controlMinInput.className = 'slider-values-min-input';
         controlMinInput.id = `${nameFilter}FromInput`;
         controlMinInput.type = 'number';
@@ -434,7 +464,7 @@ class MainPage extends Page {
 
         controlMax.className = 'slider-values-max-title';
         controlMax.innerText = 'Max';
-        
+
         controlMaxInput.className = 'slider-values-max-input';
         controlMaxInput.id = `${nameFilter}ToInput`;
         controlMaxInput.type = 'number';
@@ -465,7 +495,12 @@ class MainPage extends Page {
         parent.append(priceContainer, stockContainer);
     }
 
-    private manageSlider(fromSlider: HTMLInputElement, toSlider: HTMLInputElement, fromInput: HTMLInputElement, toInput: HTMLInputElement): void {
+    private manageSlider(
+        fromSlider: HTMLInputElement,
+        toSlider: HTMLInputElement,
+        fromInput: HTMLInputElement,
+        toInput: HTMLInputElement
+    ): void {
         function controlFromInput(
             fromSlider: HTMLInputElement,
             fromInput: HTMLInputElement,
@@ -612,7 +647,7 @@ class MainPage extends Page {
             const categoryName = button.childNodes[0].textContent;
             const countItem = array.filter((el) => el.category === categoryName).length;
             addTitleAndCSS(button, countItem, 'category');
-        });        
+        });
     }
 
     createFilterElements(array: string[], type: string): HTMLDivElement {
@@ -639,7 +674,6 @@ class MainPage extends Page {
             /* Click filter buttons */
             elementDiv.addEventListener('click', () => {
                 if (!elementDiv.classList.contains('disable')) {
-
                     if (type === 'brand') {
                         if (selectBrand) {
                             if (selectBrand !== elementDiv) {
@@ -647,7 +681,15 @@ class MainPage extends Page {
                                 elementDiv.classList.toggle(`${type}_active`);
                                 selectBrand = <HTMLDivElement>elementDiv;
                                 brandFilter = `brand=${element}`;
-                                setSearchParams(brandFilter, catFilter, searchFilter, priceFilter, stockFilter, sortFilter, layoutFilter);
+                                setSearchParams(
+                                    brandFilter,
+                                    catFilter,
+                                    searchFilter,
+                                    priceFilter,
+                                    stockFilter,
+                                    sortFilter,
+                                    layoutFilter
+                                );
                             } else {
                                 brandFilter = '';
                                 removeSearchParams([type]);
@@ -665,7 +707,15 @@ class MainPage extends Page {
                                 brandFilter = `brand=${element}`;
                                 catFilter = `category=${String(selectCategory.childNodes[0].textContent)}`;
                             }
-                            setSearchParams(brandFilter, catFilter, searchFilter, priceFilter, stockFilter, sortFilter, layoutFilter);
+                            setSearchParams(
+                                brandFilter,
+                                catFilter,
+                                searchFilter,
+                                priceFilter,
+                                stockFilter,
+                                sortFilter,
+                                layoutFilter
+                            );
                         }
                     } else {
                         if (selectCategory) {
@@ -674,7 +724,15 @@ class MainPage extends Page {
                                 elementDiv.classList.toggle(`${type}_active`);
                                 selectCategory = <HTMLDivElement>elementDiv;
                                 catFilter = `category=${element}`;
-                                setSearchParams(brandFilter, catFilter, searchFilter, priceFilter, stockFilter, sortFilter, layoutFilter);
+                                setSearchParams(
+                                    brandFilter,
+                                    catFilter,
+                                    searchFilter,
+                                    priceFilter,
+                                    stockFilter,
+                                    sortFilter,
+                                    layoutFilter
+                                );
                             } else {
                                 catFilter = '';
                                 removeSearchParams([type]);
@@ -686,7 +744,15 @@ class MainPage extends Page {
                             }
                         } else {
                             catFilter = `category=${element}`;
-                            setSearchParams(brandFilter, catFilter, searchFilter, priceFilter, stockFilter, sortFilter, layoutFilter);
+                            setSearchParams(
+                                brandFilter,
+                                catFilter,
+                                searchFilter,
+                                priceFilter,
+                                stockFilter,
+                                sortFilter,
+                                layoutFilter
+                            );
                             elementDiv.classList.toggle(`${type}_active`);
                             if (selectBrand) {
                                 catFilter = `category=${element}`;
@@ -695,7 +761,14 @@ class MainPage extends Page {
                             selectCategory = <HTMLDivElement>elementDiv;
                         }
                     }
-                    tempArray = filterItems(shoes, [brandFilter, catFilter, priceFilter, stockFilter, searchFilter, sortFilter]);
+                    tempArray = filterItems(shoes, [
+                        brandFilter,
+                        catFilter,
+                        priceFilter,
+                        stockFilter,
+                        searchFilter,
+                        sortFilter,
+                    ]);
                     this.createListItem(tempArray);
                     this.createTitleButtons(tempArray);
                     this.updateValueDualSliders(tempArray);
@@ -723,10 +796,8 @@ class MainPage extends Page {
         const priceSlider: HTMLDivElement = <HTMLDivElement>this.container.children[1].childNodes[0].childNodes[2];
         const stockSlider: HTMLDivElement = <HTMLDivElement>this.container.children[1].childNodes[0].childNodes[3];
 
-        if (brand)
-            brandFilter = `brand=${brand}`;
-        if (category)
-            catFilter = `category=${category}`;
+        if (brand) brandFilter = `brand=${brand}`;
+        if (category) catFilter = `category=${category}`;
         if (price) {
             priceFilter = `price=${price}`;
             minPrice = price.split('|')[0];
@@ -744,8 +815,12 @@ class MainPage extends Page {
         if (search) {
             searchFilter = `search=${search}`;
             searchString = search;
-            const searchInput: HTMLInputElement = <HTMLInputElement>(this.container.children[0].childNodes[1].childNodes[3]);
-            const searchInputCleaner: HTMLLabelElement = <HTMLLabelElement>(this.container.children[0].childNodes[1].childNodes[4]);
+            const searchInput: HTMLInputElement = <HTMLInputElement>(
+                this.container.children[0].childNodes[1].childNodes[3]
+            );
+            const searchInputCleaner: HTMLLabelElement = <HTMLLabelElement>(
+                this.container.children[0].childNodes[1].childNodes[4]
+            );
             searchInput.value = searchString;
             searchInputCleaner.classList.toggle('hidden');
         }
@@ -753,7 +828,7 @@ class MainPage extends Page {
             sortFilter = `sort=${sortType}`;
         }
         setSearchParams(brandFilter, catFilter, searchFilter, priceFilter, stockFilter, sortFilter, layoutFilter);
-        
+
         tempArray = filterItems(shoes, [brandFilter, catFilter, priceFilter, stockFilter, searchFilter, sortFilter]);
         if (!price) {
             minPrice = Math.min(...tempArray.map((shoe) => shoe.price)).toString();

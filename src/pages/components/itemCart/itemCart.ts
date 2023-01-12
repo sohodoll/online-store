@@ -1,5 +1,5 @@
 import Promocode from '../../templates/promocode';
-import { getArrCart, removeItemFromCart, saveLocalStorage, updateHeader } from '../../../app';
+import { getArrCart, removeItemFromCart, saveLocalStorage, updateHeader } from '../../../helpers/appFunctions';
 import iconsSVG from '../../templates/icons';
 import { Form } from '../form/form';
 
@@ -16,14 +16,12 @@ function appendChildElements(parentElem: HTMLElement, arr: HTMLElement[]): void 
 //update total price in receint
 function updateTotalPrice(): void {
     const totalPrice = <HTMLElement>document.querySelector('.receipt__total-price');
-    if (!totalPrice.classList.contains('used-promo'))
-        totalPrice.classList.add('used-promo');
+    if (!totalPrice.classList.contains('used-promo')) totalPrice.classList.add('used-promo');
     const promoPrice = <HTMLElement>document.querySelector('.receipt__total-promo');
-    if (promoPrice.classList.contains('hidden'))
-        promoPrice.classList.remove('hidden');
+    if (promoPrice.classList.contains('hidden')) promoPrice.classList.remove('hidden');
 
     const totalSale: number = promoList.filter((el) => el.getUsed() === true).reduce((a, b) => a + b.getValue(), 0);
-    promoPrice.textContent = (parseFloat(String(totalPrice.textContent)) * (1 - (totalSale / 100))).toFixed(2);
+    promoPrice.textContent = (parseFloat(String(totalPrice.textContent)) * (1 - totalSale / 100)).toFixed(2);
 }
 
 function removePromoCode(codeID: number): void {
@@ -33,19 +31,24 @@ function removePromoCode(codeID: number): void {
     const totalSale: number = promoList.filter((el) => el.getUsed() === true).reduce((a, b) => a + b.getValue(), 0);
     const newSale: number = totalSale - promoList[codeID - 1].getValue();
     const price = parseInt(String(totalPrice.textContent));
-    promoPrice.textContent = (price * (1 - (newSale / 100))).toFixed(2);
+    promoPrice.textContent = (price * (1 - newSale / 100)).toFixed(2);
     promoList[codeID - 1].setNotUsed();
 }
 
 function changeReceiptPrice(oldPrice: number, newPrice: number): void {
-    const receiptItemsPrice: HTMLParagraphElement = <HTMLParagraphElement>document.querySelector('.receipt__items-price');
+    const receiptItemsPrice: HTMLParagraphElement = <HTMLParagraphElement>(
+        document.querySelector('.receipt__items-price')
+    );
     const receiptDelivery: HTMLParagraphElement = <HTMLParagraphElement>document.querySelector('.receipt__delivery');
-    const receiptTotalPrice: HTMLParagraphElement = <HTMLParagraphElement>document.querySelector('.receipt__total-price');
-    
+    const receiptTotalPrice: HTMLParagraphElement = <HTMLParagraphElement>(
+        document.querySelector('.receipt__total-price')
+    );
+
     let tempPrice = parseInt(String(receiptItemsPrice.textContent));
-    let delivery = 0, totalPrice = 0;
-    tempPrice += (newPrice - oldPrice);
-    delivery = tempPrice * .1;
+    let delivery = 0,
+        totalPrice = 0;
+    tempPrice += newPrice - oldPrice;
+    delivery = tempPrice * 0.1;
     totalPrice = Number(tempPrice * 1.1);
 
     receiptItemsPrice.textContent = tempPrice.toFixed(2);
@@ -121,10 +124,10 @@ function createPromoPanel(): HTMLDivElement {
             promoCode.classList.remove('find');
             promoAdd.classList.remove('enable');
         }
-    });    
+    });
     promoAdd.textContent = 'Use';
     promoAdd.addEventListener('click', function () {
-        if (promoAdd.classList.contains('enable') && (findCode !== undefined)) {
+        if (promoAdd.classList.contains('enable') && findCode !== undefined) {
             if (findCode.getUsed()) {
                 alert('This promo code has already been used');
             } else {
@@ -134,7 +137,7 @@ function createPromoPanel(): HTMLDivElement {
                 updateTotalPrice();
             }
         }
-    });    
+    });
 
     usedPromoPanel.className = 'promo__used-promo-panel hidden';
     usedPromoPanelTitle.className = 'promo-panel__title';
@@ -154,7 +157,7 @@ function createReceipt(array: ItemCart[]): HTMLDivElement {
     const receipt: HTMLDivElement = document.createElement('div');
     const receiptTitle: HTMLHeadingElement = document.createElement('h2');
     const itemsCount: HTMLDivElement = document.createElement('div');
-    
+
     //Promo Code
     let promoPanel: HTMLDivElement = document.createElement('div');
     //-----------
@@ -171,20 +174,21 @@ function createReceipt(array: ItemCart[]): HTMLDivElement {
     receiptTitle.className = 'receipt__title';
     receiptTitle.textContent = 'Your receipt';
 
-    itemsCount.className = 'receipt__item-count';    
+    itemsCount.className = 'receipt__item-count';
     itemsCount.textContent = `${countItemsInCart()}`;
 
     promoPanel = createPromoPanel();
-    
-    let itemsPrice = 0, totalPrice = 0, delivery = 0;
-    
+
+    let itemsPrice = 0,
+        totalPrice = 0,
+        delivery = 0;
 
     array.forEach((el) => {
         itemsPrice += el.getTotalPrice();
     });
-    delivery = itemsPrice * .1;
+    delivery = itemsPrice * 0.1;
     totalPrice = itemsPrice * 1.1;
-    
+
     receiptItemsPrice.className = 'receipt__items-price';
     receiptItemsPrice.textContent = itemsPrice.toFixed(2);
     receiptDelivery.className = 'receipt__delivery';
@@ -202,8 +206,17 @@ function createReceipt(array: ItemCart[]): HTMLDivElement {
     });
 
     receipt.className = 'cart__receipt';
-    appendChildElements(receipt, [receiptTitle, itemsCount, promoPanel, receiptItemsPrice, receiptDelivery, hr,
-                                  receiptTotalPrice, receiptPriceWithPromo, receiptBuyNow]);
+    appendChildElements(receipt, [
+        receiptTitle,
+        itemsCount,
+        promoPanel,
+        receiptItemsPrice,
+        receiptDelivery,
+        hr,
+        receiptTotalPrice,
+        receiptPriceWithPromo,
+        receiptBuyNow,
+    ]);
     return receipt;
 }
 
@@ -216,7 +229,16 @@ class ItemCart {
     amount: number;
     limit: number;
     price: number;
-    constructor(id: number, name: string, brand: string, category: string, thumbnail: string, amount: number, stock: number, price: number) {
+    constructor(
+        id: number,
+        name: string,
+        brand: string,
+        category: string,
+        thumbnail: string,
+        amount: number,
+        stock: number,
+        price: number
+    ) {
         this.id = id;
         this.name = name;
         this.brand = brand;
@@ -224,7 +246,7 @@ class ItemCart {
         this.thumbnail = thumbnail;
         this.amount = amount;
         this.limit = stock;
-        this.price = price;        
+        this.price = price;
     }
 
     addAmount(): void {
@@ -248,7 +270,7 @@ class ItemCart {
      */
     createHTMLElement(index: number): HTMLDivElement {
         const item: HTMLDivElement = document.createElement('div');
-        const itemIndex: HTMLDivElement = document.createElement('div');;
+        const itemIndex: HTMLDivElement = document.createElement('div');
         const itemTumb: HTMLImageElement = document.createElement('img');
         const itemInfo: HTMLDivElement = document.createElement('div');
         const itemName: HTMLParagraphElement = document.createElement('p');
@@ -286,7 +308,7 @@ class ItemCart {
         //Amount Panel
         itemPanelAmount.className = 'cart__item-panel-amount';
 
-        itemAmountTitle.className = 'cart__item-amount-title'
+        itemAmountTitle.className = 'cart__item-amount-title';
         itemAmountTitle.textContent = 'Count: ';
 
         itemAmountDown.className = 'cart__item-amount-down btn';
@@ -311,7 +333,7 @@ class ItemCart {
 
         itemAmount.type = 'text';
         itemAmount.className = 'cart__item-amount';
-        itemAmount.id = `item-${this.id.toString()}`;        
+        itemAmount.id = `item-${this.id.toString()}`;
         itemAmount.min = '1';
         itemAmount.max = `${this.limit}`;
         itemAmount.value = `${this.amount}`;
@@ -352,7 +374,7 @@ class ItemCart {
 
         itemInfo.className = 'cart__item-info';
         appendChildElements(itemInfo, [itemName, itemBrand, itemCategory, itemPanelAmount, itemPrice, itemRemove]);
-        //---------        
+        //---------
         appendChildElements(item, [itemIndex, itemTumb, itemInfo]);
         return item;
     }

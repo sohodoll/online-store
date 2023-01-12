@@ -1,7 +1,7 @@
 import { IPrototypeItem } from '../templates/items';
 import Page from '../templates/page';
 import { appendChildElements } from '../components/itemCart/itemCart';
-import { addItemToCart, buyNow, getArrCart, arrCart, saveLocalStorage } from '../../app';
+import { addItemToCart, buyNow, getArrCart, arrCart, saveLocalStorage } from '../../helpers/appFunctions';
 import { setCurrPage } from '../cart/cart';
 
 let selectImg: HTMLImageElement;
@@ -67,20 +67,18 @@ function createLeftDescriptionPanel(shoe: IPrototypeItem): HTMLDivElement {
             imageChoice.classList.toggle('select');
             selectImg = imageChoice;
             imageChoice.src = shoe.thumbnail;
-        } else
-            imageChoice.src = shoe.images[i - 1];
+        } else imageChoice.src = shoe.images[i - 1];
         imageChoice.alt = shoe.name;
         //click image
         imageChoice.addEventListener('click', function () {
             image.src = this.src;
-            if (selectImg)
-                selectImg.classList.toggle('select');
+            if (selectImg) selectImg.classList.toggle('select');
             this.classList.toggle('select');
             selectImg = <HTMLImageElement>this;
         });
         imgCollection.appendChild(imageChoice);
     }
-    
+
     descriptionLeft.append(highlights, imgCollection);
     return descriptionLeft;
 }
@@ -124,16 +122,12 @@ function createRightDescriptionPanel(shoe: IPrototypeItem): HTMLDivElement {
     });
 
     btnAddToCart.className = 'description__button-add-cart btn';
-    if (arrCart.findIndex((el) => el.id === shoe.id) < 0)
-        btnAddToCart.textContent = 'Add To Cart';
-    else
-        btnAddToCart.textContent = 'Remove From Cart';
+    if (arrCart.findIndex((el) => el.id === shoe.id) < 0) btnAddToCart.textContent = 'Add To Cart';
+    else btnAddToCart.textContent = 'Remove From Cart';
     btnAddToCart.addEventListener('click', function () {
         addItemToCart(shoe.id);
-        if (this.textContent === 'Add To Cart')
-            this.textContent = 'Remove From Cart';
-        else
-            this.textContent = 'Add To Cart';
+        if (this.textContent === 'Add To Cart') this.textContent = 'Remove From Cart';
+        else this.textContent = 'Add To Cart';
         saveLocalStorage();
     });
     buttons.append(btnBuyNow, btnAddToCart);
@@ -147,10 +141,7 @@ function createDescriptionPanel(shoe: IPrototypeItem): HTMLDivElement {
     const descriptionContainer: HTMLDivElement = document.createElement('div');
 
     descriptionContainer.className = 'description__container';
-    descriptionContainer.append(
-        createLeftDescriptionPanel(shoe),
-        createRightDescriptionPanel(shoe)
-    );
+    descriptionContainer.append(createLeftDescriptionPanel(shoe), createRightDescriptionPanel(shoe));
     return descriptionContainer;
 }
 
@@ -168,7 +159,7 @@ class DescriptionPage extends Page {
         setCurrPage(1);
         breadcrumbs = createBreadCrumbs(this.shoe.brand, this.shoe.name);
         this.container.append(breadcrumbs, createDescriptionPanel(this.shoe));
-         return this.container;
+        return this.container;
     }
 }
 

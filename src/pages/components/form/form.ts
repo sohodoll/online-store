@@ -1,4 +1,4 @@
-import { clearCart, updateHeader } from "../../../app";
+import { clearCart, updateHeader } from '../../../helpers/appFunctions';
 
 export function validateIsNum(evt: UIEvent): void {
     if ((evt.which != 8 && evt.which != 0 && evt.which < 48) || evt.which > 57) {
@@ -205,12 +205,12 @@ function validateAllInputs(): boolean {
 function submitFrom(): void {
     const isValid = validateAllInputs();
     if (isValid) {
-        alert('Purchase completed!\n\nEmptying cart, redirecting to main...');                
+        alert('Purchase completed!\n\nEmptying cart, redirecting to main...');
         setTimeout(() => {
             window.location.hash = '';
             clearCart();
             updateHeader();
-        }, 1000);        
+        }, 1000);
     } else {
         alert('Invalid data entered, please try again!!!');
     }

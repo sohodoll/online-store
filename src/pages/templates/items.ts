@@ -1,4 +1,4 @@
-import { addItemToCart, findInCart, getArrCart, saveLocalStorage } from '../../app';
+import { addItemToCart, findInCart, getArrCart, saveLocalStorage } from '../../helpers/appFunctions';
 import iconsSVG from './icons';
 
 interface IPrototypeItem {
@@ -85,8 +85,7 @@ function createCartItemFromMain(item: IPrototypeItem): HTMLDivElement {
         if (this.dataset.icon === 'cart') {
             this.dataset.icon = 'removeCart';
             this.innerHTML = iconsSVG.remove;
-        }
-        else {
+        } else {
             this.dataset.icon = 'cart';
             this.innerHTML = iconsSVG.cart;
         }

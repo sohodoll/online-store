@@ -1,4 +1,4 @@
-import { PageIDs } from '../../../app';
+import { PageIDs } from '../../../helpers/appFunctions';
 
 export default function Header(): HTMLElement {
     const header: HTMLElement = document.createElement('header');
